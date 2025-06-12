@@ -1,0 +1,11 @@
+#ddev-generated
+
+disable_settings_management: true
+omit_containers: [db]
+
+hooks:
+  post-start:
+   - exec: echo export PATH="$PATH:/opt/mssql-tools/bin" >> ~/.bashrc
+   - exec: source ~/.bashrc
+   - exec: mkdir /var/opt/mssql/data -p && chmod 770 /var/opt/mssql/data
+     service: sqlsrv

@@ -1,0 +1,12 @@
+name: sqlsrv
+repository: https://github.com/davidplaytech/ddev-sqlsrv/archive/refs/tags/1.2.tar.gz
+version: ""
+install_date: "2024-04-18T09:50:58-05:00"
+project_files:
+    - docker-compose.sqlsrv.yaml
+    - web-build/pre.Dockerfile.sqlsrv
+    - config.sqlsrv.yaml
+    - commands/sqlsrv/drupal-regex
+    - commands/sqlsrv/sqlcmd
+global_files: []
+removal_actions: []
