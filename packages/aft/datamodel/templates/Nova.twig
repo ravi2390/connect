@@ -1,0 +1,158 @@
+<?php
+{% if false %}
+{% block props %}
+{%- set type = row.type|split(':') %}->sortable()
+{%- if row.nullable == true %}->nullable()
+{%- endif %}
+{%- if not row.editable %}->readonly()
+{%- endif %}
+{%- if row.rules %}->rules('{{ row.rules }}')
+{%- endif %}
+{%- endblock %}
+{%- endif %}
+
+namespace App\Nova\Models;
+
+use App\Nova\Resource;
+use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\HasOne;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsTo;
+
+class {{ table.name }} extends Resource
+{
+    /**
+     * The model the resource corresponds to.
+     *
+     * @var string
+     */
+    public static $model = 'App\\Models\\{{ table.name }}';
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = '{{ table.name }}Name';
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        '{{ table.name }}Name'
+    ];
+
+    /**
+     * Get the value that should be displayed to represent the resource.
+     *
+     * @return string
+     */
+    public function title() {
+        return $this->{{ table.name }}Name;
+    }
+
+    /**
+     * Get the fields displayed by the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function fields(Request $request)
+    {
+        return [
+            ID::make('ID', '{{ table.meta.primary_key_name }}'){{ block('props') }},
+            {% spaceless %}
+{% for row in table.rows %}
+{% if loop.index0 != table.meta.primary_key_row %}
+{% set type = row.type|split(':') %}
+{% if row.system_column %}
+            // System Column {{ row.name }}
+{% elseif row.relationship %}
+{% set rel = row.relationship|split(':') %}
+{% if not row.relationship_type %}
+            HasOne::make('{{ row.name|trim('Id', 'right') }}', '{{ row.name|trim('Id', 'right') }}'){{ block('props') }},
+{% elseif row.relationship_type == "parent" %}
+            BelongsTo::make('{{ row.name|trim('Id', 'right') }}', '{{ row.name|trim('Id', 'right') }}', 'App\Nova\Models\{{ rel[0] }}'){{ block('props') }},
+{% elseif row.relationship_type == "self_reference" %}
+            BelongsTo::make('{{ row.name|trim('Id', 'right') }}', '{{ row.name|trim('Id', 'right') }}', 'App\Nova\Models\{{ rel[0] }}'){{ block('props') }},
+            HasMany::make('{{ table.name }}Children', '{{ rel[0] }}Children', 'App\Nova\Models\{{ rel[0] }}'){{ block('props') }},
+{% endif %}
+{% else %}
+{%     if type[0] == "boolean" %}
+            Boolean::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "char" %}
+            Text::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "tinyInteger" %}
+            Number::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "integer" %}
+            Number::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "decimal" %}
+            Number::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "string" %}
+            Text::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "float" %}
+            Number::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "dateTime" %}
+            DateTime::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% elseif type[0] == "uuid" %}
+            Text::make('{{ row.name }}', '{{ row.name }}'){{ block('props') }},
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endspaceless %}
+
+        ];
+    }
+
+    /**
+     * Get the cards available for the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function cards(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the filters available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function filters(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the lenses available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function lenses(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * Get the actions available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function actions(Request $request)
+    {
+        return [];
+    }
+}

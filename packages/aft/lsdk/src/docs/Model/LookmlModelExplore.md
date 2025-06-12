@@ -1,0 +1,47 @@
+# # LookmlModelExplore
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **string** | Fully qualified explore name (model name plus explore name) | [optional] [readonly]
+**name** | **string** | Explore name | [optional] [readonly]
+**description** | **string** | Description | [optional] [readonly]
+**label** | **string** | Label | [optional] [readonly]
+**title** | **string** | Explore title | [optional] [readonly]
+**scopes** | **string[]** | Scopes | [optional] [readonly]
+**can_total** | **bool** | Can Total | [optional] [readonly]
+**can_develop** | **bool** | Can Develop LookML | [optional] [readonly]
+**can_see_lookml** | **bool** | Can See LookML | [optional] [readonly]
+**lookml_link** | **string** | A URL linking to the definition of this explore in the LookML IDE. | [optional] [readonly]
+**can_save** | **bool** | Can Save | [optional] [readonly]
+**can_explain** | **bool** | Can Explain | [optional] [readonly]
+**can_pivot_in_db** | **bool** | Can pivot in the DB | [optional] [readonly]
+**can_subtotal** | **bool** | Can use subtotals | [optional] [readonly]
+**has_timezone_support** | **bool** | Has timezone support | [optional] [readonly]
+**supports_cost_estimate** | **bool** | Cost estimates supported | [optional] [readonly]
+**connection_name** | **string** | Connection name | [optional] [readonly]
+**null_sort_treatment** | **string** | How nulls are sorted, possible values are \&quot;low\&quot;, \&quot;high\&quot;, \&quot;first\&quot; and \&quot;last\&quot; | [optional] [readonly]
+**files** | **string[]** | List of model source files | [optional] [readonly]
+**source_file** | **string** | Primary source_file file | [optional] [readonly]
+**project_name** | **string** | Name of project | [optional] [readonly]
+**model_name** | **string** | Name of model | [optional] [readonly]
+**view_name** | **string** | Name of view | [optional] [readonly]
+**hidden** | **bool** | Is hidden | [optional] [readonly]
+**sql_table_name** | **string** | A sql_table_name expression that defines what sql table the view/explore maps onto. Example: \&quot;prod_orders2 AS orders\&quot; in a view named orders. | [optional] [readonly]
+**access_filter_fields** | **string[]** | (DEPRECATED) Array of access filter field names | [optional] [readonly]
+**access_filters** | [**\OpenAPI\Client\Model\LookmlModelExploreAccessFilter[]**](LookmlModelExploreAccessFilter.md) | Access filters | [optional] [readonly]
+**aliases** | [**\OpenAPI\Client\Model\LookmlModelExploreAlias[]**](LookmlModelExploreAlias.md) | Aliases | [optional] [readonly]
+**always_filter** | [**\OpenAPI\Client\Model\LookmlModelExploreAlwaysFilter[]**](LookmlModelExploreAlwaysFilter.md) | Always filter | [optional] [readonly]
+**conditionally_filter** | [**\OpenAPI\Client\Model\LookmlModelExploreConditionallyFilter[]**](LookmlModelExploreConditionallyFilter.md) | Conditionally filter | [optional] [readonly]
+**index_fields** | **string[]** | Array of index fields | [optional] [readonly]
+**sets** | [**\OpenAPI\Client\Model\LookmlModelExploreSet[]**](LookmlModelExploreSet.md) | Sets | [optional] [readonly]
+**tags** | **string[]** | An array of arbitrary string tags provided in the model for this explore. | [optional] [readonly]
+**errors** | [**\OpenAPI\Client\Model\LookmlModelExploreError[]**](LookmlModelExploreError.md) | Errors | [optional] [readonly]
+**fields** | [**\OpenAPI\Client\Model\LookmlModelExploreFieldset**](LookmlModelExploreFieldset.md) |  | [optional]
+**joins** | [**\OpenAPI\Client\Model\LookmlModelExploreJoins[]**](LookmlModelExploreJoins.md) | Views joined into this explore | [optional] [readonly]
+**group_label** | **string** | Label used to group explores in the navigation menus | [optional] [readonly]
+**supported_measure_types** | [**\OpenAPI\Client\Model\LookmlModelExploreSupportedMeasureType[]**](LookmlModelExploreSupportedMeasureType.md) | An array of items describing which custom measure types are supported for creating a custom measure &#39;based_on&#39; each possible dimension type. | [optional] [readonly]
+**always_join** | **string[]** | An array of joins that will always be included in the SQL for this explore, even if the user has not selected a field from the joined view. | [optional] [readonly]
+
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

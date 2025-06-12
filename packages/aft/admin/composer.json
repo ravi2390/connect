@@ -1,0 +1,32 @@
+{
+    "name": "aft/admin",
+    "description": "AFT site administration",
+    "type": "library",
+    "version": "1.0",
+    "authors": [
+        {
+            "name": "David Richards",
+            "email": "drichard@aft.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\Admin\\": "src/"
+        },
+        "files": [
+            "helpers/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\Admin\\Providers\\AdminServiceProvider"
+            ]
+        }
+    }
+}

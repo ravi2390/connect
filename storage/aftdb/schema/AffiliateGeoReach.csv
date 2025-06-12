@@ -1,0 +1,11 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateGeoReachId],[int],NO,Yes,No,,"IDENTITY(1,1)",,,,,N,label:Affiliate Geo Type,Affiliate Geo Type ID,
+[AffiliateGeoReachName],[varchar](200),NO,No,Yes,,,national state and local,,,,N,default:0,Affiliate Geo Type Name,
+[DisplayOrder],[int],yes,no,No,,,,,,,N,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct AffiliateGeoReachId=id,
+AffiliateGeoReachName=name,
+CreatedAt = created_at,
+UpdatedAt = isnull(updated_at, created_at) 
+from affiliate_type (nolock) 
+where code in ('L','N','LS')",,,,,,,,,,,,

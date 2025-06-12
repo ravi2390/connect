@@ -1,0 +1,26 @@
+{
+    "name": "aft/billhighway",
+    "description": "Payment Processor",
+    "version": "1.0.0",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^8.3",
+        "guzzlehttp/guzzle": "^7.3"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\BillHighway\\Providers\\BillHighwayServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\BillHighway\\": "src/"
+        }
+    }
+}

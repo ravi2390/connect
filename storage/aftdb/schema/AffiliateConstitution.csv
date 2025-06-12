@@ -1,0 +1,14 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ConstitutionId],int,No,Yes,No,,"IDENTITY(1,1)",,,,,,,Constitution ID,
+[AffiliateId],int,No,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,belongsTo
+[ConstitutionCompliance],bit,No,No,No,,0,,,,,,,Constitution Compliance,
+[ConstitutionYear],varchar(10),Yes,No,No,,,,,,,,,Constitution Year,
+[ConstitutionDate],datetime,Yes,No,No,,,,,,,,,Constitution Date,
+[ConstitutionReceivedDate],datetime,Yes,No,No,,,,,,,,,Constitution Received Date,
+[ConstitutionAmendedDate],datetime,Yes,No,No,,,,,,,,,Constitution Amended Date,
+[ConstitutionAdoptedDate],datetime,Yes,No,No,,,,,,,,,Constitution Adopted Date,
+[ConstitutionFileName],varchar(100),Yes,No,No,,,,,,,,,Constitution File Name,
+[ConstitutionFileURL],varchar(250),Yes,No,No,,,,,,,,,Constitution File URL,
+[ConstitutionComments],varchar(2000),Yes,No,No,,,,,,,,,Constitution Comments,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

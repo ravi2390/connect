@@ -1,0 +1,28 @@
+{
+    "name": "aft/file_uploader_ui",
+    "description": "Resources and JS components for the OneSchema File Uploader.",
+    "version": "0.1.0",
+    "require": {
+        "php": "^8.3",
+        "aft/file_uploader": "^0.1.0"
+    },
+    "license": "propietary",
+    "authors": [
+        {
+            "name": "Tag1 Consulting",
+            "email": "support@tag1.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../*",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
+}

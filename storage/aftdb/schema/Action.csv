@@ -1,0 +1,13 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ActionId],[int],No,Yes,No,,"IDENTITY (1,1)",,,,,,,,Action ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,,,,,,,,Individual ID,belongsTo
+[SubmittedByIndividualId],[int],Yes,No,No,Individual(IndividualId),,,,,,,,,Submitted By Individual ID,hasOne:reference
+[IndividualQuickCommentId],[int],Yes,No,No,IndividualQuickComment(IndividualQuickCommentId),,,,,,,,,Individual Quick Comment Id,hasOne:reference
+[Action1],[bit],Yes,No,No,,0,,,,,,,,Action 1,
+[Action2],[bit],Yes,No,No,,0,,,,,,,,Action 2,
+[Action3],[bit],Yes,No,No,,0,,,,,,,,Action 3,
+[Action4],[bit],Yes,No,No,,0,,,,,,,,Action 4,
+[Action5],[bit],Yes,No,No,,0,,,,,,,,Action 5,
+[ActionDate],[datetime],Yes,No,No,,,,,,,,,,Action Date,
+,,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,,

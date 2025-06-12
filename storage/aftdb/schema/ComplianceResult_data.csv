@@ -1,0 +1,6 @@
+ComplianceResultId,ComplianceResultCode,ComplianceResultDescription
+1,v,Good Standing
+2,X,Not Compliant or No Data
+3,?,No Data-PerCapita
+4,!,Partial Compliance
+5,P,Pending

@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateInactiveReasonId],[int],NO,Yes,NO,,"IDENTITY(1,1)",,,,,N,label:Affiliate Inactive Reason,Affiliate Inactive Reason ID,
+[AffiliateInactiveReasonName],[varchar](200),NO,No,Yes,,,financial reason,,,,N,default:0,Affiliate Inactive Reason Name,
+[DisplayOrder],[int],yes,no,no,,,,,,,N,,Display Order,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

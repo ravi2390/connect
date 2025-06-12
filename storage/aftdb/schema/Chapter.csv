@@ -1,0 +1,84 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ChapterId],[int],No,Yes,NO,,"IDENTITY(1,1)",1,,,,N,label:Chapter,Chapter ID,
+[ChapterGuid],[uniqueidentifier],No,NO,Yes,,newid(),D63E10A4 3157 11D6 B0A1 00508B6D7CC3,party_type_id=2,,,N,,Chapter Guid,
+[ChapterNumber],[varchar](10),NO,NO,Yes,,,00420 0001,where affiliate_type_id=19,,randomNumber,Y,tiny:0,Chapter Number,
+[ChapterName],[varchar](200),No,NO,No,,,CTU Retiree Chapter,where affiliate_type_id=20,,company,Y,default:0,Chapter Name,
+[AffiliateId],[int],No,NO,No,Affiliate(AffiliateId),,,,,,Y,,Affiliate ID,belongsTo
+[IsChapterActive],[bit],No,NO,No,,1,1,"if 1 then true, else flase",,,Y,,Is Chapter Active,
+[ChapterEIN],[char](10),Yes,No,No,,,36 0906695,,,randomNumber,Y,,Chapter EIN,
+[IsChartered],[bit],Yes,No,No,,1,1,"if 1 then true, else flase",,,Y,,Is Chartered,
+[CharterDate],datetime2,Yes,No,No,,,1/1/1900,,,,Y,,Charter Date,
+[ElectionMonth],[tinyint],Yes,No,No,,,11,,,,Y,,Election Month,
+[OfficerTermStartMonth],[tinyint],Yes,No,No,,,1,,,,Y,,Officer Term Start Month,
+[IsElectionYearOdd],[bit],Yes,No,No,,,0,,,,,,Is Election Year Odd,
+[ElectionTermYears],[tinyint],Yes,No,No,,,2,,,,,,Election Term Years,
+[IsStructural],[bit],No,NO,No,,0,1,"if 1 then true, else flase",,,Y,,Is Chapter Structural,
+[IsUnknown],[bit],No,NO,No,,0,1,"if 1 then true, else flase",,,Y,,Is Chapter Unknown,
+,,,,,,,,,,,,,
+SQL,"Select distinct
+[ChapterId]=p.id,
+[ChapterGuid] = p.guid,
+[ChapterNumber] = CONCAT(af2.number, '-', af.chapter_number),
+[ChapterName] = af.name,
+[AffiliateId] = p.parent_party_id,
+[IsChapterActive] = case when af.affiliate_status_id=1 then 1 else 0 end,
+[ChapterEIN] = af.employer_identification_number,
+[IsChartered] = af.is_chartered,
+[CharterDate] = CONVERT(DATETIME2(0), af.charter_date),
+[ElectionMonth] = ae.election_held_month,
+[OfficerTermStartMonth] = ae.officer_term_start_month,
+[IsElectionYearOdd] = ae.is_election_held_odd_or_even_year,
+[ElectionTermYears] = ae.election_term_length,
+[IsStructural] = 0,
+[IsUnknown] = 0
+from affiliate af (nolock)
+inner join party p (nolock) on af.party_id = p.id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join party p2 (nolock) on p2.guid=vw.affiliateid
+inner join affiliate af2 (nolock) on af2.party_id=p2.id
+left outer join affiliate_election ae (nolock) on ae.id = af.party_id
+where p.is_deleted=0
+and af.number<>''
+and af.affiliate_type_id=19
+and af2.number in (Select number From vw_federated_local)
+and p2.is_deleted=0
+and (af.name not like '% Ret' and af.name not like '%Reti%' and af.Name not like 'RET %' and af.Name not like 'RET')
+
+Union
+
+select vwa.affiliateId
+		,[ChapterGuid] = NEWID()
+		,[ChapterNumber] = CONCAT(vwa.AffiliateNumber, '-', '0000')
+		,[ChapterName] = CONCAT(vwa.AffiliateName, ' - Structured Chapter')
+		,[AffiliateId] = vwa.AffiliateId
+		,[IsChapterActive] = 0
+		,[ChapterEIN] = NULL
+,[IsChartered] = NULL
+,[CharterDate] = NULL
+,[ElectionMonth] = NULL
+,[OfficerTermStartMonth] = NULL
+,[IsElectionYearOdd] = NULL
+,[ElectionTermYears] = NULL
+		,[IsStructural] = 1
+		,[IsUnknown] = 0
+From vw_1_Affiliate  vwa
+
+union
+
+select 100000 + vwa.affiliateId
+		,[ChapterGuid] = NEWID()
+		,[ChapterNumber] = CONCAT(vwa.AffiliateNumber, '-', '1000')
+		,[ChapterName] = CONCAT(vwa.AffiliateName, ' - Unknown Chapter')
+		,[AffiliateId] = vwa.AffiliateId
+		,[IsChapterActive] = 0
+			,[ChapterEIN] = NULL
+,[IsChartered] = NULL
+,[CharterDate] = NULL
+,[ElectionMonth] = NULL
+,[OfficerTermStartMonth] = NULL
+,[IsElectionYearOdd] = NULL
+,[ElectionTermYears] = NULL
+		,[IsStructural] = 0
+		,[IsUnknown] = 1
+From vw_1_Affiliate  vwa
+Where AffiliateNumber in (Select number From vw_federated_local)",,,,,,,,,,,,

@@ -1,0 +1,11 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ScheduleTypeId],[int],No,YES,No,,"IDENTITY (1,1)",1,,,,,label:Schedule Type,Schedule Type ID,
+[ScheduleTypeName],[varchar](200),No,No,No,,,Day Shift,,,,,default:0,Schedule Type Name,
+[AffiliateId],[int],Yes,No,No,Affiliate(AffiliateId),,2023,,,,,,Affiliate ID,hasOne:reference
+,,,,,,,,,,,,,,
+SQL,"select distinct
+[ScheduleTypeId] = s.id,
+[ScheduleTypeName] = s.name,
+[AffiliateId] = s.party_id
+from schedule_type s (nolock)
+where s.is_deleted = 0",,,,,,,,,,,,,

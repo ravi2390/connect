@@ -1,0 +1,30 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualSurveyAnswerId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Individual Survey Answer,Individual Survey Answer ID,
+[IndividualSurveyId],[int],No,No,1,IndividualSurvey(IndividualSurveyId),,1,,,,,,Individual Survey ID,hasOne:reference
+[AnswerId],[int],No,No,1,Answer(AnswerId),,1,,,,,,Answer ID,hasOne:reference
+[AnswerReasonId],[int],Yes,No,No,AnswerReason(AnswerReasonId),,Very good,,,,,,Answer Reason ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+[IndividualSurveyAnswerId] = ia.id,
+[IndividualSurveyId] = ia.individual_survey_id,
+[AnswerId] = ia.answer_id,
+[AnswerReasonId] = ia.answer_reason_id,
+[CreatedAt] = ISNULL(ia.created_at, ia.updated_at),
+[UpdatedAt] = ISNULL(ia.updated_at, ia.created_at)
+from individual_survey_answer ia (nolock)
+inner join individual_survey i (nolock) on ia.individual_survey_id = i.id
+inner join answer a (nolock) on ia.answer_id = a.id
+left join answer_reason ar (nolock) on ia.answer_reason_id = ar.id
+inner join party p (nolock) on i.party_id = p.id
+inner join individual id  (nolock) on p.id = id.party_id
+inner join vw_1_Individual iv (nolock) on i.party_id = iv.IndividualId
+inner join survey s  (nolock) on i.survey_id = s.id
+inner join relationship r  (nolock) on p.id=r.party_id
+inner join affiliate af  (nolock) on af.party_id=r.related_party_id
+inner join vw_1_affiliate_connect vw  (nolock) on vw.affiliatenbr=af.number
+where ia.is_deleted = 0
+and i.is_deleted = 0
+and p.is_deleted = 0
+and r.is_deleted=0
+and r.relationship_type_id=1
+and s.is_deleted=0",,,,,,,,,,,,

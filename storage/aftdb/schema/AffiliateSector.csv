@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateSectorId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,N,label:Affiliate Sector,Affiliate Sector ID,
+[AffiliateId],[int],No,No,1,Affiliate(AffiliateId),,1078,,,,N,,Affiliate ID,belongsTo:oneToOne
+[SectorId],[int],No,No,1,Sector(SectorId),,1,,,,N,,Sector ID,hasOne
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

@@ -1,0 +1,7 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[MergedOrganizationId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,N,label:Merged Organization,Merged Organization ID,
+[MergedOrganizationCode],[Varchar](20),No,No,Yes,,,,,,,N,"tiny:0,small:0",Merged Organization Code,
+[MergedOrganizationName],[Varchar](200),No,No,No,,,National Education Association,,,,N,default:0,Merged Organization Name,
+[DisplayOrder],[int],yes,no,no,,,NEA,,,,N,,Display Order,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

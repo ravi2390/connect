@@ -1,0 +1,15 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[DivisionId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,N,,Division ID,
+[DivisionName],[varchar](200),No,No,Yes,,,AFT Teachers,,,,N,default:0,Division Name,
+[DivisionPerCapitaName],[varchar](200),No,No,Yes,,,PreK 12,,,,N,"tiny:0,small:0",Division Per Capita Name,
+[DisplayOrder],[int],yes,no,no,,,,,,,N,,Display Order,
+,,,,,,,,,,,,,
+SQL,"
+select distinct
+DivisionId=id,
+DivisionName=name,
+DivisionPerCapitaName=division_name_per_capita,
+CreatedAt = created_at,
+UpdatedAt = isnull(updated_at, created_at) 
+from division (nolock)
+where is_deleted=0",,,,,,,,,,,,

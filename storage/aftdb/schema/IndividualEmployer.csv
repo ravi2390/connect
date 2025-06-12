@@ -1,0 +1,131 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualEmployerId],[int],No,Yes,No,,"Identity (1,1)",,,A uniqiue Identification number used to identify the IndividualEmployer bridge table. IndividualEmployerId can be used to retrieve all the details of an Individual and his/her associated Employer.,,,,Individual Employer ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,,,An Identification number to identify an individual. IndividualId is a foreign key in IndividualEmployer Table which references IndividualId from the Individual Table,,,,Individual ID,hasOne:reference
+[EmployerId],[int],No,No,No,Employer(EmployerId),,,,An Identification number to identify an Employer. EmployerId is a foreign key in IndividualEmployer Table which references EmployerId from the Employer Table,,,,Employer ID,belongsTo
+[EmployeeId],[varchar](35),Yes,No,No,,,,,An Identification of an employee provided from an employer not an affiliate.,,,label:Employee Id,Employee ID,
+[LocalJobClassId],[int],Yes,No,No,LocalJobClass(LocalJobClassId),,,,LocalJobClassId is an Identification Number used to identify an Individual's Job Class. LocalJobClassId is a foreign key in the Individual Employer Table which references to the LocalJobClass Table for all the details.,,,,Local Job Class ID,hasOne:reference
+[JobTitleId],[int],Yes,No,No,JobTitle(JobTitleId),,,,,,,,,hasOne:reference
+[JobDescription],[varchar](200),Yes,No,No,,,Classroom Teacher,,An Individual's Job Title with his/her associated Employer.,jobTitle,,,Job Description,
+[HireDate],[datetime],Yes,No,No,,,39583,,An Individual's Date that he/she got hired with an associated Employer,dateTime,,,Employment Hire Date,
+[StartDate],[datetime],No,No,No,,,,,An Individual's Date that he/she got started working with an associated Employer,dateTime,,,Employment Start Date,
+[UnitStartDate],[datetime],Yes,No,No,,,,,An Individual's Start date with a Bargaining Unit or a Union,dateTime,,,Unit Start Date,
+[EndDate],[datetime],Yes,No,No,,,,,An Individual's Last Day of Employement with his/her associated Employer,dateTime,,,Employment End Date,
+[WorkShift],[varchar](200),Yes,No,No,,,,,,,,,Work Shift,
+[RetirementEffDate],[datetime],Yes,No,No,,,,,,dateTime,,,Retirement Effective Date,
+[IsPartTime],[bit],No,No,No,,,0,,,,,,Is Part Time,
+[IsTenured],[bit],No,No,No,,,0,,,,,,Is Tenured,
+[CompensationId],[int],Yes,No,No,Compensation(CompensationId),,,,,,,,Compensation ID,hasOne:reference
+[PayPeriodTypeId],[int],Yes,No,No,PayPeriodType(PayPeriodTypeId),,,,,,,,Pay Period Type ID,hasOne
+[SubjectId],[int],Yes,No,No,Subject(SubjectId),,,,,,,,Subject ID,hasOne
+[WorkLocationId],[int],Yes,No,No,WorkLocation(WorkLocationId),,Grounds   Special Projects,,,,,,Work Location ID,hasOne:reference
+[WorkStructureId],[int],Yes,No,No,WorkStructure(WorkStructureId),,Waite Park Elementary,,,,,,Work Structure ID,hasOne:reference
+[RoomNumber],[varchar](200),Yes,No,No,,,234,,the room they work in,,,,Room Number,
+[Source],[varchar](200),Yes,No,No,,,file,,Source of data,,,,Source,
+[StopReason],[varchar](200),Yes,No,No,,,left profession ,,Reason for stopping employment,,,,Stop Reason,
+[CurrentlyWorking],[bit],No,No,No,,1,,Is active will help Identify if an individual is currently Employed,The relationship between an individual and an Employer is Active or in active,,,,Is Current,
+[IsPreferred],[bit],No,No,No,,0,,,,,,,,
+[PositionId],[varchar](200),Yes,No,No,,,,,,,,,,
+[FullTimeEquivalent],[int],No,No,No,,0,,,,,,,,
+,,,,,,,,,,,,,,
+SQL,"Select [IndividualEmployerId],
+[IndividualId],
+[EmployerId],
+[EmployeeId],
+[LocalJobClassId] = IndEmp.[LocalJobClassId],
+[JobTitleId] = jt.JobTitleId,
+[JobDescription],
+[HireDate],
+[StartDate],
+[UnitStartDate],
+IndEmp.[UnitId],
+[EndDate],
+[WorkShift],
+[RetirementEffDate],
+[IsPartTime],
+[IsTenured],
+[CompensationId] = IndEmp.[CompensationId],
+[PayPeriodTypeId],
+[SubjectId],
+[WorkLocationId],
+[WorkStructureId],
+[RoomNumber],
+[Source],
+[StopReason],
+[IsCurrent],
+CreatedAt,
+UpdatedAt
+From
+(
+select distinct
+[IndividualEmployerId] = ier.relationship_id,
+[IndividualId] = p.id,
+[EmployerId] = e.party_id,
+[EmployeeId] = trim(ier.employee_id),
+[LocalJobClassId] = ISNULL(j.LocalJobClassId, ISNULL(j1.LocalJobClassId, ISNULL(j2.LocalJobClassId, j3.LocalJobClassId))),
+[JobTitleId] = NULL,
+[JobDescription] = ier.job_title,
+[HireDate] = ier.hire_date,
+[StartDate] = r.start_date,
+[UnitStartDate] = null,
+[UnitId] = ISNULL(u.UnitId, u1.UnitId),
+[EndDate] = r.stop_date,
+[WorkShift] = ier.work_shift,
+[RetirementEffDate] = ier.retire_effectivity_date,
+[IsPartTime] = ier.is_part_time,
+[IsTenured] = ier.is_tenured,
+[CompensationId] = null,
+[PayPeriodTypeId] = ier.pay_period_type_id,
+[SubjectId] = ier.subject_id,
+[WorkLocationId] = vw_wl.WorkLocationId,
+[WorkStructureId] = vw_ws.WorkStructureId,
+[RoomNumber] = ier.room_number,
+[Source] = ier.source,
+[StopReason] = r.stop_reason,
+[IsCurrent] = case when r.stop_date <= getdate() THEN 0 ELSE 1 END,
+CreatedAt = r.created_at,
+UpdatedAt = isnull(r.updated_at, r.created_at)
+from individual i (nolock)
+inner join party p (nolock) on i.party_id=p.id
+inner join relationship r (nolock) on p.id=r.party_id
+left join employer e (nolock) on r.related_party_id = e.party_id
+inner join individual_employer_relationship ier (nolock) on ier.relationship_id=r.id
+inner join relationship r2 (nolock) on r2.party_id=p.id
+inner join affiliate af (nolock) on af.party_id=r2.related_party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join vw_1_Employer ve (nolock) on ve.employerid=r.related_party_id
+Inner Join vw_1_LocalAgreement  la (nolock)	on la.EmployerId = ve.EmployerId and la.IsUnknown = 1
+Inner Join vw_1_Unit u1 (nolock)	on u1.LocalAgreementId = la.LocalAgreementId and u1.IsUnknown = 1	-- u1 To get UnKnown Unit If there is no real Unit
+Left Join
+(Select Distinct i.party_id Individual_Party_Id,
+			af.party_id Chapter_Party_id,
+			ROW_NUMBER() Over (Partition by IndividualId Order by Iar.Individual_affiliate_relationship_Status_id asc, r.Updated_At desc) rn
+From Individual i
+Join vw_1_Individual vwi (nolock)	on i.party_id = vwi.IndividualId
+Join relationship r	(nolock)	on r.party_id = i.Party_id and r.relationship_type_id = 1 and r.is_deleted = 0
+JOin Affiliate af (nolock)	on r.related_party_id = af.party_id and af.affiliate_type_id = 19
+Join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+Join individual_affiliate_relationship iar (nolock)	on iar.relationship_id = r.id
+) C
+		On c.Individual_Party_Id = i.party_id and rn = 1	--To get real unit of an Individual
+Left Join vw_1_Unit u	on u.Chapter_id = c.Chapter_Party_id and la.LocalAgreementId = u.LocalAgreementId	-- u To get real UnitID
+left join vw_1_LocalJobClass j (nolock) on ier.job_class_id = j.Employer_job_class_id and u.UnitId = j.UnitId -- j Real Unit Real JobClass
+Left Join vw_1_LocalJobClass j1 (nolock)	on j1.Employer_job_class_id = ier.job_class_id and u1.UnitId = j1.UnitId	-- j1 Unknown Unit Real JobClass
+Left Join vw_1_LocalJobClass j2 (nolock)	on j2.UnitId = u.UnitId and j2.IsUnknown = 1 -- j2 Real Unit Unknown JobClass
+Left Join vw_1_LocalJobClass j3 (nolock)	on u1.UnitId = j3.UnitId and j3.IsUnknown = 1	--j3 UnKnown Unit Unknown Job Class
+left join subject sj (nolock) on ier.subject_id = sj.id
+left join pay_period_type pt (nolock) on ier.pay_period_type_id = pt.id
+left join employer_location el (nolock) on ier.employer_location_id = el.id and el.is_deleted=0
+left join vw_1_WorkLocation vw_wl (nolock)	on vw_wl.WorkLocationId = el.id
+left join employer_business_unit eb (nolock) on ier.employer_business_unit_id = eb.id and eb.is_deleted=0
+left join vw_1_WorkStructure vw_ws (nolock)	on vw_ws.WorkStructureId = eb.id
+where  1=1
+and p.party_type_id=1
+and p.is_deleted=0
+and r.is_deleted=0
+and r.relationship_type_id=2
+and r2.relationship_type_id=1
+and r2.is_deleted=0
+and e.employer_type_id<>8
+and i.last_name<>''
+) IndEmp
+Left Join vw_1_JobTitle jt (nolock)	on jt.LocalJobClassId = IndEmp.LocalJobClassId and jt.IsUnknown = 1",,,,,,,,,,,,,

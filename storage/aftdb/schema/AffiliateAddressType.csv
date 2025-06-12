@@ -1,0 +1,14 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateAddressTypeId],[int],No,Yes,No,,"IDENTITY(1,1)",123456,,,,,,label:Affiliate Address Type,Affiliate Address Type ID,
+[AffiliateAddressTypeName],[varchar] (20),No,NO,Yes,,,Permanent,,,,,,default:0,Affiliate Address Type Name,
+,,,,,,,,,,,,,,,
+SQL,"SELECT distinct
+ [AffiliateAddressTypeId]=c.id,
+[AffiliateAddressTypeName]  =c.name
+  FROM [contact_type_contact_context] cc (nolock)
+  inner Join contact_context c (nolock) on cc.contact_context_id = c.id
+  Where 1=1
+  and contact_type_id = 4
+ and c.is_deleted=0
+ and cc.is_deleted=0
+ and c.party_type_id=2",,,,,,,,,,,,,,

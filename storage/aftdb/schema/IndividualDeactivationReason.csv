@@ -1,0 +1,102 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualDeactivationReasonId],[int],No,Yes,No,,"IDENTITY(1,1)",123,,an Id that will be able to identify and tie the reason behind a relationship being ended,,,label:Individual Deactivation Reason,Individual Deactivation Reason ID,
+[IndividualDeactivationReasonName],[varchar] (200),No,No,Yes,,,,,the reason for the relationship being stopped,,,default:0,Individual Deactivation Reason Name,
+[ApplicableToMember],[bit],No,No,No,,,1,,,,,,Applicable to Member,
+[ApplicableToPotentialMember],[bit],No,No,No,,,1,,,,,,Applicable to Potential Member,
+[ApplicableToAgencyFee],[bit],No,No,No,,,1,,,,,,Applicable to Agency Fee,
+[ApplicableToRetiree],[bit],No,No,No,,,1,,,,,,Applicable to Retiree,
+[ApplicableToOther],[bit],No,No,No,,,1,,,,,,Applicable to Other,
+[DisplayOrder],[int],No,No,No,,,1,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[IndividualDeactivationReasonId]=id,
+[IndividualDeactivationReasonName]=case
+when name='Out of Unit' then 'Promoted Out of the Unit'
+when name='Left Profession' then 'Quit Employment'
+when name='Retired' then 'Member Retired'
+when name='Quit Union - Eligible to Rejoin' then 'Quit Union (Eligible to Rejoin)'
+else name end,
+ApplicableToMember = case when name in ('Deceased', 'Erroneous Record', 'Retired',
+'Not on file sent for upload','Out of Unit','Left Profession','Quit Union - Eligible to Rejoin','Unknown') then 1 else 0 end,
+ApplicableToPotentialMember	= case when name in ('Deceased', 'Erroneous Record', 'Joined union','Not on file sent for upload',
+'Out of Unit','Left Profession','Unknown') then 1 else 0 end,
+ApplicableToAgencyFee	= case when name in ('Deceased', 'Erroneous Record', 'Joined union',
+'Not on file sent for upload','Out of Unit','Left Profession','Unknown') then 1 else 0 end,
+ApplicableToRetiree = case when name in ('Deceased', 'Erroneous Record', 'Unknown') then 1 else 0 end,
+ApplicableToOther = case when name in ('Deceased', 'Erroneous Record', 'Joined union', 'Left Profession','Unknown') then 1 else 0 end,
+[DisplayOrder]= case
+when name = 'Deceased' then 1
+when name = 'Erroneous Record' then 3
+when name = 'Joined union' then 5
+when name = 'Retired' then 6
+when name = 'Joined union' then 5
+when name = 'Not on file sent for upload' then 8
+when name = 'Out of Unit' then 9
+when name = 'Left Profession' then 10
+when name = 'Quit Union - Eligible to Rejoin' then 11
+when name = 'Unknown' then 15
+end,
+CreatedAt = ISNULL(created_at, updated_at),
+UpdatedAt =  ISNULL(updated_at, created_at)
+from deactivation_reason (nolock)
+where id not in (6)
+union
+select [IndividualDeactivationReasonId]=11,[IndividualDeactivationReasonName]='Duplicate Record', 
+ApplicableToMember = 1,
+ApplicableToPotentialMember	= 1,
+ApplicableToAgencyFee	= 1,
+ApplicableToRetiree = 1,
+ApplicableToOther = 1,
+[DisplayOrder] = 2,
+CreatedAt = null,
+UpdatedAt = null
+union
+select [IndividualDeactivationReasonId]=14, [IndividualDeactivationReasonName]='Non Member Retired', 
+ApplicableToMember = 0,
+ApplicableToPotentialMember	= 1,
+ApplicableToAgencyFee	= 1,
+ApplicableToRetiree = 0,
+ApplicableToOther =1,
+[DisplayOrder] = 7,
+CreatedAt = null,
+UpdatedAt = null
+union
+select [IndividualDeactivationReasonId]=15, [IndividualDeactivationReasonName]='Establish New Relationship', 
+ApplicableToMember = 0,
+ApplicableToPotentialMember	= 0,
+ApplicableToAgencyFee	= 0,
+ApplicableToRetiree = 0,
+ApplicableToOther = 0,
+[DisplayOrder] = 4,
+CreatedAt = null,
+UpdatedAt = null
+union
+select [IndividualDeactivationReasonId]=16, [IndividualDeactivationReasonName]='Restore Previous Relationship', 
+ApplicableToMember = 0,
+ApplicableToPotentialMember	= 0,
+ApplicableToAgencyFee	= 0,
+ApplicableToRetiree = 0,
+ApplicableToOther = 0,
+[DisplayOrder] = 12,
+CreatedAt = null,
+UpdatedAt = null
+union
+select [IndividualDeactivationReasonId]=17, [IndividualDeactivationReasonName]='Took Job with Employer Union Represents', 
+ApplicableToMember = 0,
+ApplicableToPotentialMember	= 0, 
+ApplicableToAgencyFee	= 0,
+ApplicableToRetiree = 0,
+ApplicableToOther = 1,
+[DisplayOrder] = 14,
+CreatedAt = null,
+UpdatedAt = null
+union
+select [IndividualDeactivationReasonId]=18, [IndividualDeactivationReasonName]='Terminated by Employer', 
+ApplicableToMember = 1,
+ApplicableToPotentialMember	= 1, 
+ApplicableToAgencyFee	= 1,
+ApplicableToRetiree = 0,
+ApplicableToOther = 1,
+[DisplayOrder] = 13,
+CreatedAt = null,
+UpdatedAt = null",,,,,,,,,,,,

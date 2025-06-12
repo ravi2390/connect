@@ -1,0 +1,22 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateOfficerRoleId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Affiliate Officer Role,Affiliate Officer Role ID,
+[AffiliateOfficerRoleName],[varchar](200),No,No,No,,,,,,jobTitle,,default:0,Affiliate Officer Role Name,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,10000,,,,,,Affiliate ID,belongsTo
+[OfficerRoleTitleId],[int],No,No,No,OfficerRoleTitle(OfficerRoleTitleId),,,,,,,,Officer Role Title ID,hasOne
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+[AffiliateOfficerRoleId]=lp.id,
+[AffiliateOfficerRoleName]=concat(af.name, ' - ', lp.name),
+[AffiliateId]=p2.id,
+[OfficerRoleTitleId]= national_leadership_position_id,
+CreatedAt = lp.created_at,
+UpdatedAt = ISNULL(lp.updated_at, lp.created_at)
+  FROM  leadership_position lp (nolock)
+  inner join party p (nolock) on lp.party_id=p.id
+  inner join affiliate af (nolock) on p.id=af.party_id
+  inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+  inner join party p2 (nolock) on p2.guid=vw.affiliateid
+ WHERE  lp.party_id IS NOT NULL
+ and p.is_deleted=0
+ and lp.is_deleted=0
+ and lp.national_leadership_position_id IN (326, 327, 340, 328, 329, 330, 341, 331, 332, 333, 334, 342, 335, 343, 2570,  337,338,892,2571,336,2572)",,,,,,,,,,,,

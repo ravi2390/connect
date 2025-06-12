@@ -1,0 +1,11 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateTypeId],[int],NO,Yes,No,,"IDENTITY(1,1)",,,,,N,,Affiliate Type ID,
+[AffiliateTypeName],[varchar](200),No,no,Yes,,,,,,,N,,Affiliate Type Name,
+[DisplayOrder],[int],Yes,no,no,,,,,,,N,,Display Order,
+,,,,,,,,,,,,,
+SQL,"Select distinct AffiliateTypeId=affiliate_Type.id,
+AffiliateTypeName=affiliate_Type.name,
+CreatedAt = created_at,
+UpdatedAt = isnull(updated_at, created_at)
+from Affiliate_Type (nolock) 
+where affiliate_type.code in ('N','S','L','LF','C')",,,,,,,,,,,,

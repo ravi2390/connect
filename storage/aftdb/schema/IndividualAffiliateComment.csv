@@ -1,0 +1,26 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualAffiliateCommentId],[Int],No,Yes,No,,"Identity(1,1)",,,,,,label:Individual Affiliate Comment,Individual Affiliate Comment ID,
+[IndividualAffiliateId],[Int],No,No,No,IndividualAffiliate(IndividualAffiliateId),,,,,,,,Individual Affiliate ID,belongsTo
+[IndividualAffiliateComment],[varchar](2000),Yes,No,No,,,,,,sentence,,default:0,Individual Affiliate Comment,
+[SubmitByUserId],[int],Yes,No,No,,,,,,,,,Submit By ID,
+,,,,,,,,,,,,,
+SQL,"Select Distinct IndividualAffiliateCommentId = rc.id
+                ,IndividualAffiliateId = rc.relationship_id
+                ,IndividualAffiliateComment = rc.comment
+				,CreatedAt = rc.created_at
+				,UpdatedAt = rc.updated_at
+From relationship_comment rc (nolock)
+Join relationship r (nolock) on rc.relationship_id = r.id
+Join individual_affiliate_relationship iar (nolock)	on iar.relationship_id = r.id
+Join individual_affiliate_relationship_type iart (nolock)	on iart.id = iar.individual_affiliate_relationship_type_id and iart.is_deleted = 0
+Join affiliate af (nolock) on af.party_id = r.related_party_id
+Join vw_1_affiliate_connect vw (nolock) on af.number = vw.AffiliateNbr
+join vw_1_IndividualAffiliate ia on iar.relationship_id = ia.IndividualAffiliateId
+-- join vw_1_IndividualAffiliateComment iac on rc.id = iac.IndividualAffiliateCommentId
+Join party p (nolock) on p.id = r.party_id
+Where r.relationship_type_id = 1
+                and rc.is_deleted = 0
+                and r.is_deleted = 0
+                and ISNULL(rc.Comment, '') != ''
+                and rc.comment not like '%Test%'
+				and p.is_deleted = 0",,,,,,,,,,,,

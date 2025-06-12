@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ComplianceResultId],[int],NO,Yes,No,,"IDENTITY(1,1)",2023,,,,,N,label:Compliance Result,Compliance Result Id,
+[ComplianceResultCode],[varchar](20) ,NO,No,No,,,D63E10A4 3157 11D6 B0A1 00508B6D7CC3,where party_type_id=2,,,,N,"tiny:0,small:0",Compliance Result Code,
+[ComplianceResultDescription],[varchar](200) ,NO,No,No,,,,,,,,,,Compliance Result Description,
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,

@@ -1,0 +1,13 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EventCategoryId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label: Event Category,Event Category ID,
+[EventCategoryName],[varchar](200),No,No,No,,,Touch Point System,,,text,,default:0,Event Category Name,
+[Description],[varchar](max),Yes,No,No,,,New Contact Log for Locals and Officers,,,sentence,,,Description,
+,,,,,,,,,,,,,,
+SQL,"SELECT distinct
+EventCategoryId=Id,
+EventCategoryName=name,
+Description=description,
+[CreatedAt] = ISNULL(created_at, updated_at),
+[UpdatedAt] = ISNULL(updated_at, created_at)
+FROM activity_category (nolock)
+where is_deleted = 0",,,,,,,,,,,,,

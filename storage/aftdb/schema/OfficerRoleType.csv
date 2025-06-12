@@ -1,0 +1,18 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[OfficerRoleTypeId],[int],No,Yes,No,,"IDENTITY(1,1)",123456,,,,N,label:Officer Role Type,Officer Role Type ID,
+[OfficerRoleTypeName],[varchar] (40),No,No,Yes,,,President,,,,N,default:0,Officer Role Type Name,
+,,,,,,,,,,,,,
+SQL," select distinct
+ [OfficerRoleTypeId]=lp2.id,
+[OfficerRoleTypeName]=lp2.name,
+CreatedAt = lp2.created_at,
+UpdatedAt = ISNULL(lp2.updated_at, lp2.created_at)
+ from leadership_position lp (nolock)
+ inner join  leadership_position lp2 (nolock) on lp.parent_leadership_position_id=lp2.id
+where 1=1
+and lp.parent_leadership_position_id is not null
+and lp.is_deleted=0
+and lp2.is_deleted=0
+and lp2.name <>'Executive Committee'
+and lp.affiliate_level_id=1
+and lp2.affiliate_level_id=1",,,,,,,,,,,,

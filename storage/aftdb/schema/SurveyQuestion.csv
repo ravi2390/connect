@@ -1,0 +1,16 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[SurveyQuestionId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Survey Question,Survey Question ID,
+[SurveyId],[int],No,No,1,Survey(SurveyId),,1,Need to create a unique index on the combination of SurveyId and QuestionId,,,,,Survey ID,belongsTo
+[QuestionId],[int],Yes,No,1,Question(QuestionId),,100,,,,,,Question ID,hasOne
+[DisplayOrder],[tinyint],No,No,No,,,1,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[SurveyQuestionId] = sq.id,
+[SurveyId] = sq.survey_id,
+[QuestionId] = sq.question_id,
+[DisplayOrder] = sq.display_order
+from survey_question sq (nolock)
+inner join survey s (nolock) on sq.survey_id = s.id
+inner join question q (nolock) on sq.question_id = q.id
+where sq.is_deleted = 0
+            and s.is_deleted = 0",,,,,,,,,,,,

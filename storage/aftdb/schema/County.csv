@@ -1,0 +1,11 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[CountyId],[int],No,Yes,No,,"IDENTITY(1,1)",1,incremental,the unique identification of a state name,,,label:County,County ID,
+[CountyName],[varchar] (200),No,No,No,,,Douglas County,,the unique name of a state,,y,default:0,County Name,
+[StateTerritoryId],[int],No,No,No,StateTerritory(StateTerritoryId),,45,,The 2 letter unique code associated with a state,,,tiny:0,State Territory ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+CountyId=id,
+CountyName=name,
+StateTerritoryId=state_territory_id
+FROM county (nolock)
+where is_deleted=0",,,,,,,,,,,,

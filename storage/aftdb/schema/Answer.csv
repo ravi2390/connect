@@ -1,0 +1,16 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AnswerId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Answer,Answer ID,
+[AnswerDescription],[varchar](600),No,No,No,,,Agree,,,sentence,,,Answer Description,
+[QuestionId],[int],No,No,No,Question(QuestionId),,100,,,,,,Question ID,belongsTo
+[DisplayOrder],[int],No,No,No,,,1,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[AnswerId] = a.id,
+[AnswerDescription] = a.answer,
+[QuestionId] = a.question_id,
+[CreatedAt] = ISNULL(a.created_at, a.updated_at),
+[UpdatedAt] = ISNULL(a.updated_at, a.created_at),
+[DisplayOrder]  = a.display_order
+from answer a (nolock)
+inner join question q (nolock) on a.question_id = q.id
+where a.is_deleted = 0",,,,,,,,,,,,

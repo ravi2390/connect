@@ -1,0 +1,65 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[LocalDuesCategoryId],[int],No,Yes,No,,"IDENTITY(1,1)","1,2,3,4",,Unique Identification of the Local dues a member is going to pay,,,label:Local Dues Category,Local Dues Category ID,
+[LocalDuesCategoryName],[Varchar](200),No,No,No,,,"Retired, Quarter Dues, Student Member",what is the dues category localy,Unique name of the Local dues a member is going to pay,,y,default:0,Local Dues Category Name,
+[NationalPerCapitaId],[int],Yes,No,No,NationalPerCapita(NationalPerCapitaId),,"1,2,3,4",,Unique Identification of the National dues a member is going to pay,,,,National Dues Category ID,hasOne
+[StatePerCapitaId],[int],Yes,No,No,StatePerCapita(StatePerCapitaId),,"1,2,3,4",,Unique Identification of the State dues a member is going to pay,,,,State Dues Category ID,hasOne
+[AffiliateId],[int],Yes,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,belongsTo
+[LocalDuesAmount],"[numeric](15,2)",Yes,No,No,,,,,,,y,"tiny:0,small:0",Local Dues Amount,
+[LocalDuesPercentage],"[numeric](15,2)",Yes,No,No,,,34.56,,,,,"tiny:0,small:0",Local Dues Percentage,
+[PaymentFrequencyId],[Int],Yes,No,No,PaymentFrequency(PaymentFrequencyId),,,,,,y,,Payment Frequency ID,hasOne:reference
+[StartDate],[datetime],Yes,No,No,,,39583,,,,,,Start Date,
+[EndDate],[datetime],Yes,No,No,,,39583,,,,,,End Date,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[LocalDuesCategoryId] = mc.id,
+[LocalDuesCategoryName] = mc.name,
+[NationalPerCapitaId] = mc.national_membership_category_id,
+[StatePerCapitaId] = mc.state_membership_category_id,
+[AffiliateId] = p.Id,
+[LocalDuesAmount] = mc.amount,
+[LocalDuesPercentage] = mc.percentage,
+[PaymentFrequencyId] = pf.payment_frequency_id,
+[StartDate] = mc.start_date,
+[EndDate] = mc.end_date,
+[ChapterId]=null,
+[CreatedAt] = ISNULL(mc.created_at, mc.updated_at),
+[UpdatedAt] = ISNULL(mc.updated_at, mc.created_at)
+from membership_category mc (nolock)
+inner join party p (nolock) on mc.party_id = p.id
+inner join affiliate a (nolock) on p.id = a.party_id
+inner join affiliate_type at (nolock) on a.affiliate_type_id = at.id
+inner join [vw_1_affiliate_connect] af (nolock) on a.number = af.AffiliateNbr
+Left join membership_category_payment_frequency pf (nolock) on mc.id = pf.membership_category_id and pf.is_deleted=0
+where 1=1
+and at.affiliate_level_id not in (1,2,5,6,7)
+and mc.is_deleted = 0
+and p.is_deleted=0
+and at.is_deleted=0
+
+Union
+
+select distinct
+[LocalDuesCategoryId] = mc.id,
+[LocalDuesCategoryName] = mc.name,
+[NationalPerCapitaId] = IIF(mc.name = 'Associate Member', null, mc.national_membership_category_id),
+[StatePerCapitaId] = mc.state_membership_category_id,
+[AffiliateId] = p.Id,
+[LocalDuesAmount] = mc.amount,
+[LocalDuesPercentage] = mc.percentage,
+[PaymentFrequencyId] = pf.payment_frequency_id,
+[StartDate] = mc.start_date,
+[EndDate] = mc.end_date,
+[ChapterId]=null,
+[CreatedAt] = ISNULL(mc.created_at, mc.updated_at),
+[UpdatedAt] = ISNULL(mc.updated_at, mc.created_at)
+from membership_category mc
+inner join party p (nolock) on mc.party_id = p.id
+inner join affiliate a (nolock) on p.id = a.party_id
+inner join affiliate_type at (nolock) on a.affiliate_type_id = at.id
+inner join vw_1_Affiliate vw	on vw.AffiliateId = a.party_id
+Left join membership_category_payment_frequency pf (nolock) on mc.id = pf.membership_category_id and pf.is_deleted=0
+where at.affiliate_level_id = 2
+and mc.is_deleted = 0
+and p.is_deleted=0
+and at.is_deleted=0
+and mc.is_per_cap = 0",,,,,,,,,,,,

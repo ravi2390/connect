@@ -1,0 +1,12 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualSocialMediaTypeId],[int],No,Yes,No,,"IDENTITY(1,1)",12,,,,,label:Individual Social Media Type,Individual Social Media Type ID,
+[IndividualSocialMediaTypeName],[varchar] (20),No,NO,Yes,,,facebook,,,,,default:0,Individual Social Media Type Name,
+,,,,,,,,,,,,,
+SQL,"Select distinct [IndividualSocialMediaTypeId] = cc.id,
+[IndividualSocialMediaTypeName] = cc.name
+From Contact_context cc (nolock)
+Join contact_type_contact_context ctcc (nolock) on cc.id = ctcc.contact_context_id
+Where party_type_id = 1
+and ctcc.contact_type_id = 3
+and cc.is_deleted = 0
+and ctcc.is_deleted = 0",,,,,,,,,,,,

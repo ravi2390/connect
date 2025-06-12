@@ -1,0 +1,12 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ChapterEmailId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Chapter Email,Chapter Email ID,
+[ChapterId],[int],No,No,No,Chapter(ChapterId),,1,,,,,,Chapter ID,belongsTo
+[Email],[varchar] (200),No,No,No,,,,,An email address associated with an entity,email,y,default:0,Email,
+[AffiliateEmailTypeId],[int],No,No,No,AffiliateEmailType(AffiliateEmailTypeId),,1,,,,,,Affiliate Email Type ID,hasOne:reference
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+[CanContactRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,Can Contact,hasOne:reference
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

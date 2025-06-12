@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[PrefixId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,,label:prefix,Prefix ID,
+[PrefixName],[varchar] (200),No,No,Yes,,,Miss,,,,,default:0,Prefix Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+PrefixId=p.id,
+PrefixName=p.name
+from prefix p (nolock)
+where p.is_deleted=0",,,,,,,,,,,,

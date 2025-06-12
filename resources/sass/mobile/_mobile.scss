@@ -1,0 +1,300 @@
+// Variables
+@use '../variables' as *;
+
+.mobile-menu-link,
+.mobile-select-affiliate {
+    color: white;
+}
+
+.mobile-primary-navigation {
+    background-color: $primary-dark;
+    .v-list.v-theme--light {
+        --v-theme-surface: 255,255,255,0;
+        --v-theme-on-surface: #fff;
+    }
+}
+
+.mobile-logo {
+    max-width:100%;
+    height:auto;
+}
+
+.mobile-v-list {
+    padding: 0
+}
+
+.mobile-v-divider {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.mobile-menu-icons {
+    background-color: #6F9FCD;
+    color: #fff;
+}
+
+.navigation-drawer-icons {
+    margin-top: 20px;
+    margin-bottom: 20px !important;
+    .v-list-item__content {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.mobile-app-bar {
+    border-bottom: 4px #3f98c9 !important
+}
+
+.v-select-mobile .v-label {
+    color: white;
+}
+
+.mobile-select-affiliate.v-btn.v-btn--contained.v-theme--light.v-btn--size-default {
+    background-color: inherit ;
+    box-shadow: none;
+    text-transform: none;
+    display: block;
+    color: white;
+    border: none ;
+    text-align: left;
+    height: inherit;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    white-space: inherit;
+}
+
+.filter-toolbar {
+    margin-top: -16px !important;
+}
+
+.mobile-closing-bar {
+    margin-top: -16px;
+}
+.mobile-row-header {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.mobile-displaying-sort-p {
+    padding: 20px 20px 0px 20px;
+}
+
+.mobile-has-selected-row {
+    margin-top: -16px;
+    background-color: inherit !important;
+}
+
+.mobile-selected-item-container {
+    padding: 10px;
+}
+
+.tr-mobile-individual, .tr-mobile-affiliate {
+    border-bottom: 1px solid rgba(0,0,0,.12);
+}
+.td-mobile-padding {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    text-align: right;
+}
+
+.mobile-data-container {
+    word-break: break-all;
+}
+
+.custom-mobile-row {
+    text-align: left;
+    font-size: 20px;
+    border-bottom: none !important;
+}
+
+.mobile-detail-column-name {
+    font-weight: bolder;
+}
+
+.mobile-select-affiliate .v-btn__content {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.mobile-home-table-card {
+    padding: 0px !important;
+}
+
+.display-contents {
+    display: contents;
+}
+
+.tr-mobile-affiliate .custom-mobile-row {
+    width: 75%;
+    word-break: break-all;
+}
+
+.mobile-link-style {
+    text-decoration: underline;
+}
+.mobile-link-note-container {
+    word-break: break-word;
+    font-style: italic;
+    margin-bottom: 10px;
+    color: gray;
+}
+@media only screen and (max-width: 992px) {
+    .data-container, .individual-union-relationships, .mobile-employer-name, .mobile-word-break {
+        word-break: break-all;
+    }
+
+    [class*="col-"] {
+        max-width: 100%;
+    }
+
+    .current-relationship .row {
+        display: block;
+        word-break: break-all;
+    }
+
+    .mobile-new-container .row,
+    .mobile-edit-container .row,
+    .mobile-home-container .row,
+    .mobile-search-container .row,
+    .mobile-global-mobile-container .row {
+        display: block;
+    }
+
+    .v-data-table-header-mobile,
+    .v-data-table-headers--mobile {
+        display: none;
+    }
+
+    .dues {
+        width: 100%;
+    }
+    .mobile-detail-container, .mobile-detail-col {
+        padding: 0 !important;
+        border: none !important;
+    }
+    .mobile-sort-radio-group {
+        margin-top: 0;
+     }
+    .margin-fix-filter-bar {
+         margin-top: 0 !important;
+     }
+     .mobile-search-employers td,
+     .mobile-individual-search td,
+     .mobile-officer-search td,
+     .mobile-affiliate-search td,
+     .mobile-global-card-table td {
+        width: 100%;
+        word-break: break-all;
+     }
+
+     .mobile-search-employers th,
+     .mobile-individual-search th,
+     .mobile-officer-search th,
+     .mobile-affiliate-search th,
+     .mobile-global-card-table th {
+        width: 100%;
+        word-break: break-all;
+     }
+
+     .mobile-search-employers table,
+     .mobile-individual-search table,
+     .mobile-officer-search table,
+     .mobile-affiliate-search table,
+     .mobile-global-card-table table {
+        width: 100%;
+        table-layout: initial !important;
+     }
+
+     .mobile-search-employers .v-data-table__mobile-row__wrapper,
+     .mobile-individual-search .v-data-table__mobile-row__wrapper,
+     .mobile-officer-search .v-data-table__mobile-row__wrapper,
+     .mobile-affiliate-search .v-data-table__mobile-row__wrapper,
+     .mobile-global-card-table .v-data-table__mobile-row__wrapper {
+         align-items: inherit;
+     }
+
+     .mobile-search-employers .v-data-table__mobile-row__header,
+     .mobile-individual-search .v-data-table__mobile-row__header,
+     .mobile-officer-search .v-data-table__mobile-row__header,
+     .mobile-affiliate-search .v-data-table__mobile-row__header,
+     .mobile-global-card-table .v-data-table__mobile-row__header {
+        min-width: 30%;
+        width: 50%;
+     }
+     .mobile-search-employers .v-data-table__mobile-row__cell,
+     .mobile-individual-search .v-data-table__mobile-row__cell,
+     .mobile-officer-search .v-data-table__mobile-row__cell,
+     .mobile-affiliate-search .v-data-table__mobile-row__cell {
+        width: 50%;
+    }
+
+    .mobile-global-card-table .v-data-table__mobile-row__cell {
+        width: inherit;
+    }
+    .mobile-search-employers .v-data-table__mobile-row,
+    .mobile-individual-search .v-data-table__mobile-row,
+    .mobile-officer-search .v-data-table__mobile-row,
+    .mobile-affiliate-search .v-data-table__mobile-row,
+    .mobile-global-card-table .v-data-table__mobile-row,
+    .mobile-units-card-table .v-data-table__mobile-row {
+        min-height: 48px;
+        height: 100%;
+    }
+    .mobile-search-employers .v-data-table__empty-wrapper,
+    .mobile-individual-search .v-data-table__empty-wrapper,
+    .mobile-officer-search .v-data-table__empty-wrapper,
+    .mobile-affiliate-search .v-data-table__empty-wrapper,
+    .mobile-global-card-table .v-data-table__empty-wrapper,
+    .mobile-units-card-table .v-data-table__empty-wrapper {
+       width: 100%;
+    }
+
+     .mobile-employer-table table {
+        width: 100%;
+        table-layout: initial !important;
+    }
+
+    .mobile-employer-table td, th {
+        width: auto;
+    }
+    .mobile-employer-table td {
+        min-height: 48px;
+        height: 100%;
+    }
+
+    .mobile-button-multiline {
+        height: 60px !important;
+    }
+
+    .mobile-button-multiline-smaller {
+        height: 40px !important;
+    }
+
+    .mobile-button-multiline .v-btn__content, .mobile-button-multiline-smaller .v-btn__content {
+        word-break: break-word;
+        white-space: normal;
+        max-width: fit-content;
+    }
+
+    .mobile-col-button-spacing button {
+        margin-bottom: 15px;
+    }
+
+    .mobile-units-card-table .v-data-table__mobile-row__cell {
+        width: 50%;
+    }
+
+    .mobile-units-card-table .v-data-table__mobile-row__header {
+        width: 50%;
+    }
+
+    .mobile-filter-form .v-chip--select {
+        white-space: normal;
+        height: fit-content;
+        min-height: 32px;
+        word-break: break-word;
+    }
+}

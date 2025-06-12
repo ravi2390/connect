@@ -1,0 +1,29 @@
+{
+    "name": "aft/memberforms",
+    "description": "Membership Forms",
+    "version": "1.0",
+    "require": {
+        "php": "^8.3",
+        "dompdf/dompdf": "^v1.0.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\MemberForms\\ServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\MemberForms\\": "src/",
+            "Aft\\MemberForms\\Seeds\\": "database/seeds/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

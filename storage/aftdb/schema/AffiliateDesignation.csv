@@ -1,0 +1,18 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateDesignationId],[int],NO,Yes,No,,"IDENTITY(1,1)",,,,,N,label:Affiliate Designation,Affiliate Type ID,
+[AffiliateDesignationName],[varchar](200),NO,No,Yes,,,Provisional,"if name=local, rename to Typical, for other names, remove "" local"" at the end",,,N,default:0,Affiliate Type Name,
+[DisplayOrder],[int],yes,no,no,,,,,,,N,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct
+AffiliateDesignationId=id,
+AffiliateDesignationName=case
+when name='Local' then 'Typical'
+when name='T/A Local' then 'Temporary'
+else replace(name,' Local','')
+end,
+CreatedAt = created_at,
+UpdatedAt = isnull(updated_at, created_at)
+from affiliate_type (nolock)
+where is_deleted=0
+and affiliate_level_id =3
+and code not in ('sv','m','GW','RW','LF','LS','LW','V','LM','LO','LN')",,,,,,,,,,,,

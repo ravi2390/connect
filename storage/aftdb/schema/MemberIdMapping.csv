@@ -1,0 +1,60 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[MemberIdMappingId],[int],No,Yes,No,,"Identity(1,1)",,,,,,label:Member ID Mapping,Member ID Mapping ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,,,An Identification associated with an individual,,,,Individual ID,hasOne:reference
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,,,An Identification  associated with  an Affiliate,,,,Affiliate ID,belongsTo
+[MemberId],[Varchar] (12),Yes,No,No,,,,,,,,default:0,Member ID,
+[CardMailDate],[Datetime],Yes,No,No,,,,,,,,,Card Mail Date,
+[CardActivationDate],[Datetime],Yes,No,No,,,,,,,,,Card Activation Date,
+[CardExpirationDate],[Datetime],Yes,No,No,,,,,,,,,Card Expiration Date,
+[CardActivationUser],[varchar](50),Yes,No,No,,,,,,,,,Card Activation User,
+[CardIssue],[Varchar] (1000),Yes,No,No,,,,,,,,,Card Issue,
+[CardComments],[Varchar] (1000),Yes,No,No,,,,,,,,,Card Comments,
+[IsReplacementCardRequested],[bit],Yes,No,No,,,,,,,,,Is Replacement Card Requested,
+[ReplacementCardRequestedDate],[Datetime],Yes,No,No,,,,,,,,,Replacement Card Requested Date,
+,,,,,,,,,,,,,
+SQL,"Select [MemberIdMappingId] = ROW_NUMBER() Over (Order by [MemberId]),
+[IndividualId],
+[AffiliateId],
+[MemberId],
+[CardMailDate],
+[CardActivationDate],
+[CardExpirationDate],
+[CardActivationUser],
+[CardIssue],
+[CardComments],
+[IsReplacementCardRequested],
+[ReplacementCardRequestedDate],
+[CreatedAt],
+[UpdatedAt] 
+From 
+(select distinct
+[IndividualId] = i.IndividualId,
+[AffiliateId] = af.AffiliateId,
+[MemberId]=iar.member_id,
+[CardMailDate]=iar.card_mail_date,
+[CardActivationDate]=iar.card_activation_date,
+[CardExpirationDate]=iar.card_expiration_date,
+[CardActivationUser]=iar.card_activation_user,
+[CardIssue]=iar.card_issue,
+[CardComments]=iar.[card_comments],
+[IsReplacementCardRequested]=iar.[is_replacement_card_requested],
+[ReplacementCardRequestedDate]=iar.[replacement_card_request_date],
+[CreatedAt] = r.created_at,
+[UpdatedAt] = isnull(r.updated_at, r.created_at),
+ROW_NUMBER() Over (Partition by i.IndividualId, af.AffiliateId, iar.member_id Order by r.id desc) rn
+from relationship r (nolock)
+inner join individual_affiliate_relationship iar (nolock) on r.id=iar.relationship_id
+inner join Affiliate a (nolock)	on a.party_id = r.related_party_id
+inner join vw_1_affiliate af (nolock) on a.number = af.AffiliateNumber
+inner join vw_1_affiliate_connect vw  (nolock) on vw.affiliatenbr=af.AffiliateNumber
+inner join party p  (nolock) on p.guid=vw.affiliateid
+inner join party p2 (nolock) on p2.id = r.party_id
+inner join vw_1_individual i	(nolock) on p2.id = i.IndividualId
+inner join individual_affiliate_relationship_type iart (nolock) on iart.id=iar.individual_affiliate_relationship_type_id
+where iar.member_id<>''
+and r.is_deleted=0
+and p2.is_deleted = 0
+and p.is_deleted=0
+and iart.is_deleted=0
+) a
+Where rn = 1",,,,,,,,,,,,

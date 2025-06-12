@@ -1,0 +1,27 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualEducationLevelId],[int],No,Yes,No,,"Identity(1,1)",,,,,,label:Individual Education Level,Individual Education Level ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,,,,,,,Individual ID,belongsTo:oneToOne
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,remove
+[NationalEducationLevelId],[int],Yes,No,No,NationalEducationLevel(NationalEducationLevelId),,,,,,,,National Education Level ID,hasOne:reference
+[LocalEducationLevelId],[int],Yes,No,No,LocalEducationLevel(LocalEducationLevelId),,,,,,,,Local Education Level ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+[IndividualEducationLevelId]=ier.relationship_id,
+[IndividualId]=r.party_id,
+[AffiliateId]=p.id,
+[NationalEducationLevelId]=el.national_education_level_id,
+[LocalEducationLevelId]=ier.education_level_id
+from relationship r (nolock)
+inner join individual_employer_relationship ier (nolock) on r.id=ier.relationship_id
+inner join employer e (nolock) on r.related_party_id=e.party_id
+inner join [vw_1_employer] ev  (nolock) on ev.EmployerId=e.party_id
+inner join relationship r2 (nolock) on e.party_id=r2.related_party_id and r2.relationship_type_id=3
+inner join party p (nolock) on p.id=r2.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliateid=p.guid
+inner join education_level el (nolock) on el.id=ier.education_level_id
+inner join party p2 (nolock) on p2.id = r.party_id
+where r.is_deleted=0
+and r.relationship_type_id=2
+and ier.education_level_id is not null
+and p.is_deleted=0
+and p2.is_deleted = 0",,,,,,,,,,,,

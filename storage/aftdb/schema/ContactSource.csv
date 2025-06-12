@@ -1,0 +1,16 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ContactSourceId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Contact Source,Contact Source ID,
+[ContactSourceName],[varchar] (200),No,No,Yes,,,,,,,,default:0,Contact Source Name,
+[DisplayOrder],[int],No,No,No,,,,,,,,,Display Order,
+SQL,"SELECT distinct
+ContactSourceId=id,
+ContactSourceName=name,
+CreatedAt = created_at,
+UpdatedAt = ISNULL(updated_at, created_at)
+FROM contact_source (nolock)
+where is_deleted=0
+union
+select ContactSourceId=19,
+ContactSourceName='Edues Sign Up',
+CreatedAt = null,
+UpdatedAt = null",,,,,,,,,,,,,

@@ -1,0 +1,14 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EmployerAddressTypeId],[int],No,Yes,No,,"IDENTITY(1,1)",123456,,,,,label:Employer Address Type,Employer Address Type ID,
+[EmployerAddressTypeName],[varchar] (20),No,NO,Yes,,,Permanent,,,,,default:0,Employer Address Type Name,
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+ [EmployerAddressTypeId]=c.id,
+[EmployerAddressTypeName]  =c.name
+  FROM [contact_type_contact_context] cc (nolock)
+  inner Join contact_context c (nolock) on cc.contact_context_id = c.id
+  Where 1=1
+  and contact_type_id = 4
+ and c.is_deleted=0
+ and cc.is_deleted=0
+ and c.party_type_id=3",,,,,,,,,,,,

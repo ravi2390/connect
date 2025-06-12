@@ -1,0 +1,11 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ContactStatusId],[int],No,Yes,No,,"IDENTITY(1,1)",123456,,,,,label:Contact Status,Contact Status ID,
+[ContactStatusName],[varchar] (25),No,NO,Yes,,,Permanent,,,,,default:0,Contact Status Name,
+,,,,,,,,,,,,,,
+SQL,"SELECT distinct
+ContactStatusId=id,
+ContactStatusName=name,
+CreatedAt = created_at,
+UpdatedAt = ISNULL(updated_at, created_at)
+FROM contact_status (nolock)
+where is_deleted=0",,,,,,,,,,,,,

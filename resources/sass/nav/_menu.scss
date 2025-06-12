@@ -1,0 +1,100 @@
+.menu-link {
+    color: #fff !important;
+}
+
+.v-application .main-menu {
+    background: #092a5c !important;
+    border-bottom: 4px solid #3f98c9 !important;
+    padding-bottom: 0 !important;
+    box-shadow: none;
+}
+
+.v-btn:before {
+    bottom: unset;
+}
+
+.menu-link {
+    text-decoration: none;
+    padding: 23px 7px 27px 8px;
+    font-size: 12px;
+    text-transform: none;
+    font-weight: 600;
+}
+
+.menu-link:hover,
+.v-btn__content .router-link-active,
+.menu-link.v-btn--active {
+    background-color: #3f98c9;
+    text-decoration: none;
+}
+.icons {
+    display: flex;
+    align-items: center;
+
+    .menu-icons {
+        font-weight: 400;
+        font-style: normal;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        text-decoration: none !important;
+        border-color: #619fd1 !important;
+        background-color: #619fd1 !important;
+        margin-left: 5px;
+
+        a {
+            color: #fff !important;
+        }
+
+        .v-btn:not(.v-btn--round).v-btn--size-default {
+            padding: 0px;
+        }
+    }
+}
+
+a.menu-icons.v-btn.v-btn--flat.v-btn--router.v-btn--text.theme--dark.v-size--default {
+    padding: 18px;
+}
+
+//.v-btn:not(.v-btn--round).v-btn--size-default{
+//    padding: 0 5px;
+//}
+
+.select-affiliate {
+    width: 265px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    [role="combobox"] {
+        margin: 0;
+    }
+    .v-btn {
+        font-size:11px;
+    }
+}
+
+.theme--dark.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+    background-color: #0e3669;
+}
+
+.display-flex {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+}
+
+.v-toolbar-title {
+    flex: 5.3%;
+    @media only screen and (min-width: 1200px) {
+        flex: 20%;
+    }
+}
+// Individuals Page
+hr.v-divider.v-theme--light {
+    border-color: unset;
+}
+

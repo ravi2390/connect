@@ -1,0 +1,21 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[LocalEducationLevelId],[int],No,Yes,No,,"IDENTITY(1,1)",123,,,,,label:Local Education Level ,Local Education Level ID,
+[LocalEducationLevelName],[varchar] (200),No,No,No,,,,,,,,default:0,Local Education Level Name,
+[NationalEducationLevelId],[int],Yes,No,No,NationalEducationLevel(NationalEducationLevelId),,,,,,,,National Education Level ID,hasOne
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,belongsTo
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+LocalEducationLevelId=el.id,
+LocalEducationLevelName=el.name,
+NationalEducationLevelId=el.national_education_level_id,
+AffiliateId=p.id,
+CreatedAt = ISNULL(el.created_at, el.updated_at),
+UpdatedAt = ISNULL(el.updated_at, el.created_at)
+FROM education_level el (nolock)
+inner join party p (nolock) on p.id=el.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliateid=p.guid
+WHERE 1=1
+and el.is_deleted=0
+and el.party_id is not null
+and p.is_deleted=0
+and p.party_type_id=2",,,,,,,,,,,,

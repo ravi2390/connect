@@ -1,0 +1,40 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualEventId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,,Individual Event ID,
+[IndividualId],[int],No,No,1,Individual(IndividualId),,1,,,,,,Individual ID,belongsTo
+[EventId],[int],No,No,1,Event(EventId),,1,,,,,,Event ID,hasOne:reference
+[SignUpDate],[datetime],No,No,No,,,39583,,,,,,Sign Up Date,
+[RenewalDate],[datetime],Yes,No,No,,,39583,,,,,,Renewal Date,
+[HasReceivedConfirmation],[bit],No,No,No,,0,1,,,,,,Has Received Confirmation,
+[IsLeader],[bit],No,No,No,,0,1,,,,,,Is Leader,
+[HasAttended],[bit],No,No,No,,0,1,,,,,,Has Attended,
+[IndividualType],[varchar](50),No,No,No,,'AFT',AFT,,,,,,Individual Type,
+[Notes],[varchar](max),Yes,No,No,,,,,,sentence,,,Notes,
+[Comments],[varchar](max),Yes,No,No,,,,,,sentence,,,Comments,
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+IndividualEventId = ia.Id,
+IndividualId = ia.party_id,
+EventId  = ia.activity_id,
+SignUpDate = ia.signup_date,
+RenewalDate = ia.renewal_date,
+HasReceivedConfirmation = ia.is_receive_confirmation,
+IsLeader = ia.is_leader,
+HasAttended = ia.has_attended,
+IndividualType = ia.individual_type,
+Notes = ia.notes,
+Comments = ia.comments,
+[CreatedAt] = ISNULL(ia.created_at, ia.updated_at),
+[UpdatedAt] = ISNULL(ia.updated_at, ia.created_at)
+FROM individual_activity ia
+inner join individual i (nolock) on ia.party_id = i.party_id
+inner join vw_1_Individual iv (nolock) on i.party_id = iv.IndividualId
+inner join party p (nolock) on i.party_id = p.id
+inner join activity a (nolock) on ia.activity_id = a.id
+Join relationship r (nolock) on ia.party_id = r.party_id
+Join affiliate af (nolock) on af.party_id = r.related_party_id
+Join vw_1_affiliate_connect vw (nolock) on af.number = vw.AffiliateNbr
+Join vw_1_Event e (nolock)	on e.EventId = ia.activity_id
+where ia.is_deleted = 0
+and r.is_deleted = 0
+and a.is_deleted = 0
+and p.is_deleted = 0",,,,,,,,,,,,

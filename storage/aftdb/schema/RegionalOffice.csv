@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[RegionalOfficeId],[int],No,Yes,No,,"Identity (1,1)",12,,,,,label:Regional Office,Regional Office ID,
+[RegionalOfficeName],[varchar](100),No,No,No,,,PEF Northwest,,,company,,default:0,Regional Office Name,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,1234,,,,,,Affiliate ID,belongsTo
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

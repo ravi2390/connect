@@ -1,0 +1,30 @@
+{
+    "name": "aft/aftdb",
+    "description": "AFTDB Management",
+    "version": "1.1.0",
+    "require": {
+        "php": "^8.3",
+        "ext-json": "*",
+        "phpoffice/phpspreadsheet": "^1.14",
+        "twig/twig": "^3.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\AFTDB\\AFTDBServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\AFTDB\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

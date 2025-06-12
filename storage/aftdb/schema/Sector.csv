@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[SectorId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,N,label:Sector,Sector ID,
+[SectorName],[varchar](200),No,No,Yes,,,,,,,N,default:0,Sector Name,
+[DisplayOrder],[int],yes,no,no,,,,,,,N,,Display Order,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

@@ -1,0 +1,24 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary) Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+AuditDetailId,int,No,Yes,No,,"IDENTITY(1,1)",,,,,,,,,
+AuditYearId,int,No,No,Yes,AuditYear(AuditYearId),,,,,,,,,,belongsTo
+AuditFromDate,datetime,Yes,No,No,,,,,,,,,,,
+AuditToDate,datetime,Yes,No,No,,,,,,,,,,,
+AftAuditSubmittedDate,datetime,Yes,No,No,,,,,,,,,,,
+AuditorId,int,Yes,No,No,,,,,,,,,,,
+AuditTypeId,int,Yes,No,No,,,,,,,,,,,
+CPADetailId,int,Yes,No,No,CPADetail(CPADetailId),,,,,,,,,,hasOne
+CPAOpinionId,int,Yes,No,No,,,,,,,,,,,
+CuredDate,datetime,Yes,No,No,,,,,,,,,,,
+IsCash,int,Yes,No,No,,,,,,,,,,,
+IsAccural,int,Yes,No,No,,,,,,,,,,,
+AftReviewerId,int,Yes,No,No,,,,,,,,,,,
+AftReviewDate,datetime,Yes,No,No,,,,,,,,,,,
+ContactedByRegionalDirectorAt,datetime,Yes,No,No,,,,,,,,,,,
+AuditStatusId,int,Yes,No,No,,,,,,,,,,,
+AuditRejectedReason1,int,Yes,No,No,,,,,,,,,,,
+AuditRejectedReason2,int,Yes,No,No,,,,,,,,,,,
+AuditRejectedReason3,int,Yes,No,No,,,,,,,,,,,
+AuditNotes,Varchar (1000),Yes,No,No,,,,,,,,,,,
+AuditFileId,int,Yes,No,No,AuditFile(AuditFileId),,,,,,,,,,hasOne
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,

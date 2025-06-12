@@ -1,0 +1,16 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AnswerReasonId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Answer Reason,Answer Reason ID,
+[AnswerReasonDescription],[varchar](200),No,No,No,,,Personal,,,sentence,,,Answer Reason Description,
+[AnswerId],[int],No,No,No,Answer(AnswerId),,100,,,,,,Answer ID,belongsTo
+[DisplayOrder],[tinyint],No,No,No,,,1,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[AnswerReasonId] = ar.id,
+[AnswerReasonDescription] = ar.answer_reason,
+[AnswerId] = ar.answer_id,
+[CreatedAt] = ISNULL(ar.created_at, ar.updated_at),
+[UpdatedAt] = ISNULL(ar.updated_at, ar.created_at),
+[DisplayOrder] = ar.display_order
+from answer_reason ar (nolock)
+inner join answer a (nolock) on ar.answer_id = a.id
+where ar.is_deleted = 0",,,,,,,,,,,,

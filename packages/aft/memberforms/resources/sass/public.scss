@@ -1,0 +1,33 @@
+@use 'editor';
+
+$color-pack: false;
+$body-font-family: 'Nunito', sans-serif;
+
+html {
+    font-size: 18px;
+}
+
+body {
+    background: radial-gradient(circle, rgba(63,152,201,1) 0%, rgba(9,42,92,1) 100%) no-repeat center center fixed;
+}
+
+.v-theme--light.v-application {
+    background: none;
+}
+
+.v-theme--light .v-card-title.form-title {
+    background-color: #092a5c;
+    color: white;
+}
+
+.form-title {
+    text-align: center;
+    display: block;
+}
+
+.form-header {
+    background: none;
+    width: 100%;
+    text-align: left;
+    border: 2px;
+}

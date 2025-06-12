@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[PoliticalPartyId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Political Party,Political Party ID,
+[PoliticalPartyName],[varchar] (200),No,No,Yes,,,,,,,,default:0,Political Party Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[PoliticalPartyId] = id,
+[PoliticalPartyName] = name
+from political_party pp (nolock)
+where is_deleted = 0",,,,,,,,,,,,

@@ -1,0 +1,164 @@
+---
+image: atlassian/default-image:latest
+
+testDefinitions: &playwrightTest
+  step:
+    name: Playwright automated tests
+    image:
+      name: harbor.lagoon.sharemylesson.com/playwright/connect-tests:latest
+      username: $DOCKER_USER
+      password: $DOCKER_PASSWORD
+    clone:
+      enabled: false
+    script:
+      - set -a
+      - source vars.env
+      - export MANUAL_RUN=FALSE
+      - echo "BASE_URL set to ${BASE_URL}"
+      - export TARGET_ENV_NAME=$(echo $BASE_URL | awk -F[/:@.] '{print $6}')
+      - export PLAYWRIGHT_HTML_OUTPUT_DIR="${BITBUCKET_CLONE_DIR}/playwright-report"
+      - cd /
+      - |
+        case "$TARGET_ENV_NAME" in
+          "connect")
+            echo "Running @prod tag - $TARGET_ENV_NAME"
+            npx playwright test --grep "@prod" --retries=0 --timeout=60000 --output "${BITBUCKET_CLONE_DIR}/test-results"
+            ;;
+          "connect-laravel-production-nginx")
+            echo "Running @prod tag - $TARGET_ENV_NAME"
+            npx playwright test --grep "@prod" --retries=0 --timeout=60000 --output "${BITBUCKET_CLONE_DIR}/test-results"
+            ;;
+          *)
+            echo "Running default - $TARGET_ENV_NAME"
+            npx playwright test --retries=0 --timeout=60000 --output "${BITBUCKET_CLONE_DIR}/test-results"
+            ;;
+          esac
+    artifacts:
+      paths:
+        - test-results/**
+        - playwright-report/**
+
+pipelines:
+  custom:
+    manual-playwright-run:
+      - variables:
+        - name: URL
+      - step:
+          name: Playwright manual test run
+          image:
+            name: harbor.lagoon.sharemylesson.com/playwright/connect-tests:latest
+            username: $DOCKER_USER
+            password: $DOCKER_PASSWORD
+          clone:
+            enabled: false
+          script:
+            - export BASE_URL=${URL}
+            - export MANUAL_RUN=TRUE
+            - export TARGET_ENV_NAME=$(echo $URL | awk -F[/:@.] '{print $6}')
+            - echo "BASE_URL set to ${BASE_URL}"
+            - export PLAYWRIGHT_HTML_OUTPUT_DIR="${BITBUCKET_CLONE_DIR}/playwright-report"
+            - cd /
+            - |
+              case "$TARGET_ENV_NAME" in
+                "connect")
+                  echo "Running @prod tag - $TARGET_ENV_NAME"
+                  npx playwright test --grep "@prod" --retries=0 --timeout=60000 --output "${BITBUCKET_CLONE_DIR}/test-results"
+                  ;;
+                "connect-laravel-production-nginx")
+                  echo "Running @prod tag - $TARGET_ENV_NAME"
+                  npx playwright test --grep "@prod" --retries=0 --timeout=60000 --output "${BITBUCKET_CLONE_DIR}/test-results"
+                  ;;
+                *)
+                  echo "Running default - $TARGET_ENV_NAME"
+                  npx playwright test --retries=0 --timeout=60000 --output "${BITBUCKET_CLONE_DIR}/test-results"
+                  ;;
+                esac
+          artifacts:
+            paths:
+              - playwright-report/**
+              - test-results/**
+
+  pull-requests:
+    '**':
+      - step: &prdeploy
+          name: Deploy PR environment
+          concurrency:
+            limit: 5
+          #deployment: "PR"
+          script:
+            - curl -L "https://github.com/uselagoon/lagoon-cli/releases/download/v0.31.1/lagoon-cli-v0.31.1-linux-amd64" -o /usr/local/bin/lagoon && chmod +x /usr/local/bin/lagoon
+            - lagoon --version --force
+            - apt-get update && apt-get install -y jq
+            - jq --version
+            - ./scripts/pr-deploy.sh || exit 255
+            - echo 'BASE_URL=https://${LAGOON_HTTP_AUTH}@connect-laravel-pr-${BITBUCKET_PR_ID}-nginx.mda-lagoon.aft.org;' >> vars.env
+          artifacts:
+            - vars.env
+      - <<: *playwrightTest
+
+  branches:
+    development:
+      - step: &devdeploy
+          name: Deploy Development environment
+          deployment: "Development"
+          concurrency:
+            limit: 5
+          script:
+            - curl -L "https://github.com/uselagoon/lagoon-cli/releases/download/v0.31.1/lagoon-cli-v0.31.1-linux-amd64" -o /usr/local/bin/lagoon && chmod +x /usr/local/bin/lagoon
+            - lagoon --version --force
+            - apt-get update && apt-get install -y jq
+            - jq --version
+            - ./scripts/lagoon-deploy.sh development || exit 255
+            - echo 'BASE_URL=https://${LAGOON_HTTP_AUTH}@dev-new.aftmda.org' >> vars.env
+          artifacts:
+            - vars.env
+      - <<: *playwrightTest
+
+    staging:
+      - step: &stagedeploy
+          name: Deploy Staging environment
+          deployment: "Staging"
+          script:
+            - curl -L "https://github.com/uselagoon/lagoon-cli/releases/download/v0.31.1/lagoon-cli-v0.31.1-linux-amd64" -o /usr/local/bin/lagoon && chmod +x /usr/local/bin/lagoon
+            - lagoon --version --force
+            - apt-get update && apt-get install -y jq
+            - jq --version
+            - ./scripts/lagoon-deploy.sh staging || exit 255
+            - echo 'BASE_URL=https://${LAGOON_HTTP_AUTH}@stage.aftmda.org' >> vars.env
+          artifacts:
+            - vars.env
+      - <<: *playwrightTest
+
+    production:
+      - step: &proddeploy
+          name: Deploy Production environment
+          deployment: "Production"
+          script:
+            - curl -L "https://github.com/uselagoon/lagoon-cli/releases/download/v0.31.1/lagoon-cli-v0.31.1-linux-amd64" -o /usr/local/bin/lagoon && chmod +x /usr/local/bin/lagoon
+            - lagoon --version --force
+            - apt-get update && apt-get install -y jq
+            - jq --version
+            - ./scripts/lagoon-deploy.sh production || exit 255
+            - echo 'BASE_URL=https://${LAGOON_HTTP_AUTH}@connect.mda-lagoon.aft.org' >> vars.env
+          artifacts:
+            - vars.env
+    release/*:
+      - step:
+          name: Deploy release environment
+          deployment: "Release"
+          script:
+            - curl -L "https://github.com/uselagoon/lagoon-cli/releases/download/v0.31.1/lagoon-cli-v0.31.1-linux-amd64" -o /usr/local/bin/lagoon && chmod +x /usr/local/bin/lagoon
+            - lagoon --version --force
+            - apt-get update && apt-get install -y jq
+            - jq --version
+            - ./scripts/lagoon-deploy.sh "$BITBUCKET_BRANCH" || exit 255
+    upgrade:
+      - step:
+          name: Deploy Upgrade environment
+          deployment: "Upgrade"
+          script:
+            - curl -L "https://github.com/uselagoon/lagoon-cli/releases/download/v0.31.1/lagoon-cli-v0.31.1-linux-amd64" -o /usr/local/bin/lagoon && chmod +x /usr/local/bin/lagoon
+            - lagoon --version --force
+            - apt-get update && apt-get install -y jq
+            - jq --version
+            - ./scripts/lagoon-deploy.sh upgrade || exit 255

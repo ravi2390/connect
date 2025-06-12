@@ -1,0 +1,57 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateStaffId],[int],No,Yes,No,,"Identity (1,1)",1234,,,,N,label:Affiliate Staff,Affiliate Staff ID,
+[IndividualId],[int],No,No,1,Individual(IndividualId),,12,,,,Y,,Individual ID,hasOne:reference
+[AffiliateId],[int],No,No,1,Affiliate(AffiliateId),,21354,,,,Y,,Affiliate ID,belongsTo
+[StaffDepartmentId],[int],No,No,1,StaffDepartment(StaffDepartmentId),,1,,,,Y,,Staff Department ID,hasOne:reference
+[StaffTitle],[varchar](100),No,No,No,,,Manager,,,,Y,default:0,Staff Title,
+[TermStartDate],[datetime],Yes,No,No,,,39583,,,,Y,,Term Start Date,
+[TermEndDate],[datetime],Yes,No,No,,,39583,,,,Y,,Term End Date,
+[IsCurrent],[bit],No,No,No,,1,1,,,,Y,,Is Active,
+,,,,,,,,,,,,,
+SQL,"Select [AffiliateStaffId] = ROW_NUMBER() Over (Order by a.[IndividualId],a.[AffiliateId]),
+[IndividualId] = a.[IndividualId],
+[AffiliateId] = a.[AffiliateId],
+[StaffDepartmentId] = a.[StaffDepartmentId],
+[StaffTitle] = a.[StaffTitle],
+[TermStartDate] = a.[TermStartDate],
+[TermEndDate] = a.[TermEndDate],
+[IsCurrent] = a.[IsCurrent],
+[UpdatedAt] = a.updated_at,
+[CreatedAt] = a.created_at
+
+From
+(
+SELECT distinct
+--[AffiliateStaffId]=ier.relationship_id,
+[IndividualId]=r.Party_id,
+[AffiliateId]=vaf.AffiliateId,
+[StaffDepartmentId]=ISNULL(sd.staffdepartmentId, 11),
+[StaffTitle]=ier.job_title,
+[TermStartDate]=Convert(Date, r.start_date),
+[TermEndDate]=Convert(Date,r.stop_date),
+[IsCurrent]=iif(iar.individual_affiliate_relationship_status_id=1, 1, 0)
+,r.updated_at
+,r.created_at
+FROM  individual_affiliate_relationship iar (nolock)
+inner JOIN relationship r (nolock) ON r.id = iar.relationship_id
+inner join party p (nolock) on r.party_id = p.id
+inner join vw_1_Individual vi (nolock)	on vi.IndividualId = p.id
+inner join affiliate af (nolock) on af.party_id=r.related_party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join vw_1_Affiliate vaf (nolock)	on vaf.AffiliateNumber = vw.affiliatenbr
+inner join  individual_affiliate_relationship_type iart (nolock) on iart.id=iar.individual_affiliate_relationship_type_id
+inner join relationship r2 (nolock) on r2.party_id =r.party_id
+inner join employer e (nolock) on r2.related_party_id=e.party_id
+inner join individual_employer_relationship ier (nolock) on ier.relationship_id=r2.id
+Left join staffdepartment sd (nolock) on sd.[StaffDepartmentName]=ier.work_department
+where iart.name like '%staff%'
+and r2.relationship_type_id=2
+and r.relationship_type_id=1
+and r.is_deleted=0
+and r2.is_deleted=0
+and e.employer_type_id=8
+and p.is_deleted = 0
+and iart.is_deleted = 0
+and ier.job_title is not null
+and af.affiliate_type_id != 19
+ ) a",,,,,,,,,,,,

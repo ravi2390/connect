@@ -1,0 +1,79 @@
+// Variables
+@use 'variables' as *;
+
+.v-table {
+    table {
+        .v-table-header {
+            background: $primary;
+            span {
+                color: $blue-links;
+            }
+            .v-table-header__icon {
+                color: rgba(255,255,255,.87) !important;
+            }
+        }
+
+        tbody {
+            tr {
+                &:hover {
+                    background: #f0f5fe !important;
+                }
+                &:nth-child(even) {
+                    background: #efefef;
+                }
+                &:last-child th {
+                    border-bottom: 1px solid rgba(0,0,0,.12);
+                }
+                td {
+                    font-size: 12px;
+                    .table-filter {
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+.v-data-table thead,
+.v-data-table__thead {
+    background: $primary;
+
+    th,
+    span {
+        color: #7bb8da;
+    }
+}
+
+.v-table.v-table--fixed-header > .v-table__wrapper > table > thead > tr > th,
+.v-data-table__th--sticky {
+    background: $primary;
+}
+.v-table .v-table__wrapper > table > tbody > tr:not(:last-child) > td.v-data-table__mobile-row {
+    border-bottom: none;
+}
+.v-data-table__mobile-row {
+    display: block;
+}
+.v-data-table__mobile-row__wrapper {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.v-data-table__mobile-row__header {
+    min-width: 30%;
+    width: 50%;
+}
+.v-data-table__mobile-row__cell {
+    text-align: right;
+}
+.v-data-table__td-value {
+    .v-checkbox-btn.v-selection-control {
+        justify-content: end;
+    }
+}
+.v-data-table-header__content {
+    gap: 8px;
+}
+.v-data-table-header__sort-icon {
+    color: rgba(255,255,255,.87) !important;
+}

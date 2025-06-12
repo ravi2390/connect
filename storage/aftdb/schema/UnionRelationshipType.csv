@@ -1,0 +1,28 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[UnionRelationshipTypeId],[int],No,Yes,No,,"IDENTITY(1,1)","1,2,3,4,5",,,,,label:Union Relationship Type,Union Relationship Type ID,
+[UnionRelationshipTypeName],[varchar] (200),No,No,Yes,,,"Potential, member, Retired",How's is an individual related to an affiliate,,,,default:0,Union Relationship Type Name,
+[DisplayOrder],[int],No,No,No,,,1,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[UnionRelationshipTypeId]=id,
+[UnionRelationshipTypeName]=case
+when name='Agency Fee' then 'Agency Fee Payer'
+when name='Friend of the Union' then 'Other'
+else name
+end,
+[DisplayOrder]= case when name = 'Member' then 1
+when name = 'Potential Member' then 2
+when name = 'Agency Fee' then 3
+when name = 'Retired Member' then 4
+when name = 'Friend of the Union' then 5
+end, 
+CreatedAt = created_at,
+UpdatedAt = ISNULL(updated_at, created_at)
+from individual_affiliate_relationship_type (nolock)
+where name in (
+'Member',
+'Potential Member',
+'Agency Fee',
+'Retired Member',
+'Friend of the Union'
+)",,,,,,,,,,,,

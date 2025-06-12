@@ -1,0 +1,10 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ContactRestrictionId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Contact Restriction,Contact Restriction ID,
+[ContactRestrictionName],[varchar] (40),No,No,Yes,,,Do not contact,,,,,default:0,Contact Restriction Name,
+[Email],[bit],No,No,No,,,,,,,,,Email,
+[AddressVisit],[bit],No,No,No,,,,,,,,,Address Visit,
+[AddressMail],[bit],No,No,No,,,,,,,,,Address Mail,
+[PhoneCall],[bit],No,No,No,,,,,,,,,Phone Call,
+[PhoneText],[bit],No,No,No,,,,,,,,,Phone Text,
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,

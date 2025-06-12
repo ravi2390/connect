@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+## Description: Project specific command to restore mssql `.bak` files, as copied by `ddev sqlsrv-copy-bak`.
+## Usage: sqlsrv-restore-bak
+## Example: "ddev sqlsrv-restore-bak"
+
+/opt/mssql-tools18/bin/sqlcmd -S ${MSSQL_HOST} -P ${MSSQL_SA_PASSWORD} -U SA -C -Q "\
+USE [master];
+
+RESTORE DATABASE [AFTDB_tag1]
+  FROM DISK = N'/var/opt/mssql/data/aftdb.bak' WITH FILE = 2,
+  MOVE N'AFTDB_20200424' TO N'/var/opt/mssql/data/AFTDB0412.mdf',
+  MOVE N'AFTDB_20200424_log' TO N'/var/opt/mssql/data/AFTDB0412_log.ldf',
+  NOUNLOAD,
+  STATS = 5;
+"

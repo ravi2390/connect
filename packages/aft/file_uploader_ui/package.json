@@ -1,0 +1,13 @@
+{
+  "name": "@aft/file_uploader_ui",
+  "version": "0.1.0",
+  "description": "Resources and JS components for the OneSchema File Uploader.",
+  "main": "js/index.js",
+  "author": "Tag1 Consulting",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "axios": "^1.7.7"
+  },
+  "devDependencies": {}
+}

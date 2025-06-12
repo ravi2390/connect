@@ -1,0 +1,38 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualSurveyId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Individual Survey,Individual Survey ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,1,,,,,,Individual ID,belongsTo
+[SurveyId],[int],No,No,No,Survey(SurveyId),,1,,,,,,Survey ID,hasOne:reference
+[Comment],[varchar](max),Yes,No,No,,,Very good,,,default:0,sentence,,Comment,
+[SurveyDate],[datetime],Yes,No,No,,,39583,,,,,,Survey Date,
+[SurveyorUserId],[int],No,No,No,,,1000,,,,,,Surveyor User ID,
+[SurveyorNote],[varchar](max),Yes,No,No,,,Nice guy,,,,,,Surveyor Note,
+[DistributionDate],[datetime],Yes,No,No,,,39583,,,,,,Distribution Date,
+[DistributionEmail],[varchar](200),Yes,No,No,,,john.doe@abcinst.edu,,,email,,,Distribution Email,
+[IsDistributionCompleted],[bit],No,No,No,,0,1,,,,,,Is Distribution Completed,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[IndividualSurveyId] = i.id,
+[IndividualId] = i.party_id,
+[SurveyId] = i.survey_id,
+[Comment] = i.comment,
+[SurveyDate] = i.survey_date,
+[SurveyorUserId] = i.surveyor_user_id,
+[SurveyorNote] = i.surveyor_note,
+[DistributionDate] = i.distribution_date,
+[DistributionEmail] = i.distribution_email,
+[IsDistributionCompleted] = i.is_distribution_completed,
+[CreatedAt] = ISNULL(i.created_at, i.updated_at),
+[UpdatedAt] = ISNULL(i.updated_at, i.created_at)
+from individual_survey i (nolock)
+inner join party p  (nolock) on i.party_id = p.id
+inner join individual id  (nolock) on p.id = id.party_id
+inner join vw_1_Individual iv (nolock) on i.party_id = iv.IndividualId
+inner join survey s  (nolock) on i.survey_id = s.id
+inner join relationship r  (nolock) on p.id=r.party_id
+inner join affiliate af  (nolock) on af.party_id=r.related_party_id
+inner join vw_1_affiliate_connect vw  (nolock) on vw.affiliatenbr=af.number
+where i.is_deleted = 0
+and p.is_deleted = 0
+and r.is_deleted=0
+and r.relationship_type_id=1
+and s.is_deleted=0",,,,,,,,,,,,

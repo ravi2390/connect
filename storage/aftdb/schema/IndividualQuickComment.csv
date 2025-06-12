@@ -1,0 +1,29 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualQuickCommentId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Individual Quick Comment,Individual Quick Comment ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,,,,,,,Individual ID,belongsTo
+[SubmittedByIndividualId],[int],Yes,No,No,Individual(IndividualId),,,,,,,label:Submitted By ,Submitted By Individual ID,hasOne:reference
+[IndividualQuickComment],[varchar](8000),No,No,No,,,,,,sentence,y,default:0,Individual Quick Comment,
+[CommentDate],[datetime],Yes,No,No,,,,,,,,,Comment Date,
+,,,,,,,,,,,,,
+SQL,"Select Distinct
+[IndividualQuickCommentId] = pc.id,
+[IndividualId] = pc.party_id,
+[SubmittedByIndividualId]=null,
+[IndividualQuickComment] = pc.comment,
+[CommentDate]=ISNULL(pc.created_at, pc.updated_at),
+[CreatedAt] = ISNULL(pc.created_at, pc.updated_at),
+[UpdatedAt] = ISNULL(pc.updated_at, pc.created_at)
+From party_comment pc (nolock)
+Join party p (nolock) on pc.party_id = p.id
+Join individual i (nolock) on i.Party_id = p.id
+inner join vw_1_Individual iv (nolock) on i.party_id = iv.IndividualId
+Join relationship r (nolock) on pc.party_id = r.party_id
+Join affiliate af (nolock) on af.party_id = r.related_party_id
+Join vw_1_affiliate_connect vw (nolock) on af.number = vw.AffiliateNbr
+Where party_type_id = 1
+and p.is_deleted = 0
+and pc.is_deleted = 0
+and ISNULL(pc.comment, '') != ''
+and pc.comment not like '%Test%'
+and pc.party_id Is NOT NULL
+and r.is_deleted = 0",,,,,,,,,,,,

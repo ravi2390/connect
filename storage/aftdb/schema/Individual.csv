@@ -1,0 +1,83 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualId],[int],No,Yes,No,,"IDENTITY(1,1)","1,2,3",new field (incremental),,,,label:Individual,Individual ID,
+[IndividualGuid],[uniqueidentifier],No,No,Yes,,newid(),123456987,unique ids to help track an individual across all systems,GUID is an acronym for 'Globally Unique Identifier'.  It is a 128 bit integer number used to identify resources. IndividualGuid is used to uniquely identify each Individual record in the Individual Table,,,,Individual Guid,
+[FirstName],[varchar] (200),No,No,No,,,,,An Individual's First Name,firstName,,"tiny:0,small:0,default:0,long:0,full:0",First Name,
+[MiddleName],[varchar] (200),Yes,No,No,,,,,An Individual's Middle Name,text,,"default:1,long:2,full:2",Middle Name,
+[LastName],[varchar] (200),No,No,No,,,,,An Individual's Last Name,lastName,,"tiny:1,small:1,default:2,long:3,full:3",Last Name,
+[PreferredName],[varchar] (200),Yes,No,No,,,,,An Individual's Chosen or Ideal Name,name,,"long:1,full:1",Preferred Name,
+[PreviousName],[varchar] (200),Yes,No,No,,,,,An Individual's Previous Name. For e.g. If an Individual changed his/her name due to a life event/Marriage,name,,,Previous Name,
+[PreferredPronoun],[varchar] (200),Yes,No,No,,,,,a pronoun the person uses to identify themselves,text,,,Preferred Pronoun,
+[PrefixId],[int],Yes,No,No,Prefix(PrefixId),,,,the prefix an individual uses or prefers to be used,,,,Prefix ID,hasOne
+[SuffixId],[int],Yes,No,No,Suffix(SuffixId),,,,,suffix,,,Suffix ID,hasOne
+[PictureUrl],[varchar] (2000),Yes,No,No,,,,,a link to the individuals image,imageUrl,,,Picture URL,
+[GenderId],[int],Yes,No,No,Gender(GenderId),,,,GenderID which acts as a look up/link to Gender Table. GenderID is a foreign key which cross references the Gender table to obtain the valid data or an Individual's Gender. For E.g. Male or Female,,,,Gender ID,hasOne
+[EthnicityId],[int],Yes,No,No,Ethnicity(EthnicityId),,,,The ethnicity of an individual,,,,Ethnicity ID,hasOne
+[MaritalStatusId],[int],Yes,No,No,MaritalStatus(MaritalStatusId),,,,MaritalStatusID which acts as a look up/link to MaritalStatus Table. MaritalStatusID is a foreign key which cross references the MaritalStatus table to obtain the valid data or an Individual's Marital Status. For e.g. Single or Married,,,,Marital Status ID,hasOne
+[Dependents],[int],Yes,No,No,,,,,the number of dependents under this person,randomNumber,,,Dependents,
+[DayOfBirth],[int],Yes,No,No,,,,,Day of Birth field stores the day of birth of an Individual. Day will be recorded in dd format,dayOfMonth,,,Day Of Birth,
+[MonthOfBirth],[int],Yes,No,No,,,,,Day of Birth field stores the month of birth of an Individual. Day will be recorded in mm format.,month,,,Month Of Birth,
+[YearOfBirth],[int],Yes,No,No,,,,,Day of Birth field stores the year of birth of an Individual. Day will be recorded in yyyy format.,year,,,Year Of Birth,
+[AffiliateAssignedId],[varchar] (256),Yes,No,No,,,,Social Security number (last 4 digits used as external Id for locals with no external id),an Id that isn't being generated from this database but instead come from the Affiliate or the Employer associated with this individual,,,,Affiliate Assigned ID,
+[BillhighwayId],[int],Yes,No,No,,,,,,,,,BillHighway ID,
+[IsPoliticallyActive],[bit],No,No,No,,0,,,,,,,Is Politically Active,
+[IsRegisteredVoter],[bit],No,No,No,,0,,,,,,,Is Registered Voter,
+[PoliticalPartyId],[int],Yes,No,No,PoliticalParty(PoliticalPartyId),,,,,,,,Political Party ID,hasOne
+[VoterPrecinct],[varchar](30),Yes,No,No,,,,,,,,,Voter Precinct,
+[Township],[varchar](40),Yes,No,No,,,,,,,,,Township,
+[Ward],[varchar](20),Yes,No,No,,,,,,,,,Ward,
+[CongressionalDistrict],[varchar](20),Yes,No,No,,,,,,,,,Congressional District,
+[StateSenateDistrict],[varchar](20),Yes,No,No,,,,,,,,,State Senate District,
+[StateHouseDistrict],[varchar](20),Yes,No,No,,,,,,,,,State House District,
+[ResidentialSchoolDistrict],[varchar](20),Yes,No,No,,,,,,,,,Residential School District,
+,,,,,,,,,,,,,,
+SQL,"select distinct
+        [IndividualId]=I.PARTY_ID,
+        [IndividualGuid] =p.guid,
+        [FirstName] = case when i.first_name is NULL THEN 'Unknown'
+		                   when i.first_name = '' THEN 'Unknown' ELSE i.first_name END,
+        [MiddleName] =i.middle_name,
+        [LastName] =i.last_name,
+        [PreferredName] =i.nickname,
+        [PreviousName] =i.original_last_name,
+        [PreferedPronoun] =null,
+        [PictureUrl] =i.picture_url,
+        [PrefixId] =pre.id,
+        [SuffixId] =suf.id,
+        [GenderId] =g.id,
+        [EthnicityId] =e.Id,
+        [MaritalStatusId] =m.Id,
+        [Dependents] =i.number_of_dependents,
+        [DayOfBirth] =i.birth_day,
+        [MonthOfBirth] =i.birth_month,
+        [YearOfBirth] =i.birth_year,
+        [AffiliateAssignedId] =i.social_security_number,
+        [IsPoliticallyActive] = i.is_politically_active,
+        [IsRegisteredVoter] = i.is_registered_voter,
+        [PoliticalPartyId] = i.political_party_id,
+        [VoterPrecinct] = i.voter_precinct,
+        [Township] = i.township,
+        [Ward] = i.ward,
+        [CongressionalDistrict] = i.congressional_district,
+        [StateSenateDistrict] = i.state_senate_district,
+        [StateHouseDistrict] = i.state_house_district,
+        [ResidentialSchoolDistrict] = i.residential_school_district,
+		[CreatedAt] = p.created_at,
+		[UpdatedAt] = isnull(p.updated_at, p.created_at)
+from individual i (nolock)
+inner join party p (nolock) on i.party_id=p.id
+inner join relationship r (nolock) on i.party_id=r.party_id
+inner join affiliate af (nolock) on af.party_id=r.related_party_id
+inner join party p2 (nolock) on p2.id=r.related_party_id
+INNER JOIN vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+left join prefix pre (nolock) on pre.id=i.prefix_id and pre.is_deleted=0
+left join suffix suf (nolock) on suf.id=i.suffix_id and suf.is_deleted=0
+left join gender g (nolock) on g.id=i.gender_id and g.is_deleted=0
+left join Ethnicity e (nolock) on e.id=i.Ethnicity_id and e.is_deleted=0
+left join Marital_Status m (nolock) on m.id=i.Marital_Status_id and m.is_deleted=0
+where 1=1
+and p.is_deleted=0
+and r.is_deleted=0
+and p.party_type_id=1
+and p2.is_deleted=0
+and p2.party_type_id=2
+and i.last_name<>''",,,,,,,,,,,,,

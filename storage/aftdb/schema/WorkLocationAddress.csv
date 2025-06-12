@@ -1,0 +1,50 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkLocationAddressId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Work Location Address,Work Location Address ID,
+[WorkLocationId],[int],No,No,No,WorkLocation(WorkLocationId),,1,,,,,,Work Location ID,belongsTo
+[AddressLine1],[Varchar] (200),Yes,No,No,,,,,The line 1 address of a location associated with an entity,streetAddress,y,default:0,Address Line 1,
+[AddressLine2],[Varchar] (200),Yes,No,No,,,,,The line 2 address of a location associated with an entity,secondaryAddress,y,default:1,Address Line 2,
+[City],[Varchar] (50),Yes,No,No,,,,,The City associated with an entity,city,y,default:2,City,
+[CountyId],[int],Yes,No,No,County(CountyId),,,,,,,,County ID,hasOne:reference
+[StateTerritoryId],[int],Yes,No,No,StateTerritory(StateTerritoryId),,,,,,,default:3,State Territory ID,hasOne:reference
+[CountryId],[int],Yes,No,No,Country(CountryId),,,,,,,,Country ID,hasOne:reference
+[PostalCode],[Varchar] (15),Yes,No,No,,,,,The Zip Code associated with an entity,postcode,y,default:4,Postal Code,
+[CarrierRoute],[Varchar] (50),Yes,No,No,,,,,,,,,Carrier Route,
+[Latitude],"[decimal] (9,6)",Yes,No,No,,,,,,latitude,,,Lattitude,
+[Longitude],"[decimal] (9,6)",Yes,No,No,,,,,,longitude,,,Longitude,
+[WorkLocationAddressTypeId],[int],No,No,No,WorkLocationAddressType(WorkLocationAddressTypeId),,1,,,,,,Work Location Address Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,1,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+[CanVisitRestrictionId],[int],Yes,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,Can Visit,hasOne:reference
+[CanSendMailRestrictionId],[int],Yes,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,Can Send Mail,hasOne:reference
+[PreventNcoaUpdate],[bit],Yes,No,No,,,,,,,,,Prevent NCOA Update,
+,,,,,,,,,,,,,
+SQL,"Select Distinct  [WorkLocationAddressId] = c.id,
+[WorkLocationId] = [WorkLocationId],
+[AddressLine1] = ad.address_line_1,
+[AddressLine2] = ad.address_line_2,
+[City] = ad.city,
+[CountyId]=ad.county_id,
+[StateTerritoryId]=ad.state_territory_id,
+[CountryId]=ad.country_id,
+[PostalCode]=ad.zip_code,
+[CarrierRoute]=ad.[carrier_route],
+[Latitude]=ad.latitude,
+[Longitude]=ad.longitude,
+[WorkLocationAddressTypeId]=case when c.contact_context_id in (22,23) then c.contact_context_id else 22 end,
+[ContactStatusId]=isnull(c.contact_status_id,2),
+[IsPreferred]=isnull(c.is_preferred,0),
+[ContactSourceId]=c.contact_source_id,
+[VerifiedDate]=c.verified_date,
+[CanVisitRestrictionId]=IIF(ad.can_visit = 0, 2, 1),
+[CanSendMailRestrictionId]=2,
+[PreventNcoaUpdate]=ad.is_prevent_ncoa_update,
+[CreatedAt] = ISNULL(c.created_at, c.updated_at),
+[UpdatedAt] = isnull(c.updated_at, c.created_at)
+From address ad (nolock)
+inner join contact c (nolock) on ad.contact_id=c.id
+inner join employer_location_contact elc (nolock)	on elc.contact_id = c.id
+inner join vw_1_WorkLocation wl (nolock)	on wl.WorkLocationId = elc.employer_location_id
+Where c.is_deleted = 0
+and elc.is_deleted = 0",,,,,,,,,,,,

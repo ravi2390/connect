@@ -1,0 +1,55 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualEmployerScheduleId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Individual Employer Schedule,Individual Employer Schedule,
+[IndividualEmployerScheduleGuid],[uniqueidentifier],No,No,Yes,,newid(),BE13E765 51DA 4AED 9F9C 4CC73E17B670,,,,,,Individual Employer Schedule Guid,
+[IndividualEmployerId],[int],Yes,No,No,IndividualEmployer(IndividualEmployerId),,1,,,,,,Individual Employer ID,belongsTo
+[SessionId],[int],Yes,No,No,Session(SessionId),,1,,,,,,Session ID,hasOne
+[ScheduleTypeId],[int],Yes,No,No,ScheduleType(ScheduleTypeId),,1,,,,,,Schedule Type ID,hasOne
+[ScheduleStartDate],[datetime],Yes,No,No,,,39583,,,,,,Schedule Start Date,
+[ScheduleEndDate],[datetime],Yes,No,No,,,39583,,,,,,Schedule End Date,
+[DailyStartTime],[time](7),Yes,No,No,,,0.5,,,,,,Daily Start TIme,
+[DailyEndTime],[time](7),Yes,No,No,,,0.5,,,,,,Daily End TIme,
+[CourseTitle],[varchar](130),Yes,No,No,,,Advanced Calculus I,,,,,,Course Title,
+[RoomNumber],[varchar](50),Yes,No,No,,,,,,,,,Room Number,
+[Notes],[varchar](4000),Yes,No,No,,,Some notes,,,,,,Notes,
+[Monday],[bit],No,No,No,,,1,,,,,,Monday,
+[Tuesday],[bit],No,No,No,,,1,,,,,,Tuesday,
+[Wednesday],[bit],No,No,No,,,1,,,,,,Wednesday,
+[Thursday],[bit],No,No,No,,,1,,,,,,Thursday,
+[Friday],[bit],No,No,No,,,1,,,,,,Friday,
+[Saturday],[bit],No,No,No,,,1,,,,,,Saturday,
+[Sunday],[bit],No,No,No,,,1,,,,,,Sunday,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[IndividualEmployerScheduleId] = ies.id,
+[IndividualEmployerScheduleGuid] = ies.guid,
+[IndividualEmployerId] = ies.relationship_id,
+[SessionId] = ies.session_id,
+[ScheduleTypeId] = ies.schedule_type_id,
+[ScheduleStartDate] = ies.start_date,
+[ScheduleEndDate] = ies.end_date,
+[DailyStartTime] = ies.start_time,
+[DailyEndTime] = ies.end_time,
+[CourseTitle] = ies.course_name,
+[RoomNumber] = ier.room_number,
+[Notes] = ies.notes,[Monday] = ies.monday,
+[Tuesday] = ies.tuesday,
+[Wednesday] = ies.wednesday,
+[Thursday] = ies.thursday,
+[Friday] = ies.friday,
+[Saturday] = ies.saturday,
+[Sunday] = ies.sunday
+from individual_employer_relationship_schedule ies (nolock)
+left join individual_employer_relationship ier (nolock) on ies.relationship_id = ier.relationship_id
+join relationship r (nolock) on r.id=ier.relationship_id
+inner join Party p (nolock)	on p.id = r.party_id
+inner join vw_1_employer ve (nolock) on ve.employerid=r.related_party_id
+Join relationship r2 (nolock) on r.related_party_id = r2.related_party_id and r2.relationship_type_id = 3
+join affiliate af (nolock) on af.party_id=r2.party_id
+join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+left join session s (nolock) on ies.session_id = s.id
+left join schedule_type st (nolock) on ies.schedule_type_id = st.id
+where ies.is_deleted = 0
+		and r2.is_deleted = 0
+		and r.is_deleted = 0
+		and p.is_deleted = 0
+		and st.is_deleted = 0",,,,,,,,,,,,

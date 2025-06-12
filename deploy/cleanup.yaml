@@ -1,0 +1,28 @@
+---
+- name: Get all release directories
+  find:
+    paths: "/var/www/{{ app_name }}/releases"
+    file_type: directory
+  register: releases
+
+- name: find current release
+  stat:
+    path: "/var/www/{{ app_name }}/current"
+    follow: yes
+  register: current
+
+- name: Get old releases
+  set_fact:
+    # Read this as: all release directories, except the one that is currently live, sorted from youngest to oldest
+    old_releases: "{{ releases.files | rejectattr('inode', 'eq', current.stat.inode) | sort(attribute='mtime', reverse=true) }}"
+  when: current.stat.exists
+
+- name: Delete old releases
+  become_user: root
+  file:
+    state: absent
+    path: "{{ item.path }}"
+  # python list splice: if keep == 3, this will delete all but the first two releases in the list (most recent).
+  # This list excludes the live webroot, so the total releases would still be 3.
+  loop: "{{ old_releases[(keep-1):] }}"
+  when: old_releases is defined

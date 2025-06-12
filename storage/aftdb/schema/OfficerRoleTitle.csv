@@ -1,0 +1,38 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[OfficerRoleTitleId],[int],No,Yes,No,,"IDENTITY(1,1)",123456,,,,N,label:Officer Role Title,Officer Role Title ID,
+[OfficerRoleTitleName],[varchar] (40),No,No,No,,,President,,,,N,default:0,Officer Role Title Name,
+[OfficerRoleTypeId],[int],No,No,No,OfficerRoleType(OfficerRoleTypeId),,1,,,,N,,Officer Role Type ID,hasOne
+[DisplayOrder],[int],No,No,No,,,15,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[OfficerRoleTitleId]=lp.id,
+[OfficerRoleTitleName]=lp.name,
+[OfficerRoleTypeId]=lp.parent_leadership_position_id,
+[DisplayOrder]= case when lp.name = 'Acting President' then 2
+when lp.name = 'Co-President' then 3
+when lp.name = 'Co-vice president' then 7
+when lp.name = '1st vice president' then 5
+when lp.name = '2nd vice president' then 6
+when lp.name = 'Secretary' then 10
+when lp.name = 'Treasurer' then 9
+when lp.name = 'acting secretary' then 12
+when lp.name = 'acting Treasurer' then 11
+when lp.name = 'executive council member' then 14
+when lp.name = 'SRP Contact' then 20
+when lp.name = 'District representitive' then 16
+when lp.name = 'Negotiator' then 17
+when lp.name = 'President' then 1
+when lp.name = 'Vice President' then 4
+when lp.name = 'Secretary/Treasurer' then 8
+when lp.name = 'Board member' then 15
+when lp.name = 'other' then 21
+when lp.name = 'Chair' then 13
+when lp.name = 'Political action' then 18
+when lp.name = 'Regional VOTE-COPE Coordinator' then 19
+end 
+from leadership_position lp (nolock)
+where  1=1
+and lp.affiliate_level_id=1
+and lp.parent_leadership_position_id is not null
+and lp.is_deleted=0
+and lp.name <>'Executive Committee'",,,,,,,,,,,,

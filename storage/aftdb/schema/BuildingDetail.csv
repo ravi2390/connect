@@ -1,0 +1,10 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary) Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+BuildingDetailId,[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,,,,
+AuditDetailId,[int],No,No,No,,,,,,,,,,,
+OwnsBuilding,bit,No,No,No,,0,,,,,,,,,
+BuildingLoanBalance,"[Decimal] (19,2)",Yes,No,No,,,,,,,,,,,
+BuildingLoanMonthlyPayment,"[Decimal] (19,2)",Yes,No,No,,,,,,,,,,,
+AdditionalLoanBalance,"[Decimal] (19,2)",Yes,No,No,,,,,,,,,,,
+LoanComment,[Varchar] (200),Yes,No,No,,,,,,,,,,,
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,

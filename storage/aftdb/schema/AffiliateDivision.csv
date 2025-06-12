@@ -1,0 +1,20 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateDivisionId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,N,,Affiliate Division ID,
+[AffiliateId],[int],No,No,1,Affiliate(AffiliateId),,1078,,,,N,,Affiliate ID,hasOne:reference
+[DivisionId],[int],No,No,1,Division(DivisionId),,1,,,,N,,Division ID,belongsTo
+,,,,,,,,,,,,,
+SQL,"Select distinct
+AffiliateDivisionId=ad.id,
+AffiliateId=a.party_id,
+DivisionId=d.id,
+CreatedAt = ad.created_at,
+UpdatedAt = isnull(ad.updated_at, ad.created_at)
+from [affiliate_division] ad (nolock)
+inner join affiliate a (nolock) on ad.party_id = a.party_id
+inner join party p (nolock) on p.id=a.party_id
+inner join division d (nolock) on ad.division_id = d.id
+inner join vw_1_affiliate_connect vw (nolock) on p.guid=vw.affiliateid
+where 1=1
+and ad.party_id is not null
+and ad.division_id is not null
+and ad.is_deleted=0",,,,,,,,,,,,

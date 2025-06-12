@@ -1,0 +1,32 @@
+{
+    "name": "aft/drupal",
+    "description": "AFT Drupal Bridge",
+    "version": "1.0",
+    "authors": [
+        {
+            "name": "David Richards",
+            "email": "drichard@aft.org"
+        }
+    ],
+    "require": {
+        "php": "^7.2.5"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Aft\\Drupal\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\Drupal\\DrupalServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

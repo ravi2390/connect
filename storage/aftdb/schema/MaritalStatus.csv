@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[MaritalStatusId],[int],No,Yes,No,,"IDENTITY(1,1)",,,The Unique Identification Associated with the Marital Status Name,,,label:Marital Status,Marital Status ID,
+[MaritalStatusName],[varchar] (50),No,No,Yes,,,,,The unique name of an individual's Marital Status,,,default:0,Marital Status Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+MaritalStatusId=m.id,
+MaritalStatusName=m.name
+from Marital_Status m (nolock)
+where is_deleted=0",,,,,,,,,,,,

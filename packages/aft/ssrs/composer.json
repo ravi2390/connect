@@ -1,0 +1,28 @@
+{
+    "name": "aft/ssrs",
+    "description": "AFT SSRS Integration",
+    "version": "1.0",
+    "require": {
+        "php": "^8.3",
+        "chartblocks/php-ssrs": "^1.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\SSRS\\ServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\SSRS\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

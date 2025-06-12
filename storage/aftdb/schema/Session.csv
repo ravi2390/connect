@@ -1,0 +1,19 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[SessionId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label: Session,Session ID,
+[SessionName],[varchar](200),No,No,No,,,,,EmployerId is a unique ID field with an integer datatype. EmployerId is used to uniquly indentify each Employer in the Employer Table.,,,default:0,Session Name,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,hasOne:reference
+[SessionStartDate],[datetime],Yes,No,No,,,,,,,,,Session Start Date,
+[SessionEndDate],[datetime],Yes,No,No,,,,,,,,,Session End Date,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[SessionId] = s.id,
+[SessionName] = s.name,
+[AffiliateId] = s.party_id,
+[SessionStartDate] = s.session_start_date,
+[SessionEndDate] = s.session_end_date,
+[CreatedAt] = ISNULL(s.created_at, s.updated_at),
+[UpdatedAt] = ISNULL(s.updated_at, s.created_at)
+from session s (nolock)
+inner join affiliate a (nolock) on s.party_id = a.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=a.number
+where s.is_deleted = 0",,,,,,,,,,,,

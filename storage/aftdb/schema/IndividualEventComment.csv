@@ -1,0 +1,25 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualEventCommentId],[Int],No,Yes,No,,"IDENTITY(1,1)",1,,,,,label:Individual Event Comment,Individual Event Comment ID,
+[IndividualEventId],[Int],No,No,No,IndividualEvent(IndividualEventId),,3,,,,,,Individual Event ID,belongsTo
+[IndividualEventComment],[Varchar](2000),No,No,No,,,USEP,,,sentence,,default:0,Individual Event Comment,
+[SubmitByUserId],[Int],Yes,No,No,,,,,,,,,Submit By User ID,
+,,,,,,,,,,,,,
+SQL,"Select Distinct
+[IndividualEventCommentId] = iac.id,
+[IndividualEventId] = iac.individual_activity_id,
+[IndividualEventComment] = iac.comments,
+[SubmitByUserId]=null
+From individual_activity_comment iac (nolock)
+inner join individual_activity ia (nolock) on iac.individual_activity_id = ia.id
+inner join activity a (nolock) on ia.activity_id = a.id
+inner join vw_1_Event e	(nolock) on a.id = e.EventId
+inner join party p (nolock) on ia.party_id = p.id
+inner join relationship r (nolock) on ia.party_id = r.party_id
+inner join affiliate af (nolock) on af.party_id = r.related_party_id
+inner join vw_1_affiliate_connect vw (nolock) on af.number = vw.AffiliateNbr
+Where iac.is_deleted = 0
+and ia.is_deleted = 0
+and ISNULL(iac.comments, '') != ''
+and iac.comments not like '%Test%'
+and r.is_deleted = 0
+and p.is_deleted = 0",,,,,,,,,,,,

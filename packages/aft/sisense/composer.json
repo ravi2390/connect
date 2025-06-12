@@ -1,0 +1,31 @@
+{
+    "name": "aft/sisense",
+    "description": "AFT Sisense integration",
+    "type": "library",
+    "version": "1.0",
+    "authors": [
+        {
+            "name": "Raviteja Yarlagadda",
+            "email": "ryarlaga@aft.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.4",
+        "laravel/passport": "^12.0",
+        "guzzlehttp/guzzle": "^7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\Sisense\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\Sisense\\Providers\\SisenseServiceProvider"
+            ]
+        }
+    }
+}

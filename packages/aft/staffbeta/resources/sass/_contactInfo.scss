@@ -1,0 +1,9 @@
+.contact-invalid {
+    color: gray;
+    text-decoration: line-through;
+}
+
+.contact-invalid:hover {
+    color: initial;
+    text-decoration: initial;
+}

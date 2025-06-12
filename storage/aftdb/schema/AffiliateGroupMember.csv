@@ -1,0 +1,38 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateGroupMemberId],[int],No,Yes,No,,"Identity (1,1)",1234,,,,,,Affiliate Group Member ID,
+[AffiliateGroupId],[int],No,No,1,AffiliateGroup(AffiliateGroupId),,11,,,,,,Affiliate Groupd ID,belongsTo
+[IndividualId],[int],No,No,1,Individual(IndividualId),,,,An Identification associated with an individual,,,,Individual ID,hasOne:reference
+[StartDate],[datetime],Yes,No,No,,,39583,,,,,,Start Date,
+[EndDate],[datetime],Yes,No,No,,,39583,,,,,,End Date,
+,,,,,,,,,,,,,
+SQL,"Select distinct 
+[AffiliateGroupMemberId],
+[AffiliateGroupId],
+[IndividualId],
+[StartDate],
+[EndDate],
+[UpdatedAt],
+[CreatedAt]
+From (
+Select [AffiliateGroupMemberId] = r.id,
+[AffiliateGroupId] = ag.AffiliateGroupId,
+[IndividualId] = i.IndividualId,
+[AffiliateId] = vaf.AffiliateId,
+r.Related_party_id,
+[AffiliateGroupTypeId] = iar.individual_affiliate_relationship_type_id,
+[StartDate] = r.start_date,
+[EndDate] = r.stop_date,
+[UpdatedAt] = r.updated_at,
+[CreatedAt] = r.created_at,
+ROW_NUMBER() Over (Partition by i.IndividualId, ag.AffiliateGroupId Order by ISNULL(r.stop_date, '2999-12-31') Desc, r.Start_date desc) rn
+From Relationship r
+Join individual_affiliate_relationship iar	on r.id = iar.relationship_id
+Join vw_1_Individual i	on r.party_id = i.IndividualId
+join affiliate af (nolock) on af.party_id=r.related_party_id
+join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+join vw_1_Affiliate vaf (nolock)	on vaf.AffiliateNumber = vw.affiliatenbr
+Join Vw_1_AffiliateGroup ag (nolock)	on ag.AffiliateId = vaf.AffiliateId and ag.AffiliateGroupTypeId = iar.individual_affiliate_relationship_type_id
+Where r.is_deleted = 0
+and iar.individual_affiliate_relationship_type_id in (3,14,18,22,29,33)
+) a
+Where a.rn = 1",,,,,,,,,,,,

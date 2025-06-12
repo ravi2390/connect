@@ -1,0 +1,144 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualAffiliateId],[int],No,Yes,No,,"IDENTITY(1,1)",,,An Identification of an individual and an Affiliate's relationship,,,,Individual Affiliate ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,,,An Identification associated with an individual,,,,Individual ID,hasOne:child
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,,,An Identification  associated with  an Affiliate,,,,Affiliate ID,belongsTo
+[UnionRelationshipTypeId],[int],No,No,No,UnionRelationshipType(UnionRelationshipTypeId),,,,Identification of the relationship between Affiliate and an Individual,,,,Union Relationship Type ID,hasOne
+[LocalDuesCategoryId],[int],Yes,No,No,LocalDuesCategory(LocalDuesCategoryId),,,,An Identifiation of the membership dues payed from a member,,,,Local Dues Category ID,hasOne:reference
+[HasLiabilityInsurance],[bit],Yes,No,No,,,,,,,,,Has Liability Insurance,
+[HasAccidentInsurance],[bit],Yes,No,No,,,,,,,,,Has Accident Insurance,
+[IsCurrent],[bit],No,No,No,,,,Is active will help Identify if this individual currently affiliated with this Affiliate,The relationship between an individual and an Affiliate is Active or in active,,,,Is Current,
+[IndividualDeactivationReasonId],[int],Yes,No,No,IndividualDeactivationReason(IndividualDeactivationReasonId),,,,,,,,Individual Deactivation Reason ID,hasOne
+[StartDate],[datetime],No,No,No,,,,,,,,,Start Date,
+[EndDate],[datetime],Yes,No,No,,,,,The date associated with the deactivation of the individual's record or an end of the current affiliation type,,,,End Date,
+[PaidThroughDate],[datetime],Yes,No,No,,,,,,,,,Paid Through Date,
+[PaymentMethodId],[int],Yes,No,No,PaymentMethod(PaymentMethodId),,,,,,,,Payment Method ID,hasOne:reference
+[PaymentFrequencyId],[int],Yes,No,No,PaymentFrequency(PaymentFrequencyId),,,,,,,,Payment Frequency ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"Select [IndividualAffiliateId],
+[IndividualId],
+[AffiliateId],
+[UnionRelationshipTypeId],
+[ChapterId],
+[LocalDuesCategoryId],
+[HasLiabilityInsurance],
+[HasAccidentInsurance],
+[IsCurrent],
+[IndividualDeactivationReasonId],
+[StartDate],
+[EndDate],
+[PaidThroughDate],
+[PaymentMethodId],
+[PaymentFrequencyId],
+[CreatedAt],
+[UpdatedAt],
+[chapter_Party_id]
+From 
+(
+select distinct
+[IndividualAffiliateId]=iar.relationship_id,
+[IndividualId]=r.party_id,
+[AffiliateId]=p.id,
+[UnionRelationshipTypeId]=case
+when iart.name in ('member','Potential Member','Agency Fee','Retired Member') then iart.id else 22 end,
+[ChapterId]=case when vw.affiliatenbr in ('02222','06732') and iart.id != 23 and af.affiliate_type_id = 19 then r.related_party_id else null end,
+[LocalDuesCategoryId]=mca.id,
+[HasLiabilityInsurance]=iar.[has_occupation_liability_insurance],
+[HasAccidentInsurance]=iar.[has_accident_insurance],
+[IsCurrent]=case when iar.individual_affiliate_relationship_status_id=1 then 1 else 0 end,
+[IndividualDeactivationReasonId]=case when iar.deactivation_reason_id = 6 then 4 else iar.deactivation_reason_id end,
+[StartDate]=r.start_date,
+[EndDate]=r.stop_date,
+[PaidThroughDate]=iar.[paid_through_date],
+[PaymentMethodId]=iar.[payment_method_id],
+[PaymentFrequencyId]=iar.[payment_frequency_id],
+[CreatedAt] = r.created_at,
+[UpdatedAt] = isnull(r.updated_at, r.created_at),
+[chapter_Party_id] = r.related_party_id
+from relationship r (nolock)
+inner join individual_affiliate_relationship iar (nolock) on r.id=iar.relationship_id
+inner join affiliate af  (nolock) on af.party_id=r.related_party_id
+inner join vw_1_affiliate_connect vw  (nolock) on vw.affiliatenbr=af.number
+inner join party p  (nolock) on p.guid=vw.affiliateid
+inner join individual_affiliate_relationship_type iart (nolock) on iart.id=iar.individual_affiliate_relationship_type_id
+inner join individual i (nolock) on i.party_id=r.party_id
+inner join party p2 (nolock) on p2.id=i.party_id
+inner join vw_1_individual vi (nolock) on vi.individualid=r.party_id
+Left Join membership_category mc    (nolock) on mc.id = iar.membership_category_id
+Left Join membership_category mca   (nolock) on mca.name = mc.name and mca.party_id = p.id and mca.is_deleted = 0 and mca.is_per_cap = 0
+Left Join vw_1_LocalDuesCategory vw_ldc (nolock) on vw_ldc.AffiliateId = mca.party_id and mca.id = vw_ldc.LocalDuesCategoryId
+where 1=1
+and r.is_deleted=0
+and iart.is_deleted=0
+and p.is_deleted=0
+and p2.is_deleted=0
+and i.last_name<>''
+) a
+Where IsCurrent = 0
+
+Union
+
+Select 
+[IndividualAffiliateId],
+[IndividualId],
+[AffiliateId],
+[UnionRelationshipTypeId],
+[ChapterId],
+[LocalDuesCategoryId],
+[HasLiabilityInsurance],
+[HasAccidentInsurance],
+[IsCurrent],
+[IndividualDeactivationReasonId],
+[StartDate],
+[EndDate],
+[PaidThroughDate],
+[PaymentMethodId],
+[PaymentFrequencyId],
+[CreatedAt],
+[UpdatedAt],
+[chapter_Party_id]
+From 
+(
+select distinct
+[IndividualAffiliateId]=iar.relationship_id,
+[IndividualId]=r.party_id,
+[AffiliateId]=p.id,
+[UnionRelationshipTypeId]=case
+when iart.name in ('member','Potential Member','Agency Fee','Retired Member') then iart.id else 22 end,
+[ChapterId]=case when vw.affiliatenbr in ('02222','06732') and iart.id != 23 and af.affiliate_type_id = 19 then r.related_party_id else null end,
+[LocalDuesCategoryId]=mca.id,
+[HasLiabilityInsurance]=iar.[has_occupation_liability_insurance],
+[HasAccidentInsurance]=iar.[has_accident_insurance],
+[IsCurrent]=case when iar.individual_affiliate_relationship_status_id=1 then 1 else 0 end,
+[IndividualDeactivationReasonId]=case when iar.deactivation_reason_id = 6 then 4 else iar.deactivation_reason_id end,
+[StartDate]=r.start_date,
+[EndDate]=r.stop_date,
+[PaidThroughDate]=iar.[paid_through_date],
+[PaymentMethodId]=iar.[payment_method_id],
+[PaymentFrequencyId]=iar.[payment_frequency_id],
+ROW_NUMBER() Over (Partition by r.Party_id, p.id Order by r.Party_id, 
+												Case When Case When iart.name in ('member','Potential Member','Agency Fee','Retired Member') then iart.id else 22 end != 22 Then 1 Else 2 End
+												,r.Start_Date desc)r,
+[CreatedAt] = r.created_at,
+[UpdatedAt] = isnull(r.updated_at, r.created_at),
+[chapter_Party_id] = r.related_party_id
+from relationship r (nolock)
+inner join individual_affiliate_relationship iar (nolock) on r.id=iar.relationship_id
+inner join affiliate af  (nolock) on af.party_id=r.related_party_id
+inner join vw_1_affiliate_connect vw  (nolock) on vw.affiliatenbr=af.number
+inner join party p  (nolock) on p.guid=vw.affiliateid
+inner join individual_affiliate_relationship_type iart (nolock) on iart.id=iar.individual_affiliate_relationship_type_id
+inner join individual i (nolock) on i.party_id=r.party_id
+inner join party p2 (nolock) on p2.id=i.party_id
+inner join vw_1_individual vi (nolock) on vi.individualid=r.party_id
+Left Join membership_category mc    (nolock) on mc.id = iar.membership_category_id
+Left Join membership_category mca   (nolock) on mca.name = mc.name and mca.party_id = p.id and mca.is_deleted = 0 and mca.is_per_cap = 0
+Left Join vw_1_LocalDuesCategory vw_ldc (nolock) on vw_ldc.AffiliateId = mca.party_id and mca.id = vw_ldc.LocalDuesCategoryId
+where 1=1
+and r.is_deleted=0
+and iart.is_deleted=0
+and p.is_deleted=0
+and p2.is_deleted=0
+and i.last_name<>''
+and iar.individual_affiliate_relationship_status_id=1
+) a
+Where (r = 1) or (r > 1 and UnionRelationshipTypeId != 22)",,,,,,,,,,,,

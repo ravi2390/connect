@@ -1,0 +1,17 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[SubjectId],[int],No,Yes,No,,"IDENTITY (1,1)",1,,,,,label:Subject,Subject ID,
+[SubjectGuid],[uniqueidentifier],No,No,1,,newid(),88975112 5E49 4001 B4CD 098E0FC9DEE8,,,,,,Subject Guid,
+[SubjectName],[varchar](200),No,No,No,,,TechParaProf/Uncl 12mo .5+ 2,,,,,default:0,Subject Name,
+[AffiliateId],[int],Yes,No,1,Affiliate(AffiliateId),,2023,,,,,,Affiliate ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+[SubjectId] = s.id,
+[SubjectGuid] = s.guid,
+[SubjectName] = s.name,
+[AffiliateId] = s.party_id,
+[CreatedAt] = ISNULL(s.created_at, s.updated_at),
+[UpdatedAt] = ISNULL(s.updated_at, s.created_at)
+from subject s (nolock)
+inner join affiliate a (nolock) on s.party_id = a.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=a.number
+where s.is_deleted = 0",,,,,,,,,,,,

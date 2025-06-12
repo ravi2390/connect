@@ -1,0 +1,15 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[QuestionId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Question,Question ID,
+[QuestionTypeId],[int],No,No,No,QuestionType(QuestionTypeId),,100,,,,,,Question Type ID,hasOne
+[QuestionDescription],[varchar](max),No,No,No,,,Do you believe in Unions?,,,sentence,,default:0,Question Description,
+[IsDefault],[bit],No,No,No,,0,0,,,,,,Is Default,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[QuestionId] = q.id,
+[QuestionTypeId] = q.question_type_id,
+[QuestionDescription] = q.question,
+[IsDefault] = q.is_default,
+[CreatedAt] = ISNULL(q.created_at, q.updated_at),
+[UpdatedAt] = ISNULL(q.updated_at, q.created_at)
+from question q (nolock)
+where q.is_deleted = 0",,,,,,,,,,,,

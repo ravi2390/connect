@@ -1,0 +1,16 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkLocationCommentId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Work Location Comment,Work Location Comment ID,
+[WorkLocationId],[int],No,No,No,WorkLocation(WorkLocationId),,,,,,,,Work Location ID,belongsTo
+[WorkLocationComment],[varchar](2000),No,No,No,,,,,,sentence,,default:0,Work Location Comment,
+[SubmitByUserId],[int],Yes,No,No,,,,,,,,,Submit By user ID,
+,,,,,,,,,,,,,
+SQL,"Select distinct
+WorkLocationCommentId = elc.id,
+WorkLocationId = elc.employer_location_id,
+WorkLocationComment = elc.comment
+From employer_location_comment elc (nolock)
+inner join vw_1_WorkLocation wl (nolock) on wl.worklocationid=elc.employer_location_id
+Where elc.is_deleted = 0
+and ISNULL(elc.comment, '') != ''
+and elc.employer_location_id Is NOt NULL
+and elc.comment not like '%Test%'",,,,,,,,,,,,

@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[PaymentMethodId],[Int],No,Yes,No,,"Identity (1,1)",,,,,,label:Payment Method,Payment Method ID,
+[PaymentMethodName],[varchar](200),No,No,Yes,,,,,,,,default:0,Payment Method Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[PaymentMethodId]=id,
+[PaymentMethodName]=name
+from payment_method (nolock)
+where is_deleted=0",,,,,,,,,,,,

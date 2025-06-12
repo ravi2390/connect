@@ -1,0 +1,30 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[StatePerCapitaId],[int],No,Yes,No,,"IDENTITY(1,1)","1,2,3,4",,Unique Identification of the State dues a member is going to pay,,,label:State Dues Category,State Dues Category ID,
+[StatePerCapitaName],[Varchar] (200),No,No,No,,,"Retired, Quarter Dues, Student Member",what is the dues category for the state,The name of the State dues category a member is paying,,,default:0,State Dues Category Name,
+[StatePerCapitaAmount],"[Numeric](15,2)",Yes,No,No,,,,,,,,default:0,State Dues Category Amount,
+[NationalPerCapitaId],[int],Yes,No,No,NationalPerCapita(NationalPerCapitaId),,"1,2,3,4",,,,,,National Dues Category ID,hasOne:reference
+[AffiliateId],[int],Yes,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,hasOne:reference
+[IsAgencyFee],[Bit],No,No,No,,,,,,,,,IsAgencyFeePayer,
+[PaymentFrequencyId],[Int],Yes,No,No,PaymentFrequency(PaymentFrequencyId),,,,,,y,,Payment Frequency ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+[StatePerCapitaId] = mc.id,
+[StatePerCapitaName] = mc.name,
+[StatePerCapitaAmount]= mc.[amount],
+[NationalPerCapitaId] = mc.national_membership_category_id,
+[AffiliateId] = p.Id,
+[IsAgencyFee] = ISNULL(mc.Is_Fee_Payer, IIF(mc.name like '%Agency%' or mc.name like '%Agent%' or mc.name like '%Reduce%', 1, 0)),
+[PaymentFrequencyId] = pf.payment_frequency_id,
+[CreatedAt] = ISNULL(mc.created_at, mc.updated_at),
+[UpdatedAt] = ISNULL(mc.updated_at, mc.created_at)
+from membership_category mc (nolock)
+inner join party p (nolock) on mc.party_id = p.id
+inner join affiliate a (nolock) on p.id = a.party_id
+inner join affiliate_type at (nolock) on a.affiliate_type_id = at.id
+inner join vw_1_Affiliate vw (nolock) on vw.AffiliateId = a.party_id
+Left join membership_category_payment_frequency pf (nolock) on mc.id = pf.membership_category_id and pf.is_deleted=0
+where at.affiliate_level_id = 2
+and mc.is_deleted = 0
+and p.is_deleted=0
+and at.is_deleted=0
+and mc.is_per_cap = 1",,,,,,,,,,,,

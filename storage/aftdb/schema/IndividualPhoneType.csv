@@ -1,0 +1,12 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualPhoneTypeId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,,label:Individual Phone Type,Individual Phone Type ID,
+[IndividualPhoneTypeName],[varchar] (20),No,NO,Yes,,,Mobile,,,,,default:0,Individual Phone Type Name,
+,,,,,,,,,,,,,
+SQL,"Select distinct [IndividualPhoneTypeId] = cc.id,
+[IndividualPhoneTypeName] = cc.name
+From Contact_context cc (nolock)
+Join contact_type_contact_context ctcc (nolock) on cc.id = ctcc.contact_context_id
+Where party_type_id = 1
+and ctcc.contact_type_id = 1
+and cc.is_deleted = 0
+and ctcc.is_deleted = 0",,,,,,,,,,,,

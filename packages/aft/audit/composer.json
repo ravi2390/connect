@@ -1,0 +1,28 @@
+{
+    "name": "aft/audit",
+    "description": "AFT Site Auditing",
+    "version": "1.0",
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {},
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\Audit\\AuditServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\Audit\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

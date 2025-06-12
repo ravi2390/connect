@@ -1,0 +1,14 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[NationalInstitutionTypeId],[int],NO,YES,No,,"IDENTITY (1,1)",2,,,,,label:National Institution Type,National Institution Type ID,
+[NationalInstitutionTypeName],[varchar](200),NO,NO,NO,,,City Agency,,,,,default:0,National Institution Type Name,
+[HasPrivateSector],[bit],NO,NO,NO,,,0,,,,,,Has Private Sector,
+[EmployerTypeId],[int],Yes,No,No,EmployerType(EmployerTypeId),,,,,,,,Employer Type ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+[NationalInstitutionTypeId] = id,
+[NationalInstitutionTypeName] = name,
+[HasPrivateSector]   = Is_Government,
+[EmployerTypeId]=employer_type_id
+from institution_type (nolock)
+where party_id is null
+and is_deleted = 0",,,,,,,,,,,,

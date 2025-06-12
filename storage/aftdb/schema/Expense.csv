@@ -1,0 +1,13 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary) Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Name,Relationship Type
+ExpenseId,[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,,,
+AuditDetailId,[int],No,No,No,,,,,,,,,,
+PerCapExpense,"[Decimal] (19,2)",No,No,No,,,,,,,,,,
+RentExpense,"[Decimal] (19,2)",No,No,No,,,,,,,,,,
+LegalExpense,"[Decimal] (19,2)",No,No,No,,,,,,,,,,
+SalaryExpense,"[Decimal] (19,2)",No,No,No,,,,,,,,,,
+CurrentAssets,"[Decimal] (19,2)",Yes,No,No,,,,,,,,,,
+CurrentLiability,"[Decimal] (19,2)",Yes,No,No,,,,,,,,,,
+FundBalance,"[Decimal] (19,2)",Yes,No,No,,,,,,,,,,
+OfficerSalary,"[Decimal] (19,2)",Yes,No,No,,,,,,,,,,
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,

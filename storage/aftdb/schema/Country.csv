@@ -1,0 +1,15 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[CountryId],[int],No,Yes,No,,"IDENTITY(1,1)",4,incremental,the unique identification of a country name,,,label:Country,Country ID,
+[CountryGuid],[uniqueidentifier],No,No,Yes,,newid(),,,,,,,Country Guid,
+[CountryName],[varchar] (200),No,No,Yes,,,United States of America,,the unique name of a country,,y,default:0,Country Name,
+[CountryCode],[varchar] (10),No,No,Yes,,,USA,,The 2 letter unique code associated with a country,,,"tiny:0,small:0",Country Code,
+[DisplayOrder],[tinyint],No,No,No,,,1,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+CountryId=id,
+CountryGuid=guid,
+CountryName=name,
+CountryCode=code,
+DisplayOrder=display_order
+FROM country (nolock)
+where is_deleted=0",,,,,,,,,,,,

@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[GenderId],[int],No,Yes,No,,"IDENTITY(1,1)",,,The Identification Associated with the Gender Name,,,label:Gender,Gender ID,
+[GenderName],[varchar] (50),No,No,Yes,,,,,The unique Gender Name an Individual Identifies with,,,default:0,Gender Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+GenderId=g.id,
+GenderName=g.name
+from gender g (nolock)
+where is_deleted=0",,,,,,,,,,,,

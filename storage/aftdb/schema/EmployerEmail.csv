@@ -1,0 +1,43 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EmployerEmailId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Employer Email,Employer Email ID,
+[EmployerId],[int],No,No,No,Employer(EmployerId),,1,,,,,,Employer ID,belongsTo
+[Email],[varchar] (200),No,No,No,,,,,An email address associated with an entity,email,y,default:0,Email,
+[EmployerEmailTypeId],[int],No,No,No,EmployerEmailType(EmployerEmailTypeId),,1,,,,,,Employer Email Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,1,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+[CanContactRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,Can Contact,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+[EmployerEmailId]=c.id,
+[EmployerId]=p.id,
+[Email]=em.email_address,
+[EmployerEmailTypeId]=case when c.contact_context_id  in (22,23) then c.contact_context_id  else 22 end,
+[ContactStatusId]=isnull(c.contact_status_id,2),
+[IsPreferred]=isnull(c.is_preferred,0),
+[ContactSourceId]=c.contact_source_id,
+[VerifiedDate] =c.verified_date,
+[CanContactRestrictionId]= IIF(isnull(c.can_contact,1) = 0, 2, 1),
+[CreatedAt] = ISNULL(c.created_at, c.updated_at),
+[UpdatedAt] = isnull(c.updated_at, c.created_at)
+FROM email em (nolock)
+inner join contact c (nolock) on em.contact_id=c.id
+inner join party p (nolock) on p.id=c.party_id
+inner join employer e (nolock) on e.party_id=p.id
+inner join relationship r (nolock) on r.related_party_id=e.party_id
+inner join affiliate af (nolock) on r.party_id=af.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join party p2 (nolock) on p2.id=af.party_id
+inner join vw_1_Employer ve (nolock) on ve.employerid=p.id
+left  join employer_location_contact elc (nolock) on elc.contact_id=c.id
+where 1=1
+and c.is_deleted=0
+and c.contact_type_id=2
+and p.party_type_id=3
+and p.is_deleted=0
+and r.relationship_type_id=3
+and r.is_deleted=0
+and p2.party_type_id=2
+and p2.is_deleted=0
+and elc.id is null",,,,,,,,,,,,

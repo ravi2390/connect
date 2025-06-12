@@ -1,0 +1,11 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary) Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+AuditMessageId,int,No,Yes,No,,"IDENTITY(1,1)",,,,,,,,,
+AuditTab,varchar (50),No,No,No,,,,,,,,,,,
+AuditType,varchar (50),No,No,No,,,,,,,,,,,
+AuditRequestCode,varchar (10),Yes,No,No,,,,,,,,,,,
+AuditValidation,varchar (1000),Yes,No,No,,,,,,,,,,,
+AuditValidParameter,nvarchar (1000),Yes,No,No,,,,,,,,,,,
+AuditMessageCode,varchar (50),Yes,No,No,,,,,,,,,,,
+AuditMessage,varchar (200),Yes,No,No,,,,,,,,,,,
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,

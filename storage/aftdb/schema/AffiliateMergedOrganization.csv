@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateMergedOrganizationId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,N,,Affiliate Merged Organization ID,
+[AffiliateId],[int],No,No,1,Affiliate(AffiliateId),,1078,,,,N,,Affiliate ID,belongsTo
+[MergedOrganizationId],[int],No,No,1,MergedOrganization(MergedOrganizationId),,1,,,,N,,Merged Organization ID,hasOne
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

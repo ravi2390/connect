@@ -1,0 +1,64 @@
+/public/hot
+/public/storage
+/public/js/app.js
+/public/css/app.css
+/public/fonts
+/public/mix-manifest.json
+/storage/*.key
+/storage/private
+/storage/app/public
+/vendor
+/.idea
+/.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/scripts/sanitization/config.php
+build
+
+# Composer
+vendor/
+
+# Node
+node_modules/
+
+# Local configuration
+.ddev/config.*.yaml
+.env
+phpstan.neon.dist
+
+# Backups, SQL dumps, logs
+*.7z
+*.bak
+*.dmg
+*.gz
+*.iso
+*.jar
+*.log
+*.rar
+*.sql
+*.sql
+*.sql.gz
+*.sqlite
+*.tar
+*.zip
+
+# Operating System metadata
+.DS_Store*
+.Spotlight-V100
+.Trashes
+._*
+Thumbs.db
+ehthumbs.db
+
+# Editors
+*.codekit*
+*.orig
+*.swo
+*.swp
+*~
+.idea
+tags

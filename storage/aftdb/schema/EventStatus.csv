@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EventStatusId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Event Status,Event Status ID,
+[EventStatusName],[varchar](200),No,No,Yes,,,Scheduled,,,text,,default:0,Event Status Name,
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+EventStatusId=id,
+EventStatusName=name
+FROM activity_status (nolock)
+where is_deleted = 0",,,,,,,,,,,,

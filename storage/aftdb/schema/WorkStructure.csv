@@ -1,0 +1,32 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkStructureId],[int],NO,Yes,No,,"IDENTITY (1,1)",9,,,,,label:Work Structure,Work Structure ID,
+[WorkStructureGuid],[uniqueidentifier],NO,No,Yes,,newid(),2FDDD09D FE2A 4968 8FA1 5F62E9A1B5E5,,,,,,Work Structure Guid,
+[WorkStructureName],[varchar](200),NO,No,No,,,School / College,,,,,default:0,Work Structure Name,
+[EmployerId],[int],NO,No,No,Employer(EmployerId),,,join with Employee table to find the EmployeeID,,,,label:Employer ID,Employer ID,belongsTo
+[WorkStructureTypeId],[int],NO,No,No,WorkStructureType(WorkStructureTypeId),,5,,,,,label:Work Structure Type,Work Structure Type ID,hasOne
+[ParentWorkStructureId],[int],Yes,No,No,WorkStructure(WorkStructureId),,9,All the Work Structure Data should be migrated first and ParentWorkStructureId will be NULL. Once the data is loaded onto the  Work Structure Table then Update the relevant ParentWorkStructureId.,,,,,Parent Work Structure ID,hasOne:reference
+[WorkStructureCode],[varchar](20),Yes,No,No,,,CETS,,,,,"tiny:0,small:0",Work Structure Code,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[WorkStructureId] = eb.id,
+[WorkStructureGuid] = eb.guid,
+[WorkStructureName] = eb.name,
+[EmployerId] = e.party_id,
+[WorkStructureTypeId] = eb.employer_business_unit_type_id,
+[ParentWorkStructureId] = eb.parent_employer_business_unit_id,
+[WorkStructureCode] = eb.work_unit_code,
+[CreatedAt] = ISNULL(eb.created_at, eb.updated_at),
+[UpdatedAt] = ISNULL(eb.updated_at, eb.created_at)
+from employer_business_unit eb (nolock)
+inner join party p (nolock) on eb.party_id = p.id
+inner join employer e (nolock) on p.id = e.party_id
+inner join [vw_1_employer] ev  (nolock) on ev.EmployerId=e.party_id
+inner join relationship r  (nolock) on p.id = r.related_party_id
+inner join [Affiliate] a  (nolock) on r.party_id = a.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=a.number
+inner join vw_1_workstructuretype vwst (nolock) on vwst.workstructuretypeid=eb.employer_business_unit_type_id
+where 1=1
+and eb.is_deleted=0
+and p.is_deleted=0
+and r.relationship_type_id=3
+and r.is_deleted=0",,,,,,,,,,,,

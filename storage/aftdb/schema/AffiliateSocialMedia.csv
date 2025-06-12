@@ -1,0 +1,27 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateSocialMediaId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Affiliate Social Media,Affiliate Social Media ID,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,1,,,,,,Affiliate ID,belongsTo
+[URL],[varchar] (400),No,No,No,,,,,,url,,,URL,
+[AffiliateSocialMediaTypeId],[int],No,No,No,AffiliateSocialMediaType(AffiliateSocialMediaTypeId),,1,,,,,,Affiliate Social Media Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,1,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+,,,,,,,,,,,,,
+SQL,"Select distinct AffiliateSocialMediaId=c.id,
+                        AffiliateId = af2.AffiliateId,
+                        [URL] = sm.handle,
+                        AffiliateSocialMediaTypeId = c.contact_context_id,
+                        ContactStatusId = c.contact_status_id,
+                        ContactSourceId = c.contact_source_id,
+                        VerifiedDate = c.verified_date,
+[CreatedAt] = ISNULL(c.created_at, c.updated_at),
+[UpdatedAt] = isnull(c.updated_at, c.created_at)
+From social_media sm (nolock)
+Join Contact c (nolock) on sm.contact_id = c.id
+Join party pa (nolock) on c.party_id = pa.id
+Join Affiliate af (nolock) on pa.id = af.party_id
+Join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+Join vw_1_Affiliate af2 (nolock) on af2.AffiliateGUID = vw.AffiliateId
+Where c.is_deleted = 0
+and pa.is_deleted = 0
+and pa.party_type_id = 2",,,,,,,,,,,,

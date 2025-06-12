@@ -1,0 +1,7 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EmployerCommentId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Employer Comment,Employer Comment ID,
+[EmployerId],[int],No,No,No,Employer(EmployerId),,,,,,,,Employer ID,belongsTo
+[EmployerComment],[varchar](2000),Yes,No,No,,,,,,sentence,,default:0,Employer Comment,
+[SubmitByUserId],[int],Yes,No,No,,,,,,,,,Submit By ID,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

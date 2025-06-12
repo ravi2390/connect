@@ -1,0 +1,23 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+UnitDivisionId,[int],No,Yes,No,,"IDENTITY(1,1)",,,,,N,label:Unit Division,Unit Division ID,
+UnitId,[int],No,No,No,Unit(UnitId),,,,,,N,,Unit ID,hasOne:reference
+DivisionId,[int],Yes,No,No,Division(DivisionId),,,,,,N,,Division ID,belongsTo
+,,,,,,,,,,,,,
+SQL,"
+Select Distinct
+UnitDivisionId =  unitid,
+[UnitId],
+[DivisionId] = case
+when et.employertypename = 'Pre-K-12' then (select top 1 divisionid from vw_1_division where divisionname='AFT Teachers')
+when et.employertypename = 'Health Care' then (select top 1 divisionid from vw_1_division where divisionname='AFT Nurses and Health Professionals')
+when et.employertypename = 'Higher Education' then (select top 1 divisionid from vw_1_division where divisionname='AFT Higher Education')
+when et.employertypename = 'PSRP' then (select top 1 divisionid from vw_1_division where divisionname='AFT PSRP')
+when et.employertypename = 'State or Local Government' then (select top 1 divisionid from vw_1_division where divisionname='AFT Public Employees')
+when et.employertypename = 'Charter School' then (select top 1 divisionid from vw_1_division where divisionname='AFT Teachers')
+when et.employertypename = 'Early child education' then (select top 1 divisionid from vw_1_division where divisionname='AFT Teachers')
+end
+from [vw_1_Unit] u
+join vw_1_Employer e (nolock)	on u.employerid = e.employerid
+left join [vw_1_EmployerType] et (nolock) on e.employertypeid = et.employertypeid
+where u.isstructural = 0 and u.isunknown = 0
+and e.isstructural = 0 and e.isunknown = 0",,,,,,,,,,,,

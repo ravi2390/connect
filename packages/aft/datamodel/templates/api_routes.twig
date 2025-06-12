@@ -1,0 +1,5 @@
+<?php
+
+{% for table in data %}
+Route::apiResource('{{ table|lower }}', '{{ table }}Controller');
+{% endfor %}

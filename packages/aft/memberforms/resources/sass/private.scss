@@ -1,0 +1,69 @@
+@use 'editor';
+
+/** Tables **/
+.v-data-table {
+
+    table {
+
+        .v-data-table-header {
+            background: #092a5c;
+
+            span {
+                color: #7bb8da;
+            }
+
+            .v-data-table-header__icon {
+                color: rgba(255,255,255,.87) !important;
+            }
+        }
+
+        tbody {
+            tr {
+                &:hover {
+                    background: #f0f5fe !important;
+                }
+
+                td {
+                    font-size: 12px;
+
+                    .table-filter {
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    table tbody tr:hover {
+        background: #f0f5fe !important;
+    }
+
+    table tbody tr:nth-child(even) {
+        background: #efefef;
+    }
+}
+
+.v-sheet.v-stepper:not(.v-sheet--outlined) {
+    box-shadow: none;
+}
+
+.v-outlined {
+    border: 1px solid rgba(0, 0, 0, .12)
+}
+
+.form-title {
+    text-align: center;
+    display: block;
+}
+
+.form-header {
+    background: none;
+    width: 100%;
+    text-align: left;
+    border: 2px;
+}
+
+.form-designer-col .v-field__input {
+    padding-top: 8px;
+    min-height: 2.5rem;
+}

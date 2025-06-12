@@ -1,0 +1,31 @@
+{
+    "name": "aft/permissions",
+    "description": "AFT permissions management",
+    "type": "library",
+    "version": "1.0",
+    "authors": [
+        {
+            "name": "David Richards",
+            "email": "drichard@aft.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.3",
+        "doctrine/dbal": "^4.2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\Permissions\\": "src/",
+            "Aft\\Permissions\\Database\\Seeds\\": "database/seeds/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\Permissions\\Providers\\PermissionsServiceProvider"
+            ]
+        }
+    }
+}

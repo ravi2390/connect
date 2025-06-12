@@ -1,0 +1,15 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkLocationTypeId],[int],NO,YES,No,,"IDENTITY (1,1)",1,,,,,label:Work Location Type,Work Location Type ID,
+[WorkLocationTypeName],[varchar](200),NO,No,No,,,University,,,,,default:0,Work Location Type Name,
+[EmployerTypeId],[int],Yes,No,No,EmployerType(EmployerTypeId),,,,,,,label:Employer Type,Employer Type ID,hasOne:reference
+[HierachicalOrder],[int],Yes,No,No,,,,,,,,,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[WorkLocationTypeId]=id,
+[WorkLocationTypeName]=name,
+[EmployerTypeId]=employer_type_id,
+[HierachicalOrder]=ordinal
+from employer_location_type
+where is_deleted=0
+and employer_type_id not in (7,8)
+and id not in (19, 20,21)",,,,,,,,,,,,

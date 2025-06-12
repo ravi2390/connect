@@ -1,0 +1,57 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateAddressId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,,label:Affiliate Address,Affiliate Address ID,
+[AffiliateId],[int],NO,No,NO,Affiliate(AffiliateId),,2023,,,,,n,,Affiliate ID,belongsTo
+[AddressLine1],[Varchar] (200),Yes,No,No,,,,,The line 1 address of a location associated with an entity,,streetAddress,y,default:0,Address Line 1,
+[AddressLine2],[Varchar] (200),Yes,No,No,,,,,The line 2 address of a location associated with an entity,,secondaryAddress,y,default:1,Address Line 2,
+[City],[Varchar] (100),Yes,No,No,,,,,The City associated with an entity,,city,y,default:2,City,
+[CountyId],[int],Yes,No,No,County(CountyId),,,,,,,,,County ID,hasOne:reference
+[StateTerritoryId],[int],Yes,No,No,StateTerritory(StateTerritoryId),,,,,,,,default:3,State Territory ID,hasOne:reference
+[CountryId],[int],Yes,No,No,Country(CountryId),,,,,,,,,Country ID,hasOne:reference
+[PostalCode],[Varchar] (15),Yes,No,No,,,,,The Zip Code associated with an entity,,postcode,y,default:4,Postal Code,
+[CarrierRoute],[Varchar] (50),Yes,No,No,,,,,,,,,,Carrier Route,
+[Latitude],"[decimal] (9,6)",Yes,No,No,,,,,,,latitude,,,Lattitude,
+[Longitude],"[decimal] (9,6)",Yes,No,No,,,,,,,longitude,,,Longitude,
+[AffiliateAddressTypeId],[int],Yes,No,No,AffiliateAddressType(AffiliateAddressTypeId),,1,,,,,,,Affiliate Address Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,,Contact Status ID,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,,,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,,Verified Date,
+[CanVisitRestrictionId],[int],Yes,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,,Can Visit,hasOne:reference
+[CanSendMailRestrictionId],[int],Yes,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,,Can Send Mail,hasOne:reference
+[PreventNcoaUpdate],[bit],Yes,No,No,,,,,,,,,,Prevent NCOA Update,
+,,,,,,,,,,,,,,,
+SQL,"select distinct
+[AffiliateAddressId]=c.id,
+[AffiliateId]=p.id,
+[AddressLine1]=ad.address_line_1,
+[AddressLine2]=ad.address_line_2,
+[City]=ad.city,
+[CountyId]=ad.county_id,
+[StateTerritoryId]=ad.state_territory_id,
+[CountryId]=ad.country_id,
+[PostalCode]=ad.zip_code,
+[CarrierRoute]=ad.carrier_route,
+[Latitude]=ad.latitude,
+[Longitude]=ad.latitude,
+[AffiliateAddressTypeId]=case
+when c.contact_context_id in (19,20) then c.contact_context_id
+else 19 end,
+[ContactStatusId]=isnull(c.contact_status_id,2),
+[IsPreferred]=isnull(c.is_preferred,0),
+[ContactSourceId]=c.contact_source_id,
+[VerifiedDate]=c.verified_date,
+[CanVisitRestrictionId]=IIF(ad.can_visit = 0, 2, 1),
+[CanSendMailRestrictionId]=null,
+[PreventNcoaUpdate]=ad.is_prevent_ncoa_update,
+[CreatedAt] = c.created_at,
+[UpdatedAt] = c.updated_at
+FROM address ad (nolock)
+inner join contact c with (NoLock)  on ad.contact_id=c.id
+inner join party p  with (NoLock)  on p.id=c.party_id
+inner join affiliate af  with (NoLock) on p.id=af.party_id
+inner join vw_1_affiliate_connect vw  with (NoLock) on vw.affiliatenbr=af.number
+where c.is_deleted=0
+and c.contact_type_id=4
+and p.party_type_id=2
+and p.is_deleted=0
+and af.affiliate_type_id<>19",,,,,,,,,,,,,,

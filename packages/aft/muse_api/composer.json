@@ -1,0 +1,54 @@
+{
+    "name": "aft/muse_api",
+    "description": "Controllers, configuration, and utilities implementing the MUSE API.",
+    "version": "0.1.0",
+    "require": {
+        "php": "^8.3",
+        "aft/datamodel": "^1.0",
+        "laravel/passport": "^12.0"
+    },
+    "license": "propietary",
+    "autoload": {
+        "psr-4": {
+            "Aft\\MuseApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tag1 Consulting",
+            "email": "support@tag1.com"
+        }
+    ],
+    "require-dev": {
+        "orchestra/testbench": "^5.2",
+        "phpunit/phpunit": "^9.6",
+        "squizlabs/php_codesniffer": "^3.10"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\MuseApi\\MuseApiServiceProvider"
+            ]
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../*",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "scripts": {
+        "lint": [
+            "phpcs"
+        ],
+        "test": [
+            "phpunit --debug"
+        ]
+    }
+}

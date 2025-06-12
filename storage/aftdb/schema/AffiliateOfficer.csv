@@ -1,0 +1,42 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateOfficerId],[int],No,Yes,No,,"Identity (1,1)",1234,,,,,label:Affiliate Officer,Affiliate Officer ID,
+[AffiliateOfficerRoleId],[int],No,No,No,AffiliateOfficerRole(AffiliateOfficerRoleId),,11,,,,,,Affiliate Officer Role ID,hasOne:reference
+[IndividualId],[int],No,No,No,Individual(IndividualId),,10000,,,,,,Individual ID,hasOne:reference
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,belongsTo
+[TermStartDate],[datetime],Yes,No,No,,,39583,,,,y,,Term Start Date,
+[TermEndDate],[datetime],Yes,No,No,,,39583,,,,,,Term End Date,
+[IsElected],[bit],No,No,No,,0,1,,,,,,Is Elected,
+[IsCurrent],[bit],No,No,No,,1,,,,,,,Is Active,
+[IsPreferredTitle],[bit],No,No,No,,,,,,,,,Is Preferred Title,
+,,,,,,,,,,,,,
+SQL,"SELECT  distinct
+[AffiliateOfficerId]=iar.relationship_id,
+AffiliateOfficerRoleId = iar.leadership_position_id ,
+IndividualId = i.party_id,
+AffiliateId = af.AffiliateId,
+TermStartDate = r.start_date ,
+TermEdDate = r.stop_date ,
+IsElected = iif(iar.leadership_achievement_method_id=1, 1, 0) ,
+IsCurrent = iif(iar.individual_affiliate_relationship_status_id=1, 1, 0),
+IsPreferredTitle=iar.is_leadership_preferred_title,
+CreatedAt = r.created_at,
+UpdatedAt = r.updated_at
+FROM  individual_affiliate_relationship iar (nolock)
+inner      JOIN relationship r   (nolock)   ON r.id = iar.relationship_id
+Join party p (nolock) on r.party_id = p.id
+Join individual i (nolock) on p.id = i.party_id
+inner join [vw_1_Individual] iv (nolock) on iv.IndividualId=i.party_id
+inner JOIN individual_affiliate_relationship_type iart (nolock)   ON iart.id = iar.individual_affiliate_relationship_type_id
+inner JOIN leadership_position lp (nolock) ON lp.id = iar.leadership_position_id
+inner join Affiliate a (nolock)	on a.party_id = r.related_party_id
+inner join vw_1_affiliate af (nolock) on a.number = af.AffiliateNumber
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=a.number
+WHERE 1=1
+and lp.party_id IS NOT NULL
+AND iar.leadership_position_id IS NOT NULL
+AND iart.name = 'Officer'
+and r.is_deleted=0
+and lp.is_deleted=0
+  and iar.individual_affiliate_relationship_status_id=1
+and r.relationship_type_id=1
+and p.is_deleted = 0",,,,,,,,,,,,

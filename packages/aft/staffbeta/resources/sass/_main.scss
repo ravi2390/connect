@@ -1,0 +1,45 @@
+@use "../../../../../resources/sass/variables" as *;
+
+:root {
+  --link-color: #{$blue};
+  --link-hover-color: #1d68a7;
+}
+.text-white {
+  --link-color: #fff;
+  --link-hover-color: #fff;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+  font-size: 1.125rem;
+  line-height: inherit;
+  white-space: nowrap;
+  color: #fff;
+  &:hover,
+  &:focus {
+    color: #fff;
+  }
+
+  img {
+    height: 1.5rem;
+  }
+}
+
+.navbar-nav {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a.nav-link {
+  --link-color: rgba(255, 255, 255, 0.5);
+  &:hover,
+  &:focus {
+    --link-color: rgba(255, 255, 255, 0.75);
+  }
+  &.active {
+    --link-color: #fff;
+  }
+}

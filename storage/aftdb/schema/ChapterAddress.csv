@@ -1,0 +1,23 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ChapterAddressId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Chapter Address,Chapter Address ID,
+[ChapterId],[int],NO,No,NO,Chapter(ChapterId),,2023,,,,N,,Chapter ID,belongsTo
+[AddressLine1],[Varchar] (200),Yes,No,No,,,,,The line 1 address of a location associated with an entity,streetAddress,y,default:0,Address Line 1,
+[AddressLine2],[Varchar] (200),Yes,No,No,,,,,The line 2 address of a location associated with an entity,secondaryAddress,y,default:1,Address Line 2,
+[City],[Varchar] (100),Yes,No,No,,,,,The City associated with an entity,city,y,default:2,City,
+[CountyId],[int],Yes,No,No,County(CountyId),,,,,,,,County ID,hasOne:reference
+[StateTerritoryId],[int],Yes,No,No,StateTerritory(StateTerritoryId),,,,,,,default:3,State Territory ID,hasOne:reference
+[CountryId],[int],Yes,No,No,Country(CountryId),,,,,,,,Country ID,hasOne:reference
+[PostalCode],[Varchar] (15),Yes,No,No,,,,,The Zip Code associated with an entity,postcode,y,default:4,Postal Code,
+[CarrierRoute],[Varchar] (50),Yes,No,No,,,,,,,,,Carrier Route,
+[Latitude],"[decimal] (9,6)",Yes,No,No,,,,,,latitude,,,Lattitude,
+[Longitude],"[decimal] (9,6)",Yes,No,No,,,,,,longitude,,,Longitude,
+[AffiliateAddressTypeId],[int],Yes,No,No,AffiliateAddressType(AffiliateAddressTypeId),,1,,,,,,Affiliate Address Type ID,hasOne:reference
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+[CanVisitRestrictionId],[int],Yes,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,Can Visit,hasOne:reference
+[CanSendMailRestrictionId],[int],Yes,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,Can Send Mail,hasOne:reference
+[PreventNcoaUpdate],[bit],Yes,No,No,,,,,,,,,Prevent NCOA Update,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

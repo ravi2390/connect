@@ -1,0 +1,43 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkLocationId],[int],No,YES,No,,"IDENTITY (1,1)",2,,EmployerLocationId is a unique ID field with an integer datatype. EmployerLocationId is used to uniquly indentify each Employer's location in the EmployerLocation Table.,,,label: Work Location,Work Location ID,
+[WorkLocationGuid],[uniqueidentifier],No,No,No,,newid(),B47FC09A CF0F 4F95 BF2C 9DCC1487A382,,,,,,Work Location Guid,
+[WorkLocationName],[varchar](200),No,No,No,,,,,EmployerLocationName states an Employer's work location or work area name. This field stores is used to track an individual's specific work location.,,,default:0,Work Location Name,
+[WorkLocationTypeId],[int],No,No,No,WorkLocationType(WorkLocationTypeId),,4,,,,,,Work Location Type ID,hasOne
+[ParentWorkLocationId],[int],Yes,No,No,WorkLocation(WorkLocationId),,105935,,,,,,Parent Work Location ID,hasOne:reference
+[WorkLocationCode],[varchar](10),Yes,No,No,,,69029,,,,,"tiny:0,small:0",Work Location Code,
+[WorkLocationArea],[varchar](200),Yes,No,No,,,New York,,,,,"tiny:0,small:0",Work Location Area,
+[IsPubliclyAccessible],[bit],Yes,No,No,,,0,,,,,,Is Publicly Accessible,
+[NationalInstitutionTypeId],[int],Yes,No,No,NationalInstitutionType(NationalInstitutionTypeId),,,,,,,,Employer Institution Type ID,hasOne:reference
+[EmployerId],[int],No,No,No,Employer(EmployerId),,,,,,,label:Employer Id,Employer ID,belongsTo
+,,,,,,,,,,,,,
+SQL,"select distinct
+[WorkLocationId] = el.id,
+[WorkLocationGuid] = el.guid,
+[WorkLocationName] = el.name,
+[WorkLocationTypeId]=case
+when  el.employer_location_type_id=30 then 12
+when  el.employer_location_type_id=29 then 11
+when  el.employer_location_type_id=20 then 24
+else  el.employer_location_type_id
+end,
+[ParentWorkLocationId] = el.parent_employer_location_id,
+[WorkLocationCode] = el.number,
+[WorkLocationArea] = el.area,
+[IsPubliclyAccessible]  = el.is_public,
+[NationalInstitutionTypeId] = case when el.institution_type_id in  (select NationalInstitutionTypeId from vw_1_NationalInstitutionType) then el.institution_type_id else null end,
+[EmployerId] = el.party_id,
+[CreatedAt] = ISNULL(el.created_at, el.updated_at),
+[UpdatedAt] = ISNULL(el.updated_at, el.created_at)
+from employer_location el (nolock)
+inner join Employer e (nolock) on el.party_id = e.party_id
+inner join [vw_1_employer] ev  (nolock) on ev.EmployerId=e.party_id
+inner join party p   (nolock) on e.party_id=p.id
+inner join relationship r  (nolock) on p.id = r.related_party_id
+inner join Affiliate a  (nolock) on r.party_id = a.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=a.number
+where el.is_deleted = 0
+and p.is_deleted=0
+and r.is_deleted=0
+and r.relationship_type_id=3
+and (el.employer_location_type_id in (select worklocationtypeid from vw_1_worklocationtype)
+or el.employer_location_type_id in (20,29,30))",,,,,,,,,,,,

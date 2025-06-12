@@ -1,0 +1,16 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[StateTerritoryId],[int],No,Yes,No,,"IDENTITY(1,1)",12345,incremental,the unique identification of a state name,,,label:State or Territory,State Territory ID,
+[StateTerritoryGuid],[uniqueidentifier],No,No,Yes,,newid(),,,,,,,State Territory Guid,
+[StateTerritoryName],[varchar] (200),No,No,Yes,,,Maryland,,the unique name of a state,,y,default:0,State Territory Name,
+[StateTerritoryCode],[varchar] (10),No,No,Yes,,,MD,,The 2 letter unique code associated with a state,,,"tiny:0,small:0",State Territory Code,
+[CountryId],[int],No,No,No,Country(CountryId),,,,,,,,Country ID,belongsTo
+,,,,,,,,,,,,,,
+SQL,"SELECT distinct
+[StateTerritoryId]=id,
+[StateTerritoryGuid]=guid,
+[StateTerritoryName]=name,
+[StateTerritoryCode]=code,
+[CountryId]=country_id
+FROM state_territory (nolock)
+where is_deleted=0
+and name<>'Overseas'",,,,,,,,,,,,,

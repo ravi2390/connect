@@ -1,0 +1,169 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[UnitId],[int],No,Yes,No,,"IDENTITY (1, 1)",,,UnitId is a unique Identification number used to Idenity each Unit in the Unit Table,,,label:Unit,Unit ID,
+[UnitGuid],[uniqueidentifier],No,No,No,,newid(),,,,,,,Unit Guid,
+[UnitName],[varchar](200),No,No,No,,,,,,,,default:0,Unit Name,
+[UnitTypeId],[int],Yes,No,No,UnitType(UnitTypeId),,,,,,,,Unit Type ID,hasOne
+[LocalAgreementId],[int],Yes,No,No,LocalAgreement(LocalAgreementId),,,,,,,,Local Agreement ID,belongsTo
+[DivisionId],[int],Yes,No,No,Division(DivisionId),,,,,,,,Division ID,hasOne
+[IsStructural],[bit],No,NO,No,,0,1,,,,Y,,Is Unit Structural,
+[IsUnknown],[bit],No,NO,No,,0,1,,,,Y,,Is Unit Unknown,
+,,,,,,,,,,,,,
+SQL,"select [UnitId]=ROW_NUMBER() Over (Order by UnitId),
+[UnitGuid],
+[UnitName],
+[UnitTypeId],
+[EmployerId],
+[LocalAgreementId],
+[DivisionId],
+[AffiliateId],
+[IsStructural] = 0,
+[IsUnknown] = 0,
+[Chapter_id] = [Chapter_id],
+[CreatedAt],
+[UpdatedAt]
+from (
+Select Distinct [UnitId] = af.Party_id,
+[UnitGuid]=p.guid,
+[UnitName]=af.name,
+[UnitTypeId]=6,
+[EmployerId]=vwe.EmployerId,
+[LocalAgreementId]=la.LocalAgreementId,
+[DivisionId]=null,
+[AffiliateId]=p.parent_party_id,
+[Chapter_id] = af.party_id,
+[CreatedAt] = ISNULL(p.created_at, p.updated_at),
+[UpdatedAt] = ISNULL(p.updated_at, p.created_at)
+from affiliate af (nolock)
+inner join party p (nolock) on af.party_id = p.id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join vw_1_Affiliate vwaf (nolock)	on vwaf.AffiliateId = p.parent_party_id
+inner join vw_1_Chapter vwc (nolock)	on vwaf.AffiliateId = vwc.AffiliateId
+inner join vw_1_Employer vwe (nolock)	on vwe.ChapterId = vwc.ChapterId
+inner join vw_1_LocalAgreement la (nolock)	on la.EmployerId = vwe.EmployerId 
+where af.affiliate_type_id = 19
+and p.is_deleted=0
+and af.number<>''
+and vwe.Isstructural = 0 
+and vwc.IsStructural = 1
+and af.number not in (Select number From vw_federated_local)
+and la.IsStructural = 0 
+and (af.name not like '% Ret' and af.name not like '%Reti%' and af.Name not like 'RET %' and af.Name not like 'RET')
+
+
+Union
+
+Select Distinct [UnitId] = af.Party_id,
+[UnitGuid]=p.guid,
+[UnitName]=af.name,
+[UnitTypeId]=3,
+[EmployerId]=vwe.EmployerId,
+[LocalAgreementId]=la.LocalAgreementId,
+[DivisionId]=null,
+[AffiliateId]=p.parent_party_id,
+[Chapter_id] = af.party_id,
+[CreatedAt] = ISNULL(p.created_at, p.updated_at),
+[UpdatedAt] = ISNULL(p.updated_at, p.created_at)
+from affiliate af (nolock)
+inner join party p (nolock) on af.party_id = p.id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join vw_1_Affiliate vwaf (nolock)	on vwaf.AffiliateId = p.parent_party_id
+inner join vw_1_Chapter vwc (nolock)	on vwaf.AffiliateId = vwc.AffiliateId
+inner join vw_1_Employer vwe (nolock)	on vwe.ChapterId = vwc.ChapterId and vwe.IsStructural = 1
+inner join vw_1_LocalAgreement la (nolock)	on la.EmployerId = vwe.EmployerId and la.IsUnknown = 1 
+where af.affiliate_type_id = 19
+and p.is_deleted=0
+and af.number<>''
+and vwc.IsStructural = 1
+--and af.number not in (Select number From vw_federated_local)
+and la.IsStructural = 0 
+and (af.name like '% Ret' or af.name like '%Reti%' or af.Name like 'RET %' or af.Name like 'RET')
+
+
+Union
+
+
+Select Distinct [UnitId] = ROW_NUMBER() Over (Order by la.LocalAgreementId),
+[UnitGuid]=NEWID(),
+[UnitName]=CONCAT(Replace(Replace(la.LocalAgreementName, ' - Structured Local Agreement', ''), ' - Unknown Local Agreement', ''), ' - ', 'Retiree Unit'),
+[UnitTypeId]=3,
+[EmployerId]=vwe.EmployerId,
+[LocalAgreementId]=la.LocalAgreementId,
+[DivisionId]=null,
+[AffiliateId]=vwc.AffiliateId,
+[Chapter_id] = NULL,
+[CreatedAt] = GETDATE(),
+[UpdatedAt] = GETDATE()
+From vw_1_LocalAgreement la (nolock)
+Join vw_1_Employer vwe (nolock)	on la.EmployerId = vwe.EmployerId and vwe.IsStructural = 1 and la.IsUnknown = 1
+JOin vw_1_Chapter vwc (nolock)	on vwc.ChapterId = vwe.ChapterId and vwc.IsStructural = 1
+Where vwc.ChapterId not in 
+(
+Select Distinct vwc.ChapterId
+from affiliate af (nolock)
+inner join party p (nolock) on af.party_id = p.id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join vw_1_Affiliate vwaf (nolock)	on vwaf.AffiliateId = p.parent_party_id
+inner join vw_1_Chapter vwc (nolock)	on vwaf.AffiliateId = vwc.AffiliateId
+inner join vw_1_Employer vwe (nolock)	on vwe.ChapterId = vwc.ChapterId and vwe.IsStructural = 1
+inner join vw_1_LocalAgreement la (nolock)	on la.EmployerId = vwe.EmployerId and la.IsUnknown = 1 
+where af.affiliate_type_id = 19
+and p.is_deleted=0
+and af.number<>''
+--and af.number not in (Select number From vw_federated_local)
+and la.IsStructural = 0 
+and (af.name like '% Ret' or af.name like '%Reti%' or af.Name like 'RET %' or af.Name like 'RET')
+)
+) a
+
+Union
+
+Select [UnitId] = 100000 + ROW_NUMBER() Over (Order by IsStructural, UnitId),
+[UnitGuid],
+[UnitName],
+[UnitTypeId],
+[EmployerId],
+[LocalAgreementId],
+[DivisionId],
+[AffiliateId],
+[IsStructural],
+[IsUnknown],
+Chapter_id = NULL,
+[CreatedAt] = GETDATE(),
+[UpdatedAt] = GETDATE()
+From
+(
+Select Distinct
+[UnitId] = vwe.EmployerId,
+[UnitGuid] = NEWID(),
+[UnitName] = CONCAT(Replace (la.LocalAgreementName, ' - Structured Local Agreement', ''), ' - Structured Unit'),
+[UnitTypeId] = 6,
+[EmployerId] = vwe.EmployerId,
+[LocalAgreementId] = la.LocalAgreementId,
+[DivisionId] = NULL,
+[AffiliateId] = c.AffiliateId,
+[IsStructural] = 1,
+[IsUnknown] = 0
+From vw_1_Employer vwe (nolock)
+Join vw_1_Chapter c (nolock)	on vwe.ChapterId = c.ChapterId
+Join vw_1_LocalAgreement la (nolock)	on vwe.EmployerId = la.EmployerId
+Where la.IsStructural = 1
+
+
+Union
+
+Select Distinct
+[UnitId] = vwe.EmployerId,
+[UnitGuid] = NEWID(),
+[UnitName] = CONCAT(Replace (la.LocalAgreementName, ' - Unknown Local Agreement', ''), ' - Unknown Unit'),
+[UnitTypeId] = 6,
+[EmployerId] = vwe.EmployerId,
+[LocalAgreementId] = la.LocalAgreementId,
+[DivisionId] = NULL,
+[AffiliateId] = c.AffiliateId,
+[IsStructural] = 0,
+[IsUnknown] = 1
+From vw_1_Employer vwe (nolock)
+Join vw_1_Chapter c (nolock)	on	vwe.ChapterId = c.ChapterId
+Join vw_1_LocalAgreement la (nolock)	on vwe.EmployerId = la.EmployerId
+Where la.IsStructural = 0 and vwe.IsStructural = 0
+) b",,,,,,,,,,,,

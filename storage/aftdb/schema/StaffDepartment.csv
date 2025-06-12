@@ -1,0 +1,8 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[StaffDepartmentId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,N,label:Staff Department,Staff Department ID,
+[StaffDepartmentName],[varchar] (50),No,No,Yes,,,Communications,,,,N,default:0,Staff Department Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+StaffDepartmentId,
+StaffDepartmentName
+from StaffDepartment (nolock)",,,,,,,,,,,,

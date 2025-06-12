@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+## Description: Creates a new database in the MSSQL server, as configured by the MSSQL_* env variables.
+## Usage: sqlsrv-create-db db-name
+## Example: "ddev sqlsrv-create-db NEW_DB_NAME"
+## ExecRaw: true
+
+/opt/mssql-tools18/bin/sqlcmd -S ${MSSQL_HOST} -P ${MSSQL_SA_PASSWORD} -U SA -C -Q "CREATE DATABASE [$@];"

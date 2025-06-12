@@ -1,0 +1,3 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[LocalAgreementTypeId],[int],NO,YES,No,,"IDENTITY (1,1)",,,,,,label:Local Agreement Type,Local Agreement Type ID,
+[LocalAgreementTypeName],[varchar](200),NO,No,No,,,,,,,,default:0,Local Agreement Type Name,

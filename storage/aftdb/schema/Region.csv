@@ -1,0 +1,15 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[RegionId],[int],No,Yes,No,,"Identity (1,1)",12,,,,,label:Region,Region ID,
+[RegionCode],[varchar](5),No,No,No,,,REGGL,,,,,"tiny:0,small:0",Region Code,
+[RegionName],[varchar](100),No,No,No,,,Great Lakes Regional Office,,,company,,default:0,Region Name,
+,,,,,,,,,,,,,
+SQL,"select distinct 
+[RegionId]=af.party_id,
+[RegionCode]=af.number,
+[RegionName]=af.name
+from affiliate af (nolock)
+inner join party p (nolock) on af.party_id=p.id
+where p.is_deleted=0
+and af.number like 'reg%'
+and af.affiliate_status_id=1
+and af.affiliate_type_id=2",,,,,,,,,,,,

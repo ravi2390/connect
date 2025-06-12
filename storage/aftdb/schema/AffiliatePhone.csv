@@ -1,0 +1,44 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliatePhoneId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Affiliate Phone,Affiliate Phone ID,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,1,,,,,,Affiliate ID,belongsTo
+[PhoneNumber],[Varchar] (20),No,No,No,,,,phonenumber is how we track the contact phone number of any entity,The phone number asscoiated with the the PhoneId,phoneNumber,y,default:0,Phone Number,
+[Extension],[Varchar] (10),YES,No,No,,,,phone extension,,,,default:1,Extension,
+[AffiliatePhoneTypeId],[int],No,No,No,AffiliatePhoneType(AffiliatePhoneTypeId),,1,,,,,,Affiliate Phone Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[CanTextRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),0,,,,,,,Can Text,hasOne:reference
+[CanCallRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),0,,,,,,,Can Call,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,1,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+,,,,,,,,,,,,,
+SQL,"SELECT DISTINCT
+  AffiliatePhoneId = c.id,
+  AffiliateId = af.party_id,
+  PhoneNumber = p.phone_number,
+  Extension = p.extension,
+  AffiliatePhoneTypeId =
+                        CASE
+                          WHEN c.contact_context_id NOT IN (19, 20, 21) THEN 19
+                          ELSE c.contact_context_id
+                        END,
+  ContactStatusId = c.contact_status_id,
+  CanTextRestrictionId = IIF(isnull(p.is_sms_allowed,1) = 0, 2, 1),
+  CanCallRestrictionId = IIF(isnull(p.is_sms_allowed,1) = 0, 2, 1),
+  IsPreferred = c.Is_Preferred,
+  ContactSourceId = c.contact_source_id,
+  VerifiedDate = c.verified_date,
+  CreatedAt = c.created_at,
+ UpdatedAt = c.updated_at
+FROM Phone p (nolock)
+JOIN Contact c (NOLOCK)
+  ON p.contact_id = c.id
+JOIN party pa (NOLOCK)
+  ON c.party_id = pa.id
+JOIN Affiliate af (NOLOCK)
+  ON pa.id = af.party_id
+JOIN vw_1_affiliate_connect vw (NOLOCK)
+  ON vw.affiliatenbr = af.number
+WHERE c.is_deleted = 0
+AND pa.is_deleted = 0
+AND pa.party_type_id = 2
+AND af.affiliate_type_id <> 19",,,,,,,,,,,,

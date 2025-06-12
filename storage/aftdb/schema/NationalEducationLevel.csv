@@ -1,0 +1,10 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[NationalEducationLevelId],[int],No,Yes,No,,"IDENTITY(1,1)",123,,,,,label:National Education Level,National Education Level ID,
+[NationalEducationLevelName],[varchar] (200),No,No,Yes,,,,,,,,default:0,National Education Level Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[NationalEducationLevelId] = id,
+[NationalEducationLevelName] = name
+from Education_level (nolock)
+Where party_id Is NULL
+and is_deleted = 0",,,,,,,,,,,,

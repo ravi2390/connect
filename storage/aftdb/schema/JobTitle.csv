@@ -1,0 +1,38 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[JobTitleId],[int],No,yes,No,,"IDENTITY (1,1)",,,,,,label:Job Title,Job Title ID,
+[JobTitleName],[varchar](200),No,No,No,,,,,,,,default:0,Job Title Name,
+[CompensationId],[int],Yes,No,No,Compensation(CompensationId),,,,,,,,CompensationID,hasOne
+[LocalJobClassId],[int],Yes,No,No,LocalJobClass(LocalJobClassId),,1,Records that have NULL has party_id is a National Job Class in the jobclass table in 1.0. That is the top 48 records. Any Records that have a party_id then it is a local job class in the jobclass table in 1.0,,,,,Local Job Class ID,belongsTo
+[IsStructural],[bit],No,No,No,,0,1,,,,Y,,Is Job Title Structural,
+[IsUnknown],[bit],No,No,No,,0,1,,,,Y,,Is Job Title Unknown,
+,,,,,,,,,,,,,
+SQL,"Select [JobTitleId] = ROW_NUMBER() Over (Order by JobTitleId),
+		[JobTitleName],
+		[CompensationId],
+		[UnitId],
+		[LocalJobClassId],
+		[IsStructural],
+		[IsUnknown]
+From (
+Select [JobTitleId] = LocalJobClassId,
+		[JobTitleName] = LEFT(CONCAT(Replace (LocalJobClassName, ' - Structured Local JobClass', ''), ' - Structured JobTitle'), 200),
+		[CompensationId] = NULL,
+		[UnitId] = UnitId,
+		[LocalJobClassId] = LocalJobClassId,
+		[IsStructural] = 1,
+		[IsUnknown] = 0
+from vw_1_LocalJobClass
+Where IsStructural = 1
+Union
+Select [JobTitleId] = LocalJobClassId,
+		[JobTitleName] = LEFT(CONCAT(Replace (LocalJobClassName, ' - Unknown Local JobClass', ''), ' - Unknown JobTitle'), 200),
+		[CompensationId] = NULL,
+		[UnitId] = UnitId,
+		[LocalJobClassId] = LocalJobClassId,
+		[IsStructural] = 0,
+		[IsUnknown] = 1
+from vw_1_LocalJobClass
+Where IsStructural = 0
+) a
+
+",,,,,,,,,,,,

@@ -1,0 +1,27 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateGroupId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Affiliate Group,Affiliate Group ID,
+[AffiliateGroupName],[varchar](200),No,No,No,,,,,,name,,default:0,Affiliate Group Name,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,567,,,,,,Affiliate ID,belongsTo
+[AffiliateGroupTypeId],[int],No,No,No,AffiliateGroupType(AffiliateGroupTypeId),,1,,,,,,Affiliate Group Type ID,hasOne
+[Description],[varchar](max),Yes,No,No,,,,,,sentence,,,Description,
+,,,,,,,,,,,,,
+SQL,"Select [AffiliateGroupId] = ROW_NUMBER() Over (Order by AffiliateId, [AffiliateGroupTypeId]),
+[AffiliateGroupName] = [AffiliateGroupName],
+[AffiliateId] = [AffiliateId],
+[AffiliateGroupTypeId] = [AffiliateGroupTypeId],
+[Description] = NULL 
+From (
+Select Distinct [AffiliateGroupName] = iart.name,
+[AffiliateId] = vaf.AffiliateId,
+[AffiliateGroupTypeId] = iar.individual_affiliate_relationship_type_id,
+[Description] = NULL
+From Relationship r
+Join individual_affiliate_relationship iar	on r.id = iar.relationship_id
+Join Individual_Affiliate_Relationship_Type iart	on iar.individual_affiliate_relationship_type_id = iart.Id
+Join vw_1_Individual i	on r.party_id = i.IndividualId
+join affiliate af (nolock) on af.party_id=r.related_party_id
+join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+join vw_1_Affiliate vaf (nolock)	on vaf.AffiliateNumber = vw.affiliatenbr
+Where r.is_deleted = 0
+and iar.individual_affiliate_relationship_type_id in (3,14,18,22,29,33)
+) a",,,,,,,,,,,,

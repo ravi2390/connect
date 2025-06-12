@@ -1,0 +1,84 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EventId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Event,Event ID,
+[EventName],[varchar](300),No,No,No,,,Conduct home visits.,,,company,,default:0,Event Name,
+[EventTypeId],[int],No,No,No,EventType(EventTypeId),,2,,,,,,Event Type ID,hasOne:reference
+[EventStatusId],[int],No,No,No,EventStatus(EventStatusId),,2,,,,,,Event Status ID,hasOne
+[IsRecurring],[bit],Yes,No,No,,0,1,,,,,,Is Recurring,
+[IndividualId],[int],Yes,No,No,Individual(IndividualId),,10000,,,,,,Individual ID,remove
+[AffiliateId],[int],Yes,No,No,Affiliate(AffiliateId),,1,,,,,,Affiliate ID,belongsTo
+[WorkLocationId],[int],Yes,No,No,WorkLocation(WorkLocationId),,1,,,,,,Work Location ID,hasOne:reference
+[EventStartDate],[datetime],Yes,No,No,,,39583,,,,,,Event Start Date,
+[EventEndDate],[datetime],Yes,No,No,,,39583,,,,,,Event End Date,
+[Notes],[varchar](max),Yes,No,No,,,"Rep.Young's staff let us know that no one had come to ask Young for his support on EFCA.  Mentioned that eventhough Young is in the minority, no one likes to be forgotten.",,,sentences,,,Notes,
+[OutcomeNotes],[varchar](max),Yes,No,No,,,"EFCA   voted for it.  Staff was surprised, said didn't know DY was going to be a vote in favor when he left the office to go to the floor.",,,,,,Outcome Notes,
+[OrganizerName],[varchar](50),Yes,No,No,,,Amy Giovanetti,,,name,,,Organizer Name,
+[LocationName],[varchar](200),Yes,No,No,,,Anchorage DY office,,,,,,Location Name,
+[LocationPhone],[varchar](20),Yes,No,No,,,212 2121212,,,randomNumber,,,Location Phone,
+[LocationFax],[varchar](20),Yes,No,No,,,212 2121213,,,randomNumber,,,Location Fax,
+[PhoneConferenceInstructions],[varchar](500),Yes,No,No,,,,,,,,,Phone Conference Instructions,
+[ConfirmationNumber],[varchar](50),Yes,No,No,,,,,,,,,Confirmation Number,
+[EmailBody],[varchar](max),Yes,No,No,,,,,,,,,Email Body,
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+EventId=a.Id,
+EventName=a.name,
+EventTypeId=activity_type_id,
+EventStatusId=activity_status_id,
+IsRecurring=is_recurring,
+IndividualId=contact_party_id,
+AffiliateId=a.party_id,
+WorkLocationId=employer_location_id,
+EventStartDate=start_date,
+EventEndDate=end_date,
+Notes=notes,
+OutcomeNotes=outcome_notes,
+OrganizerName=organizer,
+LocationName=location_name,
+LocationPhone=location_phone,
+LocationFax=location_fax,
+PhoneConferenceInstructions=phone_conference_instructions,
+ConfirmationNumber=confirmation_number,
+EmailBody=email_body,
+[CreatedAt] = ISNULL(a.created_at, a.updated_at),
+[UpdatedAt] = ISNULL(a.updated_at, a.created_at)
+FROM activity  a (nolock)
+inner join activity_type at (nolock) on a.activity_type_id=at.id
+inner join Affiliate af (nolock)        on af.party_id = a.party_id
+inner join vw_1_affiliate_connect afc (nolock) on af.number = afc.AffiliateNbr
+inner join activity_status ast (nolock) on a.activity_status_id=ast.id
+where a.is_deleted=0
+and at.is_deleted=0
+and ast.is_deleted=0
+Union
+SELECT distinct
+EventId=a.Id,
+EventName=a.name,
+EventTypeId=activity_type_id,
+EventStatusId=activity_status_id,
+IsRecurring=is_recurring,
+IndividualId=i.IndividualId,
+AffiliateId=af.AffiliateId,
+WorkLocationId=employer_location_id,
+EventStartDate=start_date,
+EventEndDate=end_date,
+Notes=notes,
+OutcomeNotes=outcome_notes,
+OrganizerName=organizer,
+LocationName=location_name,
+LocationPhone=location_phone,
+LocationFax=location_fax,
+PhoneConferenceInstructions=phone_conference_instructions,
+ConfirmationNumber=confirmation_number,
+EmailBody=email_body,
+[CreatedAt] = ISNULL(a.created_at, a.updated_at),
+[UpdatedAt] = ISNULL(a.updated_at, a.created_at)
+FROM activity  a (nolock)
+inner join activity_type at (nolock) on a.activity_type_id=at.id
+LEft Join vw_1_Affiliate af (nolock) on a.contact_party_id = af.AffiliateId
+Left Join vw_1_Individual i(nolock)	on a.contact_party_id = i.IndividualId
+inner join activity_status ast (nolock) on a.activity_status_id=ast.id
+where a.is_deleted=0
+and at.is_deleted=0
+and a.party_id is null
+and ast.is_deleted=0
+and (i.IndividualId is not null or af.AffiliateId is not null)",,,,,,,,,,,,

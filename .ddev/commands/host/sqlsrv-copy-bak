@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+## Description: The sqlsrv-copy-bak utility lets you copy SQL Server database backup files from the host machine.
+## Usage: sqlsrv-copy-bak filename.bak
+## Example: "ddev sqlsrv-copy-bak aftdb.bak"
+
+docker cp $@ ddev-connect-sqlsrv:/var/opt/mssql/data/aftdb.bak

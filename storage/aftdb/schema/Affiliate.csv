@@ -1,0 +1,108 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateId],[int],NO,Yes,NO,,"IDENTITY(1,1)",2023,,,,,N,label:Affiliate,Affiliate ID,
+[AffiliateGuid],[uniqueidentifier],NO,No,Yes,,newid(),D63E10A4 3157 11D6 B0A1 00508B6D7CC3,where party_type_id=2,,,,N,,Affiliate Guid,
+[AffiliateName],[varchar](200),NO,No,NO,,,Chicago Teachers Union,,,,company,Y,"default:1,long:1,full:1",Affiliate Name,
+[AffiliateNumber],[char](5),NO,No,Yes,,,420,where affiliate_type_id not equal to 19,,,randomNumber,Y,"small:0,default:0,long:0,full:0",Affiliate Number,
+[AffiliateAbbreviatedName],[varchar](200),Yes,No,No,,,Chicago Teachers Union,,,,company,Y,,Affiliate Abbreviated Name,
+[AffiliateAcronym],[varchar](200),Yes,No,No,,,CTU,,,,company,Y,"tiny:0,small:1",Affiliate Acronym,
+[AffiliateEIN],[char](10),Yes,No,No,,,36 0906695,,,,randomNumber,Y,,Affiliate EIN,
+[AffiliatePerCapitaPIN],[varchar](20),Yes,No,No,,,123456,,,,randomNumber,N,,Affiliate Per Capita PIN,
+[BillHighwayGroupId],[varchar](20),Yes,No,No,,,123456,,,,,Y,,BillHighway Group ID,
+[IsChartered],[bit],NO,No,No,,1,1,,,,,Y,,Is Chartered,
+[CharterDate],[datetime],Yes,No,No,,,1/1/1900,,,,dateTime,Y,,Charter Date,
+[ParentAffiliateId],[int],Yes,No,No,Affiliate(AffiliateId),,8011,join with party and afifliate tabel find the affiliate number for the parent party id,,,,N,,Parent Affiliate ID,belongsTo
+[AffiliateTypeId],[int],NO,No,No,AffiliateType(AffiliateTypeId),,,,,,,Y,,Affiliate Type ID,hasOne
+[AffiliateDesignationId],[int],NO,No,No,AffiliateDesignation(AffiliateDesignationId),,LA,,,,,Y,,Affiliate Designation ID,hasOne
+[AffiliateGeoReachId],[int],NO,No,No,AffiliateGeoReach(AffiliateGeoReachId),,,,,,,Y,,Affiliate Geo Reach ID,hasOne
+[IsAffiliateActive],[bit],NO,No,No,,1,1,"if 1 then true, else false",,,,Y,,Is Affiliate Active,
+[AffiliateInactiveReasonId],[int],Yes,No,No,AffiliateInactiveReason(AffiliateInactiveReasonId),,2,,,,,Y,,Affiliate Inactive Reason ID,hasOne
+[AffiliateInactiveDate],[datetime],Yes,No,No,,,1/1/1900,,,,,Y,,Affiliate Inactive Date,
+[LocationStateAbr],[varchar](20),Yes,No,No,,,IL,which state this affiliate is chartered,,,,Y,,Location State Abbreviation,
+[RegionId],[int],Yes,No,No,Region(RegionId),,1,,,,,,,Region Id,hasOne
+[RetireeEntityTypeId],[int],Yes,No,No,EntityType(EntityTypeId),0,,,,,,Y,,Retiree Entity Type Id,hasOne
+[RetireeDestinationId],[int],Yes,No,No,,0,,,,,,Y,,Retiree Destination Id,hasOne
+[ElectionMonth],[tinyint],Yes,No,No,,,11,,,,,Y,,Election Month,
+[OfficerTermStartMonth],[tinyint],Yes,No,No,,,1,,,,,Y,,Officer Term Start Month,
+[IsElectionYearOdd],[bit],Yes,No,No,,,0,,,,,,,Is Election Year Odd,
+[ElectionTermYears],[tinyint],Yes,No,No,,,2,,,,,,,Election Term Years,
+[NoNcoaUpdate],[bit],No,No,No,,0,1,,,,,,,No NCOA Update,
+[NoNationalUpdate],[bit],No,No,No,,0,1,,,,,,,No National Update,
+[NoStateUpdate],[bit],No,No,No,,0,1,,,,,,,No State Update,
+[NoLanWanUpdate],[bit],No,No,No,,0,1,,,,,,,No LAN WAN Update,
+[NoExternalUpdate],[bit],No,No,No,,0,1,,,,,,,No External Update,
+[AffiliateWebsite],[varchar](200),Yes,No,No,,,,,,,,,,Affiliate Website,
+[IsActionNetwork],[bit],Yes,No,No,,0,1,,,,,,,Is Action Network,
+[UsesAftMemberId],[bit],Yes,No,No,,0,1,,,,,,,Uses Aft Member Id,
+,,,,,,,,,,,,,,,
+SQL,"select distinct
+[AffiliateId] =p.id,
+[AffiliateGuid] =p.guid,
+[AffiliateName] =af.name,
+[AffiliateNumber]=case when af.number='06732' and af.designation='6732R' then '6732R' else af.number end,
+[AffiliateAbbreviatedName] =af.abbreviated_name,
+[AffiliateAcronym] =af.acronym,
+[AffiliateEIN] =af.employer_identification_number,
+[AffiliatePerCapitaPIN] =af.per_capita_pin,
+[BillHighwayGroupId]=af.billhighway_group_id,
+[IsChartered]=af.is_chartered,
+[CharterDate] =CONVERT(DATETIME2(0), af.charter_date),
+[ParentAffiliateId] =case when p.parent_party_id in (4090, 4091, 4092, 4093, 4094,4095) then 3585 else p.parent_party_id end,
+[AffiliateTypeId] =case
+when at.code in ('N','R','RW') then (select affiliatetypeid from vw_1_affiliatetype where affiliatetypename='National')
+when at.code in ('S','SV','SM','SR') then (select affiliatetypeid from vw_1_affiliatetype where affiliatetypename='State Federation')
+when at.code in ('LF') or af.number in (Select number from vw_federated_local) then (select affiliatetypeid from vw_1_affiliatetype where affiliatetypename='Federated Local')
+when at.code in ('C') then (select affiliatetypeid from vw_1_affiliatetype where affiliatetypename='Council')
+else (select affiliatetypeid from vw_1_affiliatetype where affiliatetypename='Local')
+end,
+[AffiliateDesignationId] =case
+when at.code in ('LA') then (select affiliatedesignationid from vw_1_affiliatedesignation where affiliatedesignationname='Associate')
+when at.code in ('LP') then (select affiliatedesignationid from vw_1_affiliatedesignation where affiliatedesignationname='Provisional')
+when at.code in ('E','LE') then (select affiliatedesignationid from vw_1_affiliatedesignation where affiliatedesignationname='Reserved')
+when at.code in ('LR','SR') then (select affiliatedesignationid from vw_1_affiliatedesignation where affiliatedesignationname='Retiree')
+else (select affiliatedesignationid from vw_1_affiliatedesignation where affiliatedesignationname='Typical')
+end,
+[AffiliateGeoReachId] =case
+when at.code in ('N','R','LW') then (select affiliategeoreachid from vw_1_affiliategeoreach where affiliategeoreachname='National')
+when at.code in ('S','SV','SM','SR','LS') then (select affiliategeoreachid from vw_1_affiliategeoreach where affiliategeoreachname='Statewide Local')
+else (select affiliategeoreachid from vw_1_affiliategeoreach where affiliategeoreachname='Local')
+end,
+[IsAffiliateActive] =case when af.affiliate_status_id=1 then 1 else 0 end,
+[AffiliateInactiveReasonId] =null,
+[AffiliateInactiveDate] =CONVERT(DATETIME2(0), af.disaffiliation_date),
+[LocationStateAbr] =left(af.local_geographical_state_abbreviation,2),
+[RegionId]=st.region_party_id,
+[RetireeEntityTypeId]=(select EntityTypeId from vw_1_entitytype where EntityTypeName='Unit'),
+[RetireeDestinationId]=null,
+[ElectionMonth] = ae.election_held_month,
+[OfficerTermStartMonth] = ae.officer_term_start_month,
+[IsElectionYearOdd] = ae.is_election_held_odd_or_even_year,
+[ElectionTermYears] = ae.election_term_length,
+[NoNcoaUpdate]=isnull(af.is_prevent_ncoa_update,0),
+[NoNationalUpdate]=isnull(af.is_prevent_national_update,0),
+[NoStateUpdate]=isnull(af.is_prevent_state_update,0),
+[NoLanWanUpdate]=isnull(af.is_prevent_lan_wan_update,0),
+[NoExternalUpdate]=isnull(af.is_prevent_third_party_update,0),
+[AffiliateWebsite]=af.website_url,
+IsActionNetwork=0,
+[UsesAftMemberId] = af.[is_member_id_generated_by_aft],
+[CreatedAt] = p.created_at,
+[UpdatedAt] = isnull(p.updated_at, p.created_at)
+from affiliate af (nolock)
+inner join party p (nolock) on af.party_id=p.id
+inner join affiliate_type at (nolock) on af.affiliate_type_id=at.id
+left outer join (select * from affiliate_retiree_business_rule_relationship (nolock) where retiree_business_rule_id=1) ret1 on ret1.affiliate_party_id = af.party_id
+left outer join (select distinct a.* from  affiliate_retiree_business_rule_relationship a (nolock) inner join party p (nolock) on a.options=p.id where p.is_deleted=0) ret2 on ret2.affiliate_party_id = af.party_id
+left outer join (select * from  affiliate_retiree_business_rule_relationship (nolock) where retiree_business_rule_id=4) ret3 on ret3.affiliate_party_id = af.party_id
+left outer join affiliate_election ae (nolock) on ae.id = af.party_id
+left join state_territory st (nolock) on st.code=left(af.local_geographical_state_abbreviation,2)
+where 1=1
+and af.affiliate_type_id not in (18,19,20)
+and p.is_deleted=0
+and p.party_type_id=2
+and af.name not like '%test%'
+and af.number not like 'cp%'
+and af.number not in ('99799','99997')
+and (len(af.number) =5)
+and af.number not like 'reg%'
+and af.number<>'stfed'
+and (p.guid in (select affiliateid from vw_1_affiliate_connect) or af.affiliate_type_id in (1, 4,6, 25, 26) or af.number in ('99999','99998', '09005') )",,,,,,,,,,,,,,

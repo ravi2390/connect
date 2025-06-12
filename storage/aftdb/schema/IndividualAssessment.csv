@@ -1,0 +1,37 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Name,Relationship Type
+[IndividualAssessmentId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,Individual Assessment ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,1,,,,,Individual ID,belongsTo
+[SubmittedByIndividualId],[int],Yes,No,No,Individual(IndividualId),,1,,,,,Submitted By Individual ID,hasOne:reference
+[IndividualQuickCommentId],[int],Yes,No,No,IndividualQuickComment(IndividualQuickCommentId),,1,,,,,Individual Quick Comment ID,hasOne:reference
+[Rating],[int],Yes,No,No,,,2,,,,,Rating,hasOne
+[ContactDate],[datetime],Yes,No,No,,,1/1/2000,,,,,Contact Date,
+[AssessmentContactTypeId],[int],Yes,No,No,AssessmentContactType(AssessmentContactTypeId),,1,,,,,Assessment Contact Type ID,hasOne
+[FollowupDate],[datetime],Yes,No,No,,,1/1/2000,,,,,Follow Up Date,
+[FollowupTime],[datetime],Yes,No,No,,,,,,,,Follow Up Time,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[IndividualAssessmentId] = ia.id,
+[IndividualId] = ia.party_id,
+[SubmittedByIndividualId] = null,
+[IndividualQuickCommentId] = pc.id,
+[Rating] = ia.rating,
+[ContactDate] = iv.survey_date,
+[AssessmentContactTypeId] = pc.party_comment_contact_type_id,
+[FollowupDate] = pc.follow_up_date,
+[FollowUpTime] = pc.follow_up_date,
+[CreatedAt] = ISNULL(ia.created_at, ia.updated_at),
+[UpdatedAt] = ISNULL(ia.updated_at, ia.created_at)
+from individual_assessment ia
+inner join party p (nolock) on ia.party_id = p.id
+inner join individual i (nolock) on p.id = i.party_id
+inner join vw_1_Individual iiv (nolock) on i.party_id = iiv.IndividualId
+inner join relationship r (nolock) on ia.party_id = r.party_id and r.relationship_type_id = 1
+inner Join affiliate af (nolock) on r.related_party_id = af.party_id
+inner join vw_1_affiliate_connect vw (nolock) on af.number = vw.AffiliateNbr
+Left join party_comment pc (nolock) on ia.comment_id = pc.id and pc.is_deleted = 0
+                and ISNULL(pc.comment, '') != ''
+                and pc.comment not like '%Test%'
+Left join individual_survey iv (nolock) on ia.individual_survey_id = iv.id
+where ia.is_deleted = 0
+and p.is_deleted = 0
+and r.is_deleted = 0",,,,,,,,,,,,

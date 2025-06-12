@@ -1,0 +1,53 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualPhoneId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Individual Phone,Individual Phone ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,1,,,,,,Individual ID,belongsTo
+[PhoneNumber],[Varchar] (20),NO,No,No,,,,phonenumber is how we track the contact phone number of any entity,The phone number asscoiated with the the PhoneId,phoneNumber,y,default:0,Phone Number,
+[Extension],[Varchar] (10),YES,No,No,,,,phone extension,,,,default:1,Extension,
+[IndividualPhoneTypeId],[int],No,No,No,IndividualPhoneType(IndividualPhoneTypeId),,1,,,,,,Individual Phone Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[CanTextRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),0,,,,,,,Can Text,hasOne:reference
+[CanCallRestrictionId],[int],Yes,No,No,ContactRestriction(ContactRestrictionId),0,1,,,,,,Contact Restriction ID,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,1,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+[CountryId],[int],Yes,No,No,Country(CountryId),,1,,,,,,Country ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"SELECT DISTINCT
+  IndividualPhoneId = c.id,
+  IndividualId = pa.id,
+  PhoneNumber = p.phone_number,
+  Extension = p.extension,
+  IndividualPhoneTypeId =
+                         CASE
+                           WHEN c.contact_context_id NOT IN (1, 2, 3, 11, 14, 16) THEN 14
+                           ELSE c.contact_context_id
+                         END,
+  ContactStatusId = c.contact_status_id,
+  CanTextRestrictionId = IIF(ISNULL(p.is_sms_allowed,1) = 0, 2, 1),
+  CanCallRestrictionId = IIF(ISNULL(c.can_contact, 1) = 0, 2, 1),
+  IsPreferred = c.is_preferred,
+  ContactSourceId = c.contact_status_id,
+  VerifiedDate = c.verified_date,
+  CreatedAt = c.created_at,
+  UpdatedAt = c.updated_at
+FROM Phone p (NOLOCK)
+INNER JOIN Contact c (NOLOCK)
+  ON p.contact_id = c.id
+INNER JOIN party pa (NOLOCK)
+  ON c.party_id = pa.id
+INNER JOIN individual i (NOLOCK)
+  ON pa.id = i.party_id
+INNER JOIN relationship r (NOLOCK)
+  ON r.party_id = pa.id
+INNER JOIN affiliate af (NOLOCK)
+  ON r.related_party_id = af.party_id
+JOIN vw_1_affiliate_connect vw (NOLOCK)
+  ON vw.affiliatenbr = af.number
+  inner join party p2 (nolock) on p2.id=af.party_id
+WHERE c.is_deleted = 0
+AND pa.is_deleted = 0
+AND pa.party_type_id = 1
+AND r.relationship_type_id = 1
+AND r.is_deleted = 0
+and p2.is_deleted=0
+and i.last_name<>''",,,,,,,,,,,,

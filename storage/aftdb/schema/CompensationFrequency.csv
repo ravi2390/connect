@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[CompensationFrequencyId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Compensation Frequency,Compensation Frequency ID,
+[CompensationFrequencyName],[varchar](50),No,No,Yes,,,"hourly, yearly",,,,,default:0,CompensationFrequency Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[CompensationFrequencyId] = id,
+[CompensationFrequencyName] = name
+from salary_type (nolock)
+where is_deleted = 0",,,,,,,,,,,,

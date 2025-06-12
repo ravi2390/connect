@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EthnicityId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Ethnicity,Ethnicity ID,
+[EthnicityName],[varchar] (100),No,No,Yes,,,,,,,,default:0,Ethnicity Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+EthnicityId=e.id,
+EthnicityName=e.name
+from Ethnicity e (nolock)
+where is_deleted=0",,,,,,,,,,,,

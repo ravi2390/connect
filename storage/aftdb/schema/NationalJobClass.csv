@@ -1,0 +1,48 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[NationalJobClassId],[int],No,YES,No,,"IDENTITY (1,1)",,Records that have NULL has party_id is a National Job Class in the jobclass table in 1.0. That is the top 48 records. Any Records that have a party_id then it is a local job class in the jobclass table in 1.0,,,,label:National Job Class,National Job Class ID,
+[NationalJobClassGuid],[uniqueidentifier],No,No,YES,,newid(),F5D73A9E 7855 11D4 B091 00508B6D7CC3,Records that have NULL has party_id is a National Job Class in the jobclass table in 1.0. That is the top 48 records. Any Records that have a party_id then it is a local job class in the jobclass table in 1.1,,,,,National Job Class Guid,
+[NationalJobClassName],[varchar](200),No,No,NO,,,Elementary Teacher,Records that have NULL has party_id is a National Job Class in the jobclass table in 1.0. That is the top 48 records. Any Records that have a party_id then it is a local job class in the jobclass table in 1.2,,,,default:0,National Job Class Name,
+[NationalJobClassCode],[varchar](50),Yes,No,NO,,,TA,,,,,"tiny:0,small:0",National Job Class Code,
+[DivisionId],[int],Yes,No,No,Division(DivisionId),,1,belongsTo,,,,,Division ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+NationalJobClassId = ROW_NUMBER() over(ORDER BY a.NationalJobClassName),
+NationalJobClassGuid = newid (),
+a.*
+From (Select distinct
+NationalJobClassName = case when j.name in ('Technical/Administrative',  'Administrator/Supervisor', 'Secretary/Clerk', 'Clerical/Secretarial') then 'Administrative'
+                            when j.name in ('Aide (playground, cafeteria, bus, other)', 'Early childhood edu assistant/aide/PSRP') then 'Aide, non-classroom'
+							when j.name in ('Building/Grounds/Maintenance', 'Building/Grounds/Maintenance/Trades', 'Mechanics') then 'Building/Grounds/Maintenance/Trades'
+							when j.name in ('Elementary Guidance Counselor', 'Secondary Guidance Counselor') then 'Counselor'
+							when j.name in ('Bus Driver') then 'Driver'
+							when j.name in ('Education Assistant/Paraprofessional', 'General PSRP') then 'Education Assistant/Paraprofessional'
+							when j.name in ('Professional Staff') then 'Engineer/Scientist'
+							when j.name in ('Full-time non tenure-track faculty') then 'Faculty - Full-time NTT'
+							when j.name in ('Part-time/adjunct faculty') then 'Faculty - Part-time/Adjunct'
+							when j.name in ('Full-time tenure-track faculty') then 'Faculty - Tenure Track'
+							when j.name in ('Financial/Accounting Professional ') then 'Financial Professional '
+							when j.name in ('Health', 'Medical Professional') then 'Health Care - Liscensed'
+							when j.name in ('Health Care Non-Professional', 'Other Health Care Professional') then 'Health Care - Non-liscensed'
+							when j.name in ('Science, Technology, Computer Services') then 'IT Professional'
+							when j.name in ('Legal Professional/Law Enforcement/Corrections') then 'Legal Professional'
+							when j.name in ('Librarian', 'Elementary Librarian', 'Secondary Librarian') then 'Librarian'
+							when j.name in ('Social, Rehabilitative and Employment Services') then 'Mental Health Professional'
+							when j.name in ('Licensed Practical Nurse') then 'Nurse, LPN'
+							when j.name in ('Registered Nurse') then 'Nurse, RN'
+							when j.name in ('Elementary School Nurse', 'Secondary School Nurse') then 'Nurse, School'
+							when j.name in ('Security') then 'Public Safety/Security'
+							when j.name in ('Public Employee') then 'Social Services'
+							when j.name in ('Custodian') then 'Supervisor'
+							when j.name in ('Early childhood education teacher', 'Elementary Teacher', 'Secondary Teacher', 'Teacher') then 'Teacher'
+							when j.name in ('Elementary Specialist', 'Secondary Specialist') then 'Teacher - Specialist'
+							when j.name in ('Therapist') then 'Other Professional' else j.name end,
+NationalJobClassCode = null,
+DivisionId = null
+from job_class j (nolock)
+inner join NationalJobClassName_NewList nl (nolock) on j.id = nl.NationalJobClassId
+inner join division d (nolock) on j.division_id = d.id
+where j.party_id is null
+and national_job_class_id is null
+and j.is_deleted = 0
+and j.name not in ('Higher ED', 'Educational, Higher Ed., Cultural' )
+) a",,,,,,,,,,,,

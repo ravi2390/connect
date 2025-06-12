@@ -1,0 +1,13 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[CommitteeMemberTypeId],[int],No,Yes,No,,"IDENTITY(1,1)",5,,,,,label:Committee Member Type,Committee Member Type ID,
+[CommitteeMemberTypeName],[varchar] (200),No,No,No,,,Chair,,,,y,default:0,Committee Member Type Name,
+[ParentCommitteeMemberTypeId],[int],Yes,No,No,CommitteeMemberType(CommitteeMemberTypeId),,2,,,,,,Parent Committee Member Type ID,hasOne:reference
+,,,,,,,,,,,,,,
+SQL,"select distinct
+[CommitteeMemberTypeId]=id,
+[CommitteeMemberTypeName]=name,
+[ParentCommitteeMemberTypeId]=parent_committee_membership_type_id,
+CreatedAt = created_at,
+UpdatedAt = ISNULL(updated_at, created_at)
+from  committee_membership_type (nolock)
+where is_deleted=0",,,,,,,,,,,,,

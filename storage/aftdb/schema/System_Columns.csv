@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[CreatedBy],[int],NO,No,NO,,0,,,,,,,,Created By,
+[CreatedAt],[datetime],NO,No,NO,,getdate(),,,,,,,,Created At,
+[UpdatedBy],[int],NO,No,NO,,0,,,,,,,,Updated By,
+[UpdatedAt],[datetime],NO,No,NO,,getdate(),,,,,,,,Updated At,
+[DeletedAt],[datetime],YES,No,NO,,,,,,,,,,Deleted At,

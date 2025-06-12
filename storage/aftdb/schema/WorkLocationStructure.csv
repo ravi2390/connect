@@ -1,0 +1,13 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkLocationStructureId],[int],NO,YES,No,,"IDENTITY (1,1)",96,,,,,label:Work Location Structure,Work Location Structure ID,
+[WorkLocationId],[int],NO,NO,1,WorkLocation(WorkLocationId),,71697,,,,,label:Work Location,Work Location ID,belongsTo
+[WorkStructureId],[int],NO,NO,1,WorkStructure(WorkStructureId),,133,,,,,label:Work Structure,Work Structure ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"Select distinct
+[WorkLocationStructureId] = eleb.id,
+[WorkLocationId] = eleb.employer_location_id,
+[WorkStructureId] = eleb.employer_business_unit_id
+from employer_location_employer_business_unit_relationship eleb (nolock)
+inner join vw_1_worklocation wl (nolock) on wl.worklocationid=eleb.employer_location_id
+inner join vw_1_workstructure ws (nolock) on ws.workstructureid=eleb.employer_business_unit_id
+where eleb.is_deleted = 0",,,,,,,,,,,,

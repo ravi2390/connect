@@ -1,0 +1,25 @@
+// Vuetify
+@use "./settings";
+@use 'vuetify';
+
+// Fonts
+//@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+
+// Bootstrap
+//@import 'bootstrap/scss/bootstrap';
+
+// Views
+@use 'misc';
+
+// Views
+@use 'login';
+
+//@import "font-awesome/scss/font-awesome.scss";
+
+@use 'nav/menu';
+@use 'main';
+@use 'tables';
+@use 'forms';
+@use 'mobile/mobile';
+

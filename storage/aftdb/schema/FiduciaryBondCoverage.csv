@@ -1,0 +1,6 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[FiduciaryBondCoverageId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,N,label:Fiduciary Bond Coverage,Fiduciary Bond Coverage ID,
+[FiduciaryBondCoverageName],[varchar](200),No,No,Yes,,,,,,,N,default:0,Fiduciary Bond Coverage Name,
+[DisplayOrder],[int],yes,no,No,,,,,,,N,,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

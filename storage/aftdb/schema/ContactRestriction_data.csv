@@ -1,0 +1,6 @@
+ContactRestrictionId,ContactRestrictionName,Email,AddressVisit,AddressMail,PhoneCall,PhoneText
+1,No Restriction,1,1,1,1,1
+2,Remove from mailing list,1,1,1,1,1
+3,Publications only,1,0,1,0,0
+4,Do not send publications,1,0,1,0,0
+5,Postal return,1,1,1,1,1

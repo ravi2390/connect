@@ -1,0 +1,46 @@
+// Body
+$body-bg: #F2F2F2;
+
+// Typography
+$font-family-sans-serif: 'Nunito', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+// Colors
+$primary: #092a5c;
+$blue-links: #7bb8da;
+$hover: #f0f5fe;
+$blue: #3490dc;
+$indigo: #6574cd;
+$purple: #9561e2;
+$pink: #f66d9b;
+$red: #e3342f;
+$orange: #f6993f;
+$yellow: #ffed4a;
+$green: #38c172;
+$teal: #4dc0b5;
+$cyan: #6cb2eb;
+$primary-dark: #0C1F42;
+
+:root {
+  --link-color: #{$primary};
+  --link-hover-color: #020a16;
+}
+// Theme overrides.
+.bg-warning.v-theme--light {
+  --v-theme-warning: 255, 193, 7; // bootstrap yellow
+  --v-theme-on-warning: 0, 0 0;
+}
+.v-field--disabled.v-theme--light {
+  --v-disabled-opacity: .5;
+}
+//.form-designer-col {
+//    .v-theme--light {
+//      --v-disabled-opacity: 1;
+//    }
+//}
+.text-white,
+.bg-bprimary {
+  --link-color: #fff;
+  --link-hover-color: #fff;
+}

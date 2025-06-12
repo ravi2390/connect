@@ -1,0 +1,65 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[LocalAgreementId],[int],No,Yes,No,,"Identity (1,1)",,,,,,label:Local Agreement,Local Agreement ID,
+[LocalAgreementName],[varchar](200),NO,NO,NO,,,,,,,,default:0,Local Agreement Name,
+[EmployerId],[int],No,No,No,Employer(EmployerId),,,,EmployerId is a unique ID field with an integer datatype. EmployerId is used to uniquly indentify each Employer in the Employer Table.,,,,Employer ID,belongsTo
+[GradeStepName],[varchar](200),Yes,No,No,,,,,,,,,Grade Step Name,
+[GradeStatus],[bit],No,No,No,,,,,,,,,Grade Status,
+[LocalAgreementTypeId],[int],Yes,No,No,LocalAgreementType(LocalAgreementTypeId),,,,,,,,LocalAgreementTypeId,hasOne
+[LocalAgreementRatificationDate],[datetime],yes,no,no,,,,,,,,,Local Agreement Ratification Date,
+[LocalAgreementEffectiveStartDate],[datetime],yes,no,no,,,,,,,,,Local Agreement Effective Start Date,
+[LocalAgreementEffectiveEndDate],[datetime],yes,no,no,,,,,,,,,Local Agreement Effective End Date,
+[LocalAgreementExpirationDate],[datetime],yes,no,no,,,,,,,,,Local Agreement Expiration Date,
+[FileUrl],[varchar](300),yes,no,no,,,,,,url,,,File URL,
+[IsStructural],[bit],No,NO,No,,0,1,,,,Y,,Is Local Agreement Structural,
+[IsUnknown],[bit],No,NO,No,,0,1,,,,Y,,Is Local Agreement Unknown,
+,,,,,,,,,,,,,
+SQL,"Select [LocalAgreementId] = ROW_NUMBER() Over (Order by IsStructural, LocalAgreementId),
+[LocalAgreementName],
+[EmployerId],
+[GradeStepName],
+[GradeStatus],
+[LocalAgreementTypeId],
+[LocalAgreementRatificationDate],
+[LocalAgreementEffectiveStartDate],
+[LocalAgreementEffectiveEndDate],
+[LocalAgreementExpirationDate],
+[FileUrl],
+[IsStructural],
+[IsUnknown]
+From
+(
+Select Distinct
+[LocalAgreementId] = EmployerId,
+[LocalAgreementName]  = CONCAT(Replace (EmployerName, ' - Structured Employer', ''), ' - Structured Local Agreement'),
+[EmployerId] = EmployerId,
+[GradeStepName] = NULL,
+[GradeStatus] = 0,
+[LocalAgreementTypeId] = 5,
+[LocalAgreementRatificationDate] = '1900-01-01 00:00:00',
+[LocalAgreementEffectiveStartDate] = '1900-01-01 00:00:00',
+[LocalAgreementEffectiveEndDate] = '2099-12-31 00:00:00',
+[LocalAgreementExpirationDate] = '2099-12-31 00:00:00',
+[FileUrl] = NULL,
+[IsStructural] = 1,
+[IsUnknown] = 0
+From vw_1_Employer
+Where IsStructural = 1
+
+Union
+
+Select Distinct
+[LocalAgreementId] = EmployerId,
+[LocalAgreementName]  = CONCAT(Replace(Replace (EmployerName, ' - Unknown Employer', ''), ' - Structured Employer', ''), ' - Unknown Local Agreement'),
+[EmployerId] = EmployerId,
+[GradeStepName] = NULL,
+[GradeStatus] = 0,
+[LocalAgreementTypeId] = 5,
+[LocalAgreementRatificationDate] = '1900-01-01 00:00:00',
+[LocalAgreementEffectiveStartDate] = '1900-01-01 00:00:00',
+[LocalAgreementEffectiveEndDate] = '2099-12-31 00:00:00',
+[LocalAgreementExpirationDate] = '2099-12-31 00:00:00',
+[FileUrl] = NULL,
+[IsStructural] = 0,
+[IsUnknown] = 1
+From vw_1_Employer
+) a",,,,,,,,,,,,

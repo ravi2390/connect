@@ -1,0 +1,30 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EmployerInstitutionTypeId],[int],NO,YES,No,,"IDENTITY (1,1)",2,,,,,label:Employer Institution Type,Employer Institution Type ID,
+[EmployerInstitutionTypeName],[varchar](200),NO,No,No,,,City Agency,,,,,default:0,Employer Institution Type Name,
+[HasPrivateSector],[bit],NO,No,No,,0,0,,,,,,Has Private Sector,
+[NationalInstitutionTypeId],[int],YES,No,No,NationalInstitutionType(NationalInstitutionTypeId),,11,,,,,,National Institution Type ID,hasOne
+[EmployerTypeId],[int],YES,No,No,EmployerType(EmployerTypeId),,2,join with employertype table to find the employertypeid,EmployerTypeId is used to identify what type an Employer belongs to. For e.g. Health Care or Higher Education etc. EmployerTypeId is a foreign Key in the Employer Table which referenes to the Employer Type Table.,,,,Employer Type ID,hasOne:reference
+[EmployerId],[int],YES,No,No,Employer(EmployerId),,1,,,,,,Employer ID,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"select distinct
+[EmployerInstitutionTypeId] = it.id,
+[EmployerInstitutionTypeName] = it.name,
+[HasPrivateSector]   = it.Is_Government,
+[NationalInstitutionTypeId] = it.national_institution_type_id,
+[EmployerTypeId] = it.employer_type_id,
+[EmployerId]=it.party_id,
+[CreatedAt] = ISNULL(it.created_at, it.updated_at),
+[UpdatedAt] = ISNULL(it.updated_at, it.created_at)
+from institution_type it  (nolock)
+inner join party p   (nolock) on it.party_id=p.id
+inner join employer e   (nolock) on p.id=e.party_id
+inner join [vw_1_employer] ev  (nolock) on ev.EmployerId=e.party_id
+inner join relationship r  (nolock) on p.id = r.related_party_id
+inner join Affiliate a  (nolock) on r.party_id = a.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=a.number
+where it.party_id is not null
+and it.is_deleted = 0
+and p.is_deleted=0
+and p.party_type_id=3
+and r.is_deleted=0
+and r.relationship_type_id=3",,,,,,,,,,,,

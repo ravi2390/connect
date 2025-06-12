@@ -1,0 +1,123 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EmployerId],[int],No,Yes,No,,"IDENTITY(1,1)",,,EmployerId is a unique ID field with an integer datatype. EmployerId is used to uniquly indentify each Employer in the Employer Table.,,,,Employer ID,
+[EmployerGuid],[uniqueidentifier],No,No,No,,newid(),,Party_id in employer table in 1.0 should be joined with id in party table to obtain the correct guid associated to the employer for the existing records. Any new records will have new GUID.,GUID is an acronym for 'Globally Unique Identifier'.  EmplouerGUID is used to uniquely identify each Employer record in the Employer Table.,,,,Employer Guid,
+[EmployerName],[varchar](200),No,No,No,,,Fairfax County Public Schools,,EmployerName states the Employer worksite Name in the Employer Table. EmployerName allows the user to define the name of the employer.,company,,default:0,Employer Name,
+[EmployerTypeId],[int],No,No,No,EmployerType(EmployerTypeId),1,2,join with employertype table to find the employertypeid,EmployerTypeId is used to identify what type an Employer belongs to. For e.g. Health Care or Higher Education etc. EmployerTypeId is a foreign Key in the Employer Table which referenes to the Employer Type Table.,,,,Employer Type ID,hasOne:reference
+[ParentEmployerId],[int],Yes,No,No,Employer(EmployerId),,,"In Connect1.0 there is no Parent Employer Id, This is a new column in 2.0. All the Employer Data should be migrated to 2.0 and ParentEmployerId will be NULL. In future if an Employer in 2.0 has a Parent Employer then an ID can be stored under ParentEmployerId.","ParentEmployerId field allows the user to establish a relationship between the employer they are creating and any other employers in the Connect2.0 database. ParentEmployerId acts a Foregin Key and references to the EmployerId in the Employer Table. For example,  Peace South is part of Kaiser Permanente, which makes Kaiser Parmanente the Parent Employer.",,,,Parent Employer ID,hasOne:reference
+[Acronym],[varchar](30),Yes,No,No,,,FCPS,,An Acronym is an abbreviation created for an Employer which states the first letter of each word from the Employer Name. For e.g. Fairfax County Public Schools will have an acronym as 'FCPS',,,"tiny:0,small:0",Acronym,
+[EmployerCode],[varchar](12),Yes,No,No,,,G34,,,,,"tiny:0,small:0",Employer Code,
+[ChapterId],[int],Yes,No,No,Chapter(ChapterId),,1,,,,N,,Chapter ID,belongsTo
+[HasPrivateSector],[bit],Yes,No,No,,,Yes,,,,,,Has Private Sector,
+[Area],[varchar](50),Yes,No,No,,,,,,,,tiny:0,Area,
+[WebsiteURL],[varchar](500),Yes,No,No,,,,,,,,,Website URL,
+[IsStructural],[bit],No,NO,No,,0,1,,,,Y,,Is Employer Structural,
+[IsUnknown],[bit],No,NO,No,,0,1,,,,Y,,Is Employer Unknown,
+,,,,,,,,,,,,,
+SQL,"Select [EmployerId] = [EmployerId],
+[EmployerGuid] = [EmployerGuid],
+[EmployerName]  = [EmployerName],
+[EmployerTypeId] = [EmployerTypeId],
+[ParentEmployerId] = [ParentEmployerId],
+[Acronym]  = [Acronym],
+[EmployerCode] = [EmployerCode],
+[ChapterId] = [ChapterId],
+[HasPrivateSector] = [HasPrivateSector],
+[Area] = [Area], 
+[WebsiteURL] = [WebsiteURL],
+[IsStructural] = 0,
+[IsUnknown] = 0,
+[CreatedAt] = CreatedAt,
+[UpdatedAt] = UpdatedAt
+From (
+select distinct
+[EmployerId] = p.id,
+[EmployerGuid] = p.guid,
+[EmployerName]  = e.name,
+[EmployerTypeId] = isnull(e.employer_type_id,1),
+[ParentEmployerId] = p.parent_party_id,
+[Acronym]  = e.acronym,
+[EmployerCode] = e.employer_code,
+[ChapterId] = ISNULL(mf.Chapter_party_id, ISNULL(vwc1.ChapterId, vwc.ChapterId)),
+[HasPrivateSector] = IIF(e.is_government = 0, 1, 0),
+[Area] = e.area, 
+[WebsiteURL] = e.website_url,
+[IsStructural] = 0,
+[IsUnknown] = 0,
+a.party_id,
+[CreatedAt] = ISNULL(p.created_at, p.updated_at),
+[UpdatedAt] = isnull(p.updated_at, p.created_at)
+from Employer e (nolock)
+inner join party p  (nolock) on e.party_id=p.id
+inner join relationship r  (nolock) on p.id = r.related_party_id
+inner join [Affiliate] a  (nolock) on r.party_id = a.party_id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=a.number
+Left Join migration_FederatedLocalMapping mf (nolock)	on mf.Employer_party_id = e.party_id
+Left join Vw_1_Chapter vwc (nolock)	on vwc.ChapterId = a.party_id
+Left Join Vw_1_Chapter vwc1 (nolock) on vwc1.ChapterId = 100000 + a.party_id
+where 1=1
+and p.is_deleted=0
+and e.party_id is not null
+and a.number is not null
+and a.number not like 'cp%'
+and a.number not in ('99799','99997','dc101')
+and r.relationship_type_id=3
+and r.is_deleted=0
+and e.employer_type_id<>8
+) a
+
+Union
+
+
+Select [EmployerId] = ROW_NUMBER() Over (Order by EmployerId),
+[EmployerGuid],
+[EmployerName],
+[EmployerTypeId],
+[ParentEmployerId],
+[Acronym],
+[EmployerCode],
+[ChapterId],
+[HasPrivateSector],
+[Area], 
+[WebsiteURL],
+[IsStructural],
+[IsUnknown],
+[CreatedAt] = GETDATE(),
+[UpdatedAt] = GETDATE()
+From
+(
+Select [EmployerId] = c.ChapterId,
+[EmployerGuid] = NEWID(),
+[EmployerName]  = CONCAT(Replace(Replace (c.ChapterName, ' - Structured Chapter', ''), ' - Unknown Chapter', ''), ' - Structured Employer'),
+[EmployerTypeId] = 9,
+[ParentEmployerId] = null,
+[Acronym]  = null,
+[EmployerCode] = NULL,
+[ChapterId] = c.ChapterId,
+[HasPrivateSector] = 0,
+[Area] = NULL, 
+[WebsiteURL] = NULL,
+[IsStructural] = 1,
+[IsUnknown] = 0
+From Vw_1_Chapter c
+Where IsStructural = 1
+
+Union
+
+Select [EmployerId] = 200000 + c.ChapterId,
+[EmployerGuid] = NEWID(),
+[EmployerName]  = CONCAT(Replace(Replace (c.ChapterName, ' - Unknown Chapter', ''), ' - Structured Chapter', ''), ' - Unknown Employer'),
+[EmployerTypeId] = 9,
+[ParentEmployerId] = null,
+[Acronym]  = null,
+[EmployerCode] = NULL,
+[ChapterId] = c.ChapterId,
+[HasPrivateSector] = 0,
+[Area] = NULL, 
+[WebsiteURL] = NULL,
+[IsStructural] = 0,
+[IsUnknown] = 1
+From Vw_1_Chapter c
+Join vw_1_Affiliate af	on c.AffiliateId = af.AffiliateId
+Where (c.IsStructural = 1 and af.AffiliateNumber not in (Select number From vw_federated_local)) or
+(c.IsStructural = 0 and af.AffiliateNumber in (Select number From vw_federated_local))
+) a",,,,,,,,,,,,

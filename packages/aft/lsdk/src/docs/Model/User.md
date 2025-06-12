@@ -1,0 +1,45 @@
+# # User
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**can** | **array<string,bool>** | Operations the current user is able to perform on this object | [optional] [readonly]
+**avatar_url** | **string** | URL for the avatar image (may be generic) | [optional] [readonly]
+**avatar_url_without_sizing** | **string** | URL for the avatar image (may be generic), does not specify size | [optional] [readonly]
+**credentials_api3** | [**\OpenAPI\Client\Model\CredentialsApi3[]**](CredentialsApi3.md) | API credentials | [optional] [readonly]
+**credentials_email** | [**\OpenAPI\Client\Model\CredentialsEmail**](CredentialsEmail.md) |  | [optional]
+**credentials_embed** | [**\OpenAPI\Client\Model\CredentialsEmbed[]**](CredentialsEmbed.md) | Embed credentials | [optional] [readonly]
+**credentials_google** | [**\OpenAPI\Client\Model\CredentialsGoogle**](CredentialsGoogle.md) |  | [optional]
+**credentials_ldap** | [**\OpenAPI\Client\Model\CredentialsLDAP**](CredentialsLDAP.md) |  | [optional]
+**credentials_looker_openid** | [**\OpenAPI\Client\Model\CredentialsLookerOpenid**](CredentialsLookerOpenid.md) |  | [optional]
+**credentials_oidc** | [**\OpenAPI\Client\Model\CredentialsOIDC**](CredentialsOIDC.md) |  | [optional]
+**credentials_saml** | [**\OpenAPI\Client\Model\CredentialsSaml**](CredentialsSaml.md) |  | [optional]
+**credentials_totp** | [**\OpenAPI\Client\Model\CredentialsTotp**](CredentialsTotp.md) |  | [optional]
+**display_name** | **string** | Full name for display (available only if both first_name and last_name are set) | [optional] [readonly]
+**email** | **string** | EMail address | [optional] [readonly]
+**embed_group_space_id** | **string** | (DEPRECATED) (Embed only) ID of user&#39;s group space based on the external_group_id optionally specified during embed user login | [optional] [readonly]
+**first_name** | **string** | First name | [optional]
+**group_ids** | **string[]** | Array of ids of the groups for this user | [optional] [readonly]
+**home_folder_id** | **string** | ID string for user&#39;s home folder | [optional]
+**id** | **string** | Unique Id | [optional] [readonly]
+**is_disabled** | **bool** | Account has been disabled | [optional]
+**last_name** | **string** | Last name | [optional]
+**locale** | **string** | User&#39;s preferred locale. User locale takes precedence over Looker&#39;s system-wide default locale. Locale determines language of display strings and date and numeric formatting in API responses. Locale string must be a 2 letter language code or a combination of language code and region code: &#39;en&#39; or &#39;en-US&#39;, for example. | [optional]
+**looker_versions** | **string[]** | Array of strings representing the Looker versions that this user has used (this only goes back as far as &#39;3.54.0&#39;) | [optional] [readonly]
+**models_dir_validated** | **bool** | User&#39;s dev workspace has been checked for presence of applicable production projects | [optional]
+**personal_folder_id** | **string** | ID of user&#39;s personal folder | [optional] [readonly]
+**presumed_looker_employee** | **bool** | User is identified as an employee of Looker | [optional] [readonly]
+**role_ids** | **string[]** | Array of ids of the roles for this user | [optional] [readonly]
+**sessions** | [**\OpenAPI\Client\Model\Session[]**](Session.md) | Active sessions | [optional] [readonly]
+**ui_state** | **array<string,string>** | Per user dictionary of undocumented state information owned by the Looker UI. | [optional]
+**verified_looker_employee** | **bool** | User is identified as an employee of Looker who has been verified via Looker corporate authentication | [optional] [readonly]
+**roles_externally_managed** | **bool** | User&#39;s roles are managed by an external directory like SAML or LDAP and can not be changed directly. | [optional] [readonly]
+**allow_direct_roles** | **bool** | User can be directly assigned a role. | [optional] [readonly]
+**allow_normal_group_membership** | **bool** | User can be a direct member of a normal Looker group. | [optional] [readonly]
+**allow_roles_from_normal_groups** | **bool** | User can inherit roles from a normal Looker group. | [optional] [readonly]
+**embed_group_folder_id** | **string** | (Embed only) ID of user&#39;s group folder based on the external_group_id optionally specified during embed user login | [optional] [readonly]
+**is_iam_admin** | **bool** | User is an IAM Admin - only available in Looker (Google Cloud core) | [optional] [readonly]
+**url** | **string** | Link to get this item | [optional] [readonly]
+
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

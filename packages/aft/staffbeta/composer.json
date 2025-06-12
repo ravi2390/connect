@@ -1,0 +1,29 @@
+{
+    "name": "aft/staffbeta",
+    "description": "Connect Staff User Interface (Beta)",
+    "version": "1.0",
+    "require": {
+        "php": "^8.1"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\StaffBeta\\ServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\StaffBeta\\": "src/",
+            "Aft\\StaffBeta\\Seeds\\": "database/seeds/"
+        },
+        "files": ["helpers/helpers.php"]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

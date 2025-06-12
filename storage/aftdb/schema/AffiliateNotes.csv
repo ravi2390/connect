@@ -1,0 +1,25 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateNotesId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,N,label:Affiliate Notes,Affiliate Notes ID,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,1078,,,,Y,,Affiliate ID,belongsTo
+[AffiliateNotes],[varchar](2000),Yes,No,No,,,,,,sentence,Y,default:0,Affiliate Notes,
+[AffiliateNotesDate],[DateTime],Yes,No,No,,getdate(),,,,,Y,,Affiliate Notes Date,
+[AffiliateNotesAuthor],[varchar](200),Yes,No,No,,suser_name(),,,,name,Y,,Affiliate Notes Author,
+[SubmitByUserId],[int],Yes,No,No,,,,,,,,,Submit User ID,
+,,,,,,,,,,,,,
+SQL,"Select distinct
+AffiliateNotesId=c.id,
+AffiliateId=p.id,
+AffiliateNotes = c.comment,
+AffiliateNotesDate = c.created_at,
+AffiliateNotesAuthor = 'AFT',
+ [CreatedAt] = c.created_at,
+ [UpdatedAt] = isnull(c.updated_at, c.created_at)
+from party_comment c (nolock)
+inner join affiliate af (nolock) on c.party_id = af.party_id
+inner join party p (nolock) on p.id=c.party_id
+inner join vw_1_affiliate_connect a (nolock) on p.guid=a.affiliateid
+where 1=1
+and c.comment<>''
+and c.party_id is not null
+and c.comment not like '%Test%'
+and c.is_deleted=0",,,,,,,,,,,,

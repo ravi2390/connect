@@ -1,0 +1,46 @@
+<?php
+{% block columnoptions %}
+{% spaceless %}
+{% if column.default == 'autoinc' %}->autoIncrement(){% elseif column.default == 'now' %}->useCurrent(){% elseif column.default is not empty %}->default({{ column.default }}){% endif %}
+{% if column.unique %}->unique(){% endif %}
+{% if column.nullable == true %}->nullable(){% endif %}
+{% endspaceless %}
+{% endblock %}
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class Create{{ table.name }}Table extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('{{ table.name }}', function (Blueprint $table) {
+{% for column in table.rows %}{% set type = column.type|split(':') %}
+            $table->{{ type[0] }}('{{ column.name }}'){{ block('columnoptions') }};
+{% if column.primary and column.default != 'autoinc' %}
+            $table->primary('{{ column.name }}');
+{% endif %}
+{% if column.relationship is not empty %}
+{% set rel = column.relationship|split(':') %}
+            $table->foreign('{{ column.name }}')->references('{{ rel[1] }}')->on('{{ rel[0] }}');
+{% endif %}
+{% endfor %}
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('{{ table.name }}');
+    }
+}

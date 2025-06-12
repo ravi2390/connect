@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[PayPeriodTypeId],[int],NO,YES,No,,"IDENTITY (1,1)",1,,,,,label:Pay Period Type,Pay Period Type ID,
+[PayPeriodTypeName],[varchar](200),NO,NO,NO,,,bi weekly,,,,,default:0,Pay Period Type Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[PayPeriodTypeId] = id,
+[PayPeriodTypeName] = name
+from pay_period_type (nolock)
+where is_deleted = 0",,,,,,,,,,,,

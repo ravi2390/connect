@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[QuestionTypeId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Question Type,Question Type ID,
+[QuestionTypeName],[varchar](200),No,No,Yes,,,Free text,,,text,,default:0,Question Type Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[QuestionTypeId] = id,
+[QuestionTypeName] = name
+from question_type (nolock)
+where is_deleted = 0",,,,,,,,,,,,

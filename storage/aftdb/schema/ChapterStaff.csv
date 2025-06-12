@@ -1,0 +1,11 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[ChapterStaffId],[int],No,Yes,No,,"Identity (1,1)",1234,,,,N,label:Chapter Staff,ChapterStaff ID,
+[IndividualId],[int],No,No,1,Individual(IndividualId),,12,,,,Y,,Individual ID,hasOne:reference
+[ChapterId],[int],No,No,1,Chapter(ChapterId),,21354,,,,Y,,Chapter ID,belongsTo
+[StaffDepartmentId],[int],No,No,1,StaffDepartment(StaffDepartmentId),,1,,,,Y,,Staff Department ID,hasOne:reference
+[StaffTitle],[varchar](100),No,No,No,,,Manager,,,,Y,default:0,Staff Title,
+[TermStartDate],[datetime],Yes,No,No,,,39583,,,,Y,,Term Start Date,
+[TermEndDate],[datetime],Yes,No,No,,,39583,,,,Y,,Term End Date,
+[IsCurrent],[bit],No,No,No,,1,1,,,,Y,,Is Active,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

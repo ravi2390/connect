@@ -1,0 +1,114 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[LocalJobClassId],[int],No,YES,No,,"IDENTITY (1,1)",1,Records that have NULL has party_id is a National Job Class in the jobclass table in 1.0. That is the top 48 records. Any Records that have a party_id then it is a local job class in the jobclass table in 1.0,,,,label:Local Job Class,Local Job Class ID,
+[LocalJobClassGuid],[uniqueidentifier],No,No,No,,newid(),F5D73A9E 7855 11D4 B091 00508B6D7CC3,Records that have NULL has party_id is a National Job Class in the jobclass table in 1.0. That is the top 48 records. Any Records that have a party_id then it is a local job class in the jobclass table in 1.1,,,,,Local Job Class Guid,
+[LocalJobClassName],[varchar](200),No,No,No,,,Elementary Teacher,Records that have NULL has party_id is a National Job Class in the jobclass table in 1.0. That is the top 48 records. Any Records that have a party_id then it is a local job class in the jobclass table in 1.2,,,,default:0,Local Job Class Name,
+[NationalJobClassId],[int],Yes,No,No,NationalJobClass(NationalJobClassId),,39,,,,,,National Job Class ID,hasOne
+[LocalJobClassCode],[varchar](50),Yes,No,No,,,3415,,,,,tiny:0,Local Job Class Code,
+[UnitId],[int],Yes,No,No,Unit(UnitId),,1,,,,,,Unit ID,belongsTo
+[IsStructural],[bit],No,NO,No,,0,1,,,,Y,,Is Local Job Class Structural,
+[IsUnknown],[bit],No,NO,No,,0,1,,,,Y,,Is Local Job Class Unknown,
+,,,,,,,,,,,,,
+SQL,"Select [LocalJobClassId] = ROW_NUMBER() Over (Order by Employer_job_class_id),
+Employer_job_class_id = Employer_job_class_id,
+[LocalJobClassGuid],
+[LocalJobClassName],
+[NationalJobClassId],
+[LocalJobClassCode],
+[AffiliateId],
+[UnitId],
+[IsStructural] = 0,
+[IsUnknown] = 0,
+[CreatedAt],
+[UpdatedAt]
+From (
+Select Distinct Employer_job_class_id = ejc.Id,
+[LocalJobClassGuid] = ejc.guid,
+[LocalJobClassName] = ejc.name,
+[NationalJobClassId] = case 
+when ejc.name like '%Teacher%' OR ejc.name like '%Substitute%' OR ejc.name like '%Science%' OR ejc.name like '%Kindergarden%' OR ejc.name like '%TCHR%' OR ejc.name like '%PRE K%' OR ejc.name like '%Grade 1%' OR ejc.name like '%Grade 2%' OR ejc.name like '%CTA%' then 28
+when ejc.name like '%Elementary Specialist%' OR ejc.name like '%Secondary Specialist%' OR ejc.name like '%Teacher - Specialist%' OR ejc.name like '%Specialist%' then 29
+when ejc.name like '%Admin%' OR ejc.name like '%Clerk%' OR ejc.name like '%Secretary%' OR ejc.name like '%Secretarial%' OR ejc.name like '%Professional Staff%' then 1
+when ejc.name like '%Aide%' OR ejc.name like '%non-classroom%' OR ejc.name like '%Athletic%' OR ejc.name like '%Transportation%'then 2
+when ejc.name like '%Engineer%' OR ejc.name like '%Scientist%' then 7 
+when ejc.name like '%Building%' OR ejc.name like '%Grounds%' OR ejc.name like '%Maintenance%' OR ejc.name like '%Trades%' OR ejc.name like '%Storekeeper%' OR ejc.name like 'MECH' OR ejc.name like '%Technician%' OR ejc.name like '%Custodial%' OR ejc.name like '%Custodian%' then 3 
+when ejc.name like '%Counselor%' OR ejc.name like '%Guidance Counselor%' then 4
+when ejc.name like '%Driver%' OR ejc.name like '%Bus%'  then 5 
+when ejc.name like '%Education Assistant/Paraprofessional%' OR ejc.name like '%PSRP%' OR ejc.name like '%Paraprofessional%' OR ejc.name like 'PARA' OR ejc.name like '%Paraeducator%' OR ejc.name like '%Education%' OR ejc.name like '%Assist%' OR ejc.name like '%SRP%' then 6 
+when ejc.name like '%non tenure%' OR ejc.name like '%Lecturer%' then 8 
+when ejc.name like '%adjunct%' OR ejc.name like '%Faculty - Adjunct%' OR ejc.name like 'Lecturer, Hrly'then 9 
+when ejc.name like '%tenure-track%' OR ejc.name like '%tenure%' OR ejc.name like '%Faculty%'  OR ejc.name like '%Full-time tenure-track faculty%' then 10 
+when ejc.name like '%Financial%' OR ejc.name like '%Accounting%' OR ejc.name like '%Accountant%' then 11
+when ejc.name like '%Food%' OR ejc.name like '%Cafeteria%' OR ejc.name like '%Cook%' then 12
+when ejc.name like '%Graduate%' then 13 
+when ejc.name like '%Health%' OR ejc.name like '%Medical Professional%' OR ejc.name like '%Psychologist%' then 14
+when ejc.name like '%Health Care Non-Professional%' OR ejc.name like '%Other Health Care%' then 15
+when ejc.name like '%Science%' OR ejc.name like '%Technology%' OR ejc.name like '%Technologist%' OR ejc.name like '%Computer%' OR ejc.name like '%Programmer%' OR ejc.name like '%Data Quality%' OR ejc.name like '%Info Tech%'  OR ejc.name like 'IT' OR ejc.name like '%DATA BASE%' OR ejc.name like '%Database%'then 16
+when ejc.name like '%Legal%' then 17
+when ejc.name like '%Librarian%' OR ejc.name like '%Library%' OR ejc.name like '%Arcvst%' OR ejc.name like '%Corr Lbrn%'then 18
+when ejc.name like '%Rehab%' then 19
+when ejc.name like '%Licensed Nurse%' OR ejc.name like '%Licensed Practical Nurse%'  OR ejc.name like '%Nurse%' OR ejc.name like '%Clin Research Nurse%' OR ejc.name like '%HLTH NURSE%'then 20
+when ejc.name like '%Registered Nurse%' OR ejc.name like 'RN' OR ejc.name like '%Nurse, Registered%' then 21
+when ejc.name like '%School Nurse%' then 22
+when ejc.name like '%Other Professional%' OR ejc.name like '%Therapist%' OR ejc.name like '%Therapeutic%' then 23
+when ejc.name like '%Physician%' OR ejc.name like '%Doctor%' then 24
+when ejc.name like '%Security%' OR ejc.name like '%Public Safety%' OR ejc.name like '%Crossing Guard %' then 25
+when ejc.name like '%Public Employee%' OR ejc.name like '%Soc Wkr%' OR ejc.name like '%Social Worker%' OR ejc.name like '%Public Works%' OR ejc.name like '%Social Service%' then 26
+when ejc.name like '%Supervisor%' then 27
+else 23 end,
+[LocalJobClassCode] = ejc.code,
+[AffiliateId] = af.party_id,
+[UnitId] = u.UnitId,
+[CreatedAt] = ISNULL(ejc.created_at, ejc.updated_at),
+[UpdatedAt] = ISNULL(ejc.updated_at, ejc.created_at)
+From employer_job_class ejc (nolock)
+Join employer e (nolock)	on ejc.party_id=e.party_id
+Join relationship r (nolock)	on r.related_party_id = e.party_id and r.relationship_type_id = 3 and r.is_deleted = 0
+Join affiliate af (nolock)	on r.party_id = af.party_id
+Join vw_1_affiliate_connect vw (nolock) on af.number=vw.affiliatenbr
+Join vw_1_Unit u	on e.party_id = u.EmployerId
+Where ejc.is_deleted = 0 and ejc.party_id is not null
+and u.IsStructural = 0 and u.UnitTypeId != 3
+) a
+
+Union
+
+Select [LocalJobClassId] = 1000000 + ROW_NUMBER() Over (Order by LocalJobClassId),
+Employer_job_class_id = NULL,
+[LocalJobClassGuid],
+[LocalJobClassName],
+[NationalJobClassId],
+[LocalJobClassCode],
+[AffiliateId],
+[UnitId],
+[IsStructural],
+[IsUnknown],
+[CreatedAt] = GETDATE(),
+[UpdatedAt] = GETDATE()
+From
+(
+Select Distinct [LocalJobClassId] = UnitId,
+[LocalJobClassGuid] = newid(),
+[LocalJobClassName] = LEFT(CONCAT(Replace (UnitName, ' - Structured Unit', ''), ' - Structured Local JobClass'), 200),
+[NationalJobClassId] = null,
+[LocalJobClassCode] = null,
+[AffiliateId] = [AffiliateId],
+[UnitId] = UnitId,
+[IsStructural] = 1,
+[IsUnknown] = 0
+From vw_1_Unit
+Where IsStructural = 1 or UnitTypeId = 3
+
+Union
+
+Select Distinct [LocalJobClassId] = UnitId,
+[LocalJobClassGuid] = newid(),
+[LocalJobClassName] = LEFT(CONCAT(Replace (UnitName, ' - Unknown Unit', ''), ' - Unknown Local JobClass'), 200),
+[NationalJobClassId] = null,
+[LocalJobClassCode] = null,
+[AffiliateId] = [AffiliateId],
+[UnitId] = UnitId,
+[IsStructural] = 0,
+[IsUnknown] = 1
+From vw_1_Unit
+Where IsStructural = 0 and UnitTypeId != 3
+) b",,,,,,,,,,,,

@@ -1,0 +1,9 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[PaymentFrequencyId],[Int],No,Yes,No,,"Identity (1,1)",,,,,,label:Payment Frequency,Payment Frequency ID,
+[PaymentFrequencyName],[varchar] (200),No,No,Yes,,,Weekly,,,,,default:0,Payment Frequency Name,
+,,,,,,,,,,,,,
+SQL,"Select distinct
+[PaymentFrequencyId] = id,
+[PaymentFrequencyName] = name
+From payment_frequency (nolock)
+where is_deleted = 0",,,,,,,,,,,,

@@ -1,0 +1,21 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[NationalPerCapitaId],[int],No,Yes,No,,"IDENTITY(1,1)","1,2,3,4",,The Unique Identification associated with the national dues type paid by an Individual,,,label:National Per Capita,National Dues Category ID,
+[NationalPerCapitaName],[Varchar] (200),No,No,Yes,,,"Retired, Quarter Dues, Student Member",what is the dues category Nationaly,The Name of the national Dues category paid by an individual,,,default:0,National Dues Category Name,
+[NationalPerCapitaGuid],[uniqueidentifier],No,No,Yes,,,,,,,,,National Dues Category Guid,
+[NationalPerCapitaAmount],"[Numeric](15,2)",Yes,No,No,,,,,,,,default:0,National Dues Category Amount,
+[IsAgencyFee],[Bit],No,No,No,,,,,,,,,IsAgencyFeePayer,
+[DisplayOrder],[tinyint],Yes,No,No,,,1,,,,,,Display Order,
+,,,,,,,,,,,,,
+SQL,"
+select distinct
+[NationalPerCapitaId] = id,
+[NationalPerCapitaName] = name,
+[NationalPerCapitaGuid] = guid,
+[NationalPerCapitaAmount] = amount,
+[IsAgencyFee] = is_fee_payer,
+[DisplayOrder] = display_order,
+CreatedAt = created_at,
+UpdatedAt = ISNULL(updated_at, created_at)
+from membership_category (nolock)
+where party_id is null
+and is_deleted = 0",,,,,,,,,,,,

@@ -1,0 +1,16 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EmployerTypeId],[int],No,Yes,No,,"IDENTITY (1,1)",1,,,,,label:Employer Type,Employer Type ID,
+[EmployerTypeName],[varchar](200),No,No,Yes,,,Pre K 12,,,,,default:0,Employer Type Name,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[EmployerTypeId] = id,
+[EmployerTypeName] = name, 
+[CreatedAt] = created_at,
+[UpdatedAt] = isnull(updated_at, created_at)
+from employer_type (nolock)
+where is_deleted = 0
+union
+select [EmployerTypeId] = 9,
+[EmployerTypeName] = 'Unknown',
+[CreatedAt] = null,
+[UpdatedAt] = null",,,,,,,,,,,,

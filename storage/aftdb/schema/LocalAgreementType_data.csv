@@ -1,0 +1,6 @@
+LocalAgreementTypeId,LocalAgreementTypeName
+1,Contract
+2,Meet and Confer Agreement
+3,District Policy
+4,No agreement
+5,Unknown

@@ -1,0 +1,24 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateCommitteeId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Affiliate Committee,Affiliate Committee ID,
+[AffiliateCommitteeName],[varchar](200),No,No,No,,,Worksite Leader Committee,,,company,y,default:0,Affiliate Committee Name,
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,567,,,,,,Affiliate ID,belongsTo
+[CommitteeTypeId],[int],No,No,No,CommitteeType(CommitteeTypeId),,1,,,,,,Committee Type ID,hasOne
+[Description],[varchar](max),Yes,No,No,,,,,,,y,,Description,
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+AffiliateCommitteeId=c.id,
+AffiliateCommitteeName=c.name,
+AffiliateId=p2.id,
+CommitteeTypeId=c.committee_type_id,
+Description=c.description,
+[CreatedAt] = ISNULL(c.created_at, c.updated_at),
+[UpdatedAt] = ISNULL(c.updated_at, c.created_at)
+FROM committee c (nolock)
+inner join party p (nolock) on c.party_id=p.id
+inner join affiliate af (nolock) on af.party_id=p.id
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.number
+inner join party p2 (nolock) on p2.guid=vw.affiliateid
+inner join affiliate_type at (nolock) on af.affiliate_type_id=at.id
+where c.is_deleted=0
+and p.is_deleted=0
+and at.id<>19",,,,,,,,,,,,

@@ -1,0 +1,15 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkStructureTypeId],[int],No,Yes,No,,"IDENTITY(1,1)",1,,,,,label:Work Structure Type,Work Structure Type ID,
+[WorkStructureTypeName],[varchar](200),No,No,1,,,School / College,,,,,default:0,Work Structure Type Name,
+[EmployerTypeId],[int],Yes,No,1,EmployerType(EmployerTypeId),,,,,,,,Employer Type ID,hasOne:reference
+[HierachicalOrder],[int],Yes,No,No,,,,,,,,,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[WorkStructureTypeId]=id,
+[WorkStructureTypeName]=case when name='Unit' then 'Work Unit' else name end,
+[EmployerTypeId]=employer_type_id,
+[HierachicalOrder]=ordinal
+from employer_business_unit_type
+where is_deleted=0
+and employer_type_id not in (7,8)
+and name not in ('Work Area','Worksite')",,,,,,,,,,,,

@@ -1,0 +1,7 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[CompensationId],[int],No,Yes,No,,"IDENTITY (1,1)",,,,,,label:Compensation,Compensation ID,
+[CompensationName],[varchar](200),NO,NO,NO,,,,,,,,default:0,Compensation Name,
+[CompensationFrequencyId],[int],Yes,No,No,CompensationFrequency(CompensationFrequencyId),,,,,,,,Compensation Frequency ID,hasOne
+[CompensationAmount],[varchar](200),Yes,no,No,,,,,,,,tiny:0,Compensation Amount,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

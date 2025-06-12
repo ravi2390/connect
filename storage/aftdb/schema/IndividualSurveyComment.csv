@@ -1,0 +1,29 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualSurveyCommentId],[Int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Individual Survey Comment,Individual Survey Comment ID,
+[IndividualSurveyId],[Int],No,No,No,IndividualSurvey(IndividualSurveyId),,,,,,,,Individual Survey ID,belongsTo
+[IndividualSurveyComment],[varchar](2000),No,No,No,,,,,,,,default:0,Individual Survey Comment,
+[SubmitByUserId],[Int],Yes,No,No,,,,,,,,,Submit By user ID,
+,,,,,,,,,,,,,
+SQL,"Select Distinct  IndividualSurveyCommentId = isc.id
+                ,IndividualSurveyId = i.id
+                ,IndividualSurveyComment = isc.comment
+				,[CreatedAt] = ISNULL(isc.created_at, isc.updated_at)
+				,[UpdatedAt] = ISNULL(isc.updated_at, isc.created_at)
+                
+From individual_survey_comment isc
+join individual_survey i (nolock) on isc.individual_survey_id = i.id
+inner join party p  (nolock) on i.party_id = p.id
+inner join individual id  (nolock) on p.id = id.party_id
+inner join vw_1_Individual iv (nolock) on i.party_id = iv.IndividualId
+inner join survey s  (nolock) on i.survey_id = s.id
+inner join relationship r  (nolock) on p.id=r.party_id
+inner join affiliate af  (nolock) on af.party_id=r.related_party_id
+inner join vw_1_affiliate_connect vw  (nolock) on vw.affiliatenbr=af.number
+Where i.is_deleted = 0
+        and isc.is_deleted = 0
+        and ISNULL(isc.Comment, '') != ''
+        and isc.Comment not like '%Test%'
+                and p.is_deleted = 0
+                and r.is_deleted=0
+                and r.relationship_type_id=1
+                and i.is_deleted = 0",,,,,,,,,,,,

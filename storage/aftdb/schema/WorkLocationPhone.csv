@@ -1,0 +1,34 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[WorkLocationPhoneId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Work Location Phone,Work Location Phone ID,
+[WorkLocationId],[int],No,No,No,WorkLocation(WorkLocationId),,1,,,,,label:Work Location,Work Location ID,belongsTo
+[PhoneNumber],[Varchar] (20),NO,No,No,,,,phonenumber is how we track the contact phone number of any entity,The phone number asscoiated with the the PhoneId,phoneNumber,y,default:0,Phone Number,
+[Extension],[Varchar] (10),YES,No,No,,,,phone extension,,,,default:1,Extension,
+[WorkLocationPhoneTypeId],[int],No,No,No,WorkLocationPhoneType(WorkLocationPhoneTypeId),,1,,,,,label:Work Location Phone Type,Work Location Phone Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,label:Contact Status ID,Contact Status ID,hasOne:reference
+[CanTextRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),0,,,,,,label:Can Text,Can Text,hasOne:reference
+[CanCallRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),0,,,,,,label:Can Call,Can Call,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,label:Is Preferred,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,1,,,,,label:Contact Source ID,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,label:Verified Date,Verified Date,
+,,,,,,,,,,,,,,
+SQL,"Select Distinct
+[WorkLocationPhoneId] = ROW_NUMBER() Over (Partition by 'id' Order by c.id),
+[WorkLocationId] = wl.WorkLocationid,
+[PhoneNumber] = ph.phone_number,
+[Extension] = ph.extension,
+[WorkLocationPhoneTypeId] =case when c.contact_context_id in (22,23,24) then c.contact_context_id else 22 end,
+[ContactStatusId]= isnull(c.contact_status_id,2),
+[CanTextRestrictionId] = IIF(isnull(ph.is_sms_allowed,1) = 0, 2, 1),
+[CanCallRestrictionId] = IIF(isnull(c.Can_Contact,1) = 0, 2, 1),
+[IsPreferred] = isnull(c.Is_Preferred,0),
+[ContactSourceId] = c.contact_source_id,
+[VerifiedDate] = c.verified_date,
+[CreatedAt] = ISNULL(c.created_at, c.updated_at),
+[UpdatedAt] = isnull(c.updated_at, c.created_at)
+From Phone ph (nolock)
+inner Join Contact c (nolock) on ph.contact_id = c.id
+inner join employer_location_contact elc (nolock)	on elc.contact_id = c.id
+inner join vw_1_WorkLocation wl (nolock)	on wl.WorkLocationId = elc.employer_location_id
+Where c.is_deleted = 0
+and elc.is_deleted = 0
+and c.contact_type_id = 1",,,,,,,,,,,,,

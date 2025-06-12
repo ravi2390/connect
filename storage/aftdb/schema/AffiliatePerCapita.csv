@@ -1,0 +1,63 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliatePerCapitaId],[int],NO,Yes,No,,"IDENTITY(1,1)",1,,,,N,label:Per Capita,Per Capita ID,
+[AffiliateId],[int],NO,No,No,Affiliate(AffiliateId),,,,,,Y,,Affiliate ID,belongsTo
+[FiscalYearEndMonth],[int],Yes,No,No,,,10,,,month,Y,,FYE Month,
+[FiscalYearEndDay],[int],Yes,No,No,,,30,,,dayOfMonth,Y,,FYE Day,
+[PayPerCapitaToAFT],[bit],No,No,No,,1,1,,,,Y,,Pays Per Capita to AFT,
+[InvoicedByAFT],[bit],No,No,No,,1,0,,,,Y,,Invoiced By AFT,
+[IncludeStatePerCapita],[bit],No,No,No,,,1,,,,Y,,Include State Per Capita,
+[IncludeAFLCIOPerCapita],[bit],No,No,No,,1,0,,,,Y,,Include AFLCIO Per Capita,
+[AFLCIOAmount],"[Numeric](15,2)",No,No,No,,0,0,,,,Y,,AFLCIO Amount,
+[AffiliateBillingFrequencyId],[int],Yes,No,No,AffiliateBillingFrequency(AffiliateBillingFrequencyId),,1,,,,Y,,Billing Frequency ID,hasOne
+[HasOccupationalLiabilityInsurance],[bit],NO,No,No,,1,1,,,,Y,,Has Occupational Liability Insurance,
+[AccidentInsuranceUnits],[int],NO,No,No,,1,2,,,,Y,,Accidental Insurance Unit,
+[HasCope],[bit],NO,No,No,,,0,,,,Y,,Has Cope,
+[IsCopeVoluntary],[bit],NO,No,No,,,1,,,,Y,,Is Cope Voluntary,
+[HasPIPE],[bit],No,No,No,,,0,,,,Y,,Has PIPE,
+[IsDirectBargaining],[bit],No,No,No,,1,1,,,,Y,,Is Direct Bargaining,
+[ConventionDelegationEligibility],[bit],No,No,No,,,1,,,,Y,,Convention Delegation Elegibility,
+[HasStateWebAccess],[bit],No,No,No,,1,0,,,,Y,,Has State Web Access,
+[CurrentFiduciaryBondCoverageId],[int],Yes,No,No,FiduciaryBondCoverage(FiduciaryBondCoverageId),,2,,,,Y,,Current Fiduciary Bond Coverage ID,hasOne:reference
+[RequestedFiduciaryBondCoverageId],[int],Yes,No,No,FiduciaryBondCoverage(FiduciaryBondCoverageId),,3,,,,Y,,Requested Fiduciary Bond Coverage ID,hasOne:reference
+[CustomerNumber],[Varchar](10),No,No,No,,,,,,,,,Customer Number,
+[IsAgencyFee],[bit],No,No,No,,,,,,,,,Has Agency Fee,
+[IsStateDues],[bit],No,No,No,,,,,,,,,Has State Dues,
+[IsStateAflCio],[bit],No,No,No,,,,,,,,,Has State AFLCIO,
+[DeliveryType],[Varchar](50),No,No,No,,,,,,,,,Delivery Type,
+[InsuranceAgencyFee],[Varchar](50),Yes,No,No,,,,,,,,,Insurancy Agency Fee,
+[GroupNumber],[int],Yes,No,No,,,,,,,,,Group Number,
+,,,,,,,,,,,,,,
+SQL,"select distinct
+[AffiliatePerCapitaId]=af.party_id,
+ [AffiliateId] = af.party_id,
+ [AffiliateNbr] = af.number,
+ [FiscalYearEndMonth] = af.[fiscal_year_end_month],
+ [FiscalYearEndDay] = af.[fiscal_year_end_day],
+ [PayPerCapitaToAFT] = 1,
+ [InvoicedByAFT] =1,
+ [IncludeStatePerCapita] = case
+       when left(af.local_geographical_state_abbreviation,2) in ('CA','CT','IO','MA','NJ','NC','OH','TN','WI') then 1
+       else 0         end,
+ [IncludeAFLCIOPerCapita]= 1,
+ [AFLCIOAmount] = 0.00,
+ [AffiliateBillingFrequencyId] = 1,
+ [HasOccupationalLiabilityInsurance] =af.[is_occupational_liability_insurance_offered],
+ [AccidentInsuranceUnits] =isnull(af.[members_accident_insurance_units],1),
+ [HasCope] =case when c.party_id is not null then 1 else 0 end,
+ [IsCopeVoluntary]=case when c.party_id is not null then 1 else 0 end,
+ [HasPIPE]=0,
+ [IsDirectBargaining] =isnull([is_bargaining_unit] ,1),
+ [ConventionDelegationEligibility] =        isnull([is_eligible_for_delegates],0),
+ [HasStateWebAccess] =0,
+ [CurrentFiduciaryBondCoverageID] =null,
+ [RequestedFiduciaryBondCoverageID] =null,
+ [CreatedAt] = p.created_at,
+ [UpdatedAt] = isnull(p.updated_at, p.created_at)
+from Affiliate af (nolock)
+inner join party p (nolock) on af.party_id=p.id
+inner join vw_1_affiliate vw (nolock) on vw.affiliateguid=p.guid
+left join vw_affiliate_cope c (nolock) on c.party_id=af.party_id
+where 1=1
+and p.is_deleted=0
+and p.party_type_id=2
+and af.affiliate_type_id<>19",,,,,,,,,,,,,

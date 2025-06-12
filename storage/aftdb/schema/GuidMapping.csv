@@ -1,0 +1,7 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Name,Relationship Type
+[GuidMappingId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,Unique ID,
+[Connect2Guid],[uniqueidentifier],No,No,Yes,,"NEWID()",,,,,,Connect 2.0 GUID,
+[Connect1Guid],[uniqueidentifier],No,No,No,,,,,,,,Connect 1.0 GUID,
+[TableName],[varchar](128),No,No,No,,,,,,,,2.0 table the GUIDs apply to,
+,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,

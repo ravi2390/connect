@@ -1,0 +1,29 @@
+{
+    "name": "aft/legacy",
+    "description": "AFT legacy data management",
+    "type": "library",
+    "version": "1.0",
+    "authors": [
+        {
+            "name": "David Richards",
+            "email": "drichard@aft.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aft\\Legacy\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aft\\Legacy\\Providers\\LegacyServiceProvider"
+            ]
+        }
+    }
+}

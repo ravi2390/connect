@@ -1,0 +1,10 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EmailFrequencyId],[Int],No,Yes,No,,"Identity(1,1)",,,,,,label:Email Frequency,Email Frequency ID,
+[EmailFrequencyName],[varchar](200),No,No,Yes,,,Once a week,,,,,default:0,Email Frequency Name,
+,,,,,,,,,,,,,
+SQL,"select
+[EmailFrequencyId] = min(id),
+[EmailFrequencyName] = email_type
+from activity_email_log (nolock)
+where is_deleted = 0
+group by email_type",,,,,,,,,,,,

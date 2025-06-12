@@ -1,0 +1,25 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[SurveyId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Survey,Survey ID,
+[SurveyName],[varchar](200),No,No,No,,,Servicing Contact Log   88,,,text,,default:0,Survey Name,
+[SurveyStartDate],[datetime],Yes,No,No,,,39583,,,,,,Survey Start Date,
+[SurveyEndDate],[datetime],Yes,No,No,,,39583,,,,,,Survey End Date,
+[ParentSurveyId],[int],Yes,No,No,Survey(SurveyId),,1,,,,,,Parent Survey ID,belongsTo
+[OwnerUserId],[int],No,No,No,,,1000,,,,,,Owner User ID,
+[SurveyComment],[varchar](max),Yes,No,No,,,Very good,,,,,default:0,Survey Comment,
+[HasEmailDistribution],[bit],No,No,No,,1,1,,,,,,Has Email Distribution,
+[EmailDate],[datetime],Yes,No,No,,,39583,,,,,,Email Date,
+,,,,,,,,,,,,,
+SQL,"select distinct
+[SurveyId] = id,
+[SurveyName] = name,
+[SurveyStartDate] = start_date,
+[SurveyEndDate] = end_date,
+[ParentSurveyId] = parent_survey_id,
+[OwnerUserId] = owner_user_id,
+[SurveyComment] = Comment,
+[HasEmailDistribution] = Has_email_distribution,
+[EmailDate] = email_date,
+[CreatedAt] = ISNULL(s.created_at, s.updated_at),
+[UpdatedAt] = ISNULL(s.updated_at, s.created_at)
+from survey s (nolock)
+where is_deleted = 0",,,,,,,,,,,,

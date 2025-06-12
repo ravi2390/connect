@@ -1,0 +1,17 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[EventTypeId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Event Type,Event Type ID,
+[EventTypeName],[varchar](200),No,No,No,,,AK01,,,text,,default:0,Event Type Name,
+[EventCategoryId],[int],No,No,No,EventCategory(EventCategoryId),,1,,,,,,Event Category ID,belongsTo
+[IsPolitical],[bit],No,No,No,,0,1,,,,,,Is Political,
+[Description],[varchar](max),Yes,No,No,,,I will help on an organizing campaign in my state. I am willing to:,,,,,,Description,
+,,,,,,,,,,,,,
+SQL,"SELECT distinct
+EventTypeId=Id,
+EventTypeName=name,
+EventCategoryId=activity_category_id,
+IsPolitical=is_political,
+Description=description,
+[CreatedAt] = ISNULL(created_at, updated_at),
+[UpdatedAt] = ISNULL(updated_at, created_at)
+FROM activity_type (nolock)
+where is_deleted = 0",,,,,,,,,,,,

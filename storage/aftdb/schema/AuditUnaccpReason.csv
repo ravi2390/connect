@@ -1,0 +1,5 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary) Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AuditUnaccpID],int,No,Yes,No,,"IDENTITY(1,1)",,,,,,,,,
+[AuditUnaccpReason],varchar(100),No,No,No,,,,,,,,,,,
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,

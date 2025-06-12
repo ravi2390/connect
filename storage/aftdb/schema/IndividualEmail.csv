@@ -1,0 +1,41 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualEmailId],[int],No,Yes,No,,"Identity (1,1)",1,,,,,label:Individual Email,Individual Email ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,1,,,,,,Individual ID,belongsTo
+[Email],[varchar] (200),No,No,No,,,,,An email address associated with an entity,email,y,default:0,Email,
+[IndividualEmailTypeId],[int],No,No,No,IndividualEmailType(IndividualEmailTypeId),,1,,,,,,Individual Email Type ID,hasOne
+[ContactStatusId],[int],No,No,No,ContactStatus(ContactStatusId),2,1,,,,,,Contact Status ID,hasOne:reference
+[IsPreferred],[bit],No,No,No,,0,1,,,,,,Is Preferred,
+[ContactSourceId],[int],Yes,No,No,ContactSource(ContactSourceId),,1,,,,,,Contact Source ID,hasOne:reference
+[VerifiedDate],[datetime],Yes,No,No,,,,,,,,,Verified Date,
+[CanContactRestrictionId],[int],No,No,No,ContactRestriction(ContactRestrictionId),,,,,,,,Can Contact,hasOne:reference
+,,,,,,,,,,,,,
+SQL,"SELECT DISTINCT
+  [IndividualEmailId] = c.id,
+  [IndividualId] = p.id,
+  [Email] = em.email_address,
+  [IndividualEmailTypeId] = CASE
+                             WHEN c.contact_context_id NOT IN (1, 2, 14) THEN 14
+                             ELSE c.contact_context_id
+                           END,
+  [ContactStatusId] = c.contact_status_id,
+  [IsPreferred] = c.is_preferred,
+  [ContactSourceId] = c.contact_source_id,
+  [VerifiedDate] = c.verified_date,
+  [CanContactRestrictionId] = IIF(ISNULL(c.can_contact, 1) = 0 , 2, 1),
+[CreatedAt] = c.created_at,
+[UpdatedAt] = c.updated_at
+FROM email em (nolock)
+INNER JOIN contact c (NOLOCK)  ON em.contact_id = c.id
+  INNER JOIN party p (NOLOCK)  ON p.id = c.party_id 
+  INNER JOIN individual i (NOLOCK)  ON i.party_id = p.id
+INNER JOIN relationship r (NOLOCK)  ON r.party_id = i.party_id
+INNER JOIN affiliate af (NOLOCK)  ON r.related_party_id = af.party_id
+INNER JOIN vw_1_affiliate_connect vw (NOLOCK)  ON vw.affiliatenbr = af.number
+inner join party p2 (nolock) on p2.id=af.party_id
+WHERE c.is_deleted = 0
+AND c.contact_type_id = 2
+AND p.party_type_id = 1
+AND r.relationship_type_id = 1
+AND p.is_deleted = 0
+AND r.is_deleted = 0
+and p2.is_deleted=0",,,,,,,,,,,,

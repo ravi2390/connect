@@ -1,0 +1,44 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definitions (Data Dictionary),Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[IndividualCopeId],[int],No,Yes,No,,"IDENTITY(1,1)",,,,,,label:Individual Cope,Individual COPE ID,
+[IndividualId],[int],No,No,No,Individual(IndividualId),,,,,,,,Individual ID,belongsTo
+[AffiliateId],[int],No,No,No,Affiliate(AffiliateId),,,,,,,,Affiliate ID,remove
+[CopeAmount],[varchar] (200),No,No,No,,0,,,,,,default:0,COPE Amount,
+[CopePaymentFrequencyId],[int],Yes,No,No,PaymentFrequency(PaymentFrequencyId),,,,,,,,COPE Frequency,hasOne:reference
+[CopePaymentMethodId],[int],Yes,No,No,PaymentMethod(PaymentMethodId),,,,,,,,COPE Payment Method,hasOne:reference
+[BillHighwayId],[int],Yes,No,No,,,,,,,,,BillHighway ID,
+,,,,,,,,,,,,,
+SQL,"select  distinct
+IndividualCopeId=a.individualcopeid,
+IndividualId=a.individualid,
+AffiliateId=a.affiliateId,
+CopeAmount=a.copeamount,
+CopePaymentFrequencyId=a.[CopePaymentFrequencyId],
+CopePaymentMethodId=a.[CopePaymentMethodId],
+BillHighwayId=null,
+a.CreatedAt,
+a.UpdatedAt
+from (
+select
+[IndividualCopeId]=iarcc.id,
+[IndividualId]=r.party_id,
+[AffiliateId]=p.id,
+[CopeAmount]=iarcc.amount,
+[CopePaymentFrequencyId]=iarcc.payment_frequency_id,
+[CopePaymentMethodId]=iarcc.payment_method_id,
+[BillHighwayId]=null,
+contribution_date,
+[CreatedAt] = ISNULL(iarcc.Created_at, iarcc.Updated_At),
+[UpdatedAt] = ISNULL(iarcc.updated_at, iarcc.created_at),
+row_number()Over (partition by r.party_id, p.id Order by iarcc.contribution_date desc) row_num
+from individual_affiliate_relationship_cope_contribution iarcc (nolock)
+inner join relationship r (nolock) on iarcc.relationship_id=r.id
+inner join affiliate af (nolock) on r.related_party_id=af.party_id
+inner join vw_1_affiliate vw (nolock) on vw.affiliatenumber=af.number
+inner join party p (nolock) on p.guid=vw.affiliateguid
+where r.is_deleted=0
+and iarcc.is_deleted=0
+and iarcc.amount<>'0'
+) a
+inner join vw_1_individual i (nolock) on i.individualid=a.individualid
+inner join vw_1_affiliate va (nolock) on va.affiliateid=a.affiliateid
+where a.row_num=1",,,,,,,,,,,,

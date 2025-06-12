@@ -1,0 +1,31 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateCommitteeMemberId],[int],No,Yes,No,,"Identity (1,1)",1234,,,,,,Affiliate Committee Member ID,
+[AffiliateCommitteeId],[int],No,No,No,AffiliateCommittee(AffiliateCommitteeId),,11,,,,,,Affiliate Committee ID,belongsTo
+[IndividualId],[int],No,No,No,Individual(IndividualId),,10000,,,,,,Individual ID,hasOne:reference
+[CommitteeMemberTypeId],[int],No,No,No,CommitteeMemberType(CommitteeMemberTypeId),,2,,,,y,,Committee Member Type ID,hasOne
+[StartDate],[datetime],Yes,No,No,,,39583,,,,y,,Start Date,
+[EndDate],[datetime],Yes,No,No,,,39583,,,,y,,End Date,
+,,,,,,,,,,,,,
+SQL,"SELECT   distinct
+AffiliateCommitteeMemberId=ifrc.id,
+AffiliateCommitteeId=ifrc.committee_id,
+IndividualId = i.IndividualId,
+CommitteeMemberTypeId=ifrc.committee_membership_type_id,
+StartDate=r.start_date,
+EndDate=r.stop_date,
+CreatedAt = ifrc.created_at,
+UpdatedAt = ifrc.updated_at
+FROM  individual_affiliate_relationship_committee ifrc (nolock)
+inner JOIN relationship r (nolock) ON r.id = ifrc.relationship_id
+inner join party p (nolock) on r.party_id = p.id
+inner join vw_1_individual i (nolock) on p.id = i.IndividualId
+inner join Affiliate a (nolock)	on a.party_id = r.related_party_id
+inner join vw_1_affiliate af (nolock) on a.number = af.AffiliateNumber
+inner join vw_1_affiliate_connect vw (nolock) on vw.affiliatenbr=af.AffiliateNumber
+inner join committee c (nolock) on c.id=ifrc.committee_id
+inner join vw_1_affiliatecommittee vwac on ifrc.committee_id = vwac.affiliatecommitteeid
+where r.is_deleted=0
+and p.is_deleted = 0
+and c.is_deleted=0
+and ifrc.is_deleted=0
+and (ifrc.stop_date is null or ifrc.stop_date>=getdate())",,,,,,,,,,,,

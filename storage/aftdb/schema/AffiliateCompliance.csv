@@ -1,0 +1,35 @@
+Field Name,Data Type + Length,Allow NULL value,Is_Primary_Key,Is_Unique_Key,Reference Table for Foreign Key,Default Value,Sample Values (if applicable),Business Rule(s),Definition (Data Dictionary)   Connect2.0,Manageable from the UI,Sanitized Function,Is Editable,Display Group,Display Name,Relationship Type
+[AffiliateComplianceId],[int],NO,Yes,No,,"IDENTITY(1,1)",2022,,,,,N,label:Affiliate Compliance,Affiliate Compliance ID,
+[AffiliateId],[int],NO,No,Yes,Affiliate(AffiliateId),,2023,,,,,N,,Affiliate ID,belongsTo
+[AffiliateGUID],[uniqueidentifier],NO,No,Yes,,,D63E10A4 3157 11D6 B0A1 00508B6D7CC3,where party_type_id=2,,,,N,,Affiliate GUID,
+[AffiliateNumber],[char](5),NO,No,Yes,,,420,where affiliate_type_id not equal to 19,,,randomNumber,Y,,Affiliate Number,
+[AuditDate],[datetime],Yes,No,No,,,,,,,,,,Audit Date,
+[AuditCompliance],[varchar](20) ,No,No,No,,,,,,,,,,Audit Compliance,
+[AuditCertifiedTF],[bit],No,No,No,,,,,,,,,,AuditCertifiedTF,
+[AuditResultId],[int] ,No,No,No,ComplianceResult(ComplianceResultId),,,,,,,,,AuditResultId,hasOne:reference
+[ConstitutionDate],[datetime],Yes,No,No,,,,,,,,,,Constitution Date,
+[ConstitutionCompliance],[varchar](20) ,No,No,No,,,,,,,,,,Constitution Compliance,
+[ConstitutionCertifiedTF],[bit],No,No,No,,,,,,,,,,ConstitutionCertifiedTF,
+[ConstitutionResultId],[int] ,No,No,No,ComplianceResult(ComplianceResultId),,,,,,,,,[ConstitutionResultId],hasOne:reference
+[DuesDate],[datetime],Yes,No,No,,,,,,,,,,Dues Date,
+[DuesCompliance],[varchar](20) ,No,No,No,,,,,,,,,,Dues Compliance,
+[DuesCertifiedTF],[bit],No,No,No,,,,,,,,,,DuesCertifiedTF,
+[DuesResultId],[int] ,No,No,No,ComplianceResult(ComplianceResultId),,,,,,,,,DuesResultId,hasOne:reference
+[OfficersDate],[datetime],Yes,No,No,,,,,,,,,,Officers Date,
+[OfficersCompliance],[varchar](20) ,No,No,No,,,,,,,,,,Officers Compliance,
+[OfficersCertifiedTF],[bit],No,No,No,,,,,,,,,,OfficersCertifiedTF,
+[OfficersResultId],[int] ,No,No,No,ComplianceResult(ComplianceResultId),,,,,,,,,OfficersResultId,hasOne:reference
+[ExecBoardDate],[datetime],Yes,No,No,,,,,,,,,,Exec Board Date,
+[ExecBoardCompliance],[varchar](20) ,No,No,No,,,,,,,,,,Exec Board Compliance,
+[ExecBoardCertifiedTF],[bit],No,No,No,,,,,,,,,,ExecBoardCertifiedTF,
+[ExecBoardResultId],[int] ,No,No,No,ComplianceResult(ComplianceResultId),,,,,,,,,ExecBoardResultId,hasOne:reference
+[MembershipDate],[datetime],Yes,No,No,,,,,,,,,,Membership Date,
+[MembershipCompliance],[varchar](20) ,No,No,No,,,,,,,,,,Membership Compliance,
+[MembershipCertifiedTF],[bit],No,No,No,,,,,,,,,,MembershipCertifiedTF,
+[MembershipResultId],[int] ,No,No,No,ComplianceResult(ComplianceResultId),,,,,,,,,MembershipResultId,hasOne:reference
+[StateDuesDate],[datetime],Yes,No,No,,,,,,,,,,State Dues Date,
+[StateDuesCompliance],[varchar](20) ,No,No,No,,,,,,,,,,State Dues Compliance,
+[StateDuesCertifiedTF],[bit],No,No,No,,,,,,,,,,StateDuesCertifiedTF,
+[StateDuesResultId],[int] ,No,No,No,ComplianceResult(ComplianceResultId),,,,,,,,,StateDuesResultId,hasOne:reference
+,,,,,,,,,,,,,,
+SQL,,,,,,,,,,,,,,
