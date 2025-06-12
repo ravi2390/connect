@@ -1,7 +1,0 @@
-[webservers:children]
-staging_servers
-
-# Member benefits server
-[staging_servers]
-172.19.11.154 hostname=connect-stage-web1.aft.org
-172.19.12.118 hostname=connect-stage-web2.aft.org

@@ -1,7 +1,0 @@
-[webservers:children]
-prod_servers
-
-# Member benefits server
-[prod_servers]
-172.19.11.18 hostname=connect-prod-web1.aft.org
-172.19.12.68 hostname=connect-prod-web2.aft.org
