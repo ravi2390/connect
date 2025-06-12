@@ -570,13 +570,13 @@
     import configurationMixin from "../../mixins/UI/configurationMixin";
     import BasicDataComponent from "./Partial/ViewBasicDataComponent";
     import paginationUrlMixin from "../../mixins/Grid/paginationUrlMixin";
-    import dataTablesMixin from "../../mixins/UI/dataTablesMixin";
-    import mobileCheckMixin from "../../mixins/UI/mobileCheckMixin";
+import mobileCheckMixin from "../../mixins/UI/mobileCheckMixin";
+import { HOME_PHONE, MOBILE_PHONE, HOME_EMAIL, WORK_EMAIL } from "../../constants/contactTypes";
 
     export default {
         name: "IndividualListComponent",
 
-        mixins: [headersMixin, configurationMixin, paginationUrlMixin, dataTablesMixin, mobileCheckMixin],
+        mixins: [headersMixin, configurationMixin, paginationUrlMixin, mobileCheckMixin],
 
         components: {
             'filter-component': FilterComponent,
@@ -627,9 +627,11 @@
         },
         mounted() {
             this.loadConfiguration('');
-            document.getElementById('main-container').addEventListener('scroll', this.bodyScroll);
-            this.initialSetup();
             this.selectedAffiliate = this.$store.getters['user/selectedAffiliate'];
+            const container = document.getElementById('main-container');
+            if (!container) {
+                console.warn('main-container element not found during mounted');
+            }
 
             // const fullRow = document.querySelector('.v-data-table');
             // const dataTable = document.querySelector('.v-data-table__wrapper');
@@ -659,52 +661,22 @@
                 deep: true,
                 immediate: true,
             },
-            collapsedFilter: {
-                handler() {
-                    if (this.numberOfCells > 0) {
-                        this.setTableWidth(this.numberOfCells);
-                    }
-                    if (this) {
-                        document.getElementsByClassName('v-data-table__thead')[0].style.left = '0px';
-                    }
-
-                    const rowCollapse = document.querySelector('.table-content-row__right');
-                    const isCollapsed = rowCollapse.classList.contains("collapsed-table-col");
-                    const dataTableCollapsed = document.querySelector('.v-data-table');
-                    if (isCollapsed) {
-                        dataTableCollapsed.classList.remove("collapse-table");
-                    } else {
-                        dataTableCollapsed.classList.add("collapse-table");
-                    }
-                },
-                deep: true,
-            },
-            fixedHeaders: {
-                handler() {
-                    if (this) {
-                        const table = this.$refs.tableContainer.getElementsByTagName('table')[0];
-                        table.style.width = this.fixedWidth + "px";
-                        document.getElementsByClassName('v-data-table__thead')[0].style.width = this.fixedWidth + 'px';
-                    }
-                },
-                deep: true,
-            },
         },
         methods: {
             getHomePhones: function (individualPhonesOrdered) {
-                const phones = individualPhonesOrdered.filter(phone => phone.IndividualPhoneTypeId==1);
+                const phones = individualPhonesOrdered.filter(phone => phone.IndividualPhoneTypeId == HOME_PHONE);
                 return phones.length>0 ? phones[0].fullPhone : '';
             },
             getMobilePhones: function (individualPhonesOrdered) {
-                const phones = individualPhonesOrdered.filter(phone => phone.IndividualPhoneTypeId==3);
+                const phones = individualPhonesOrdered.filter(phone => phone.IndividualPhoneTypeId == MOBILE_PHONE);
                 return phones.length>0 ? phones[0].fullPhone : '';
             },
             getHomeEmails: function (individualEmailsOrdered) {
-                const emails = individualEmailsOrdered.filter(email => email.IndividualEmailTypeId==1);
+                const emails = individualEmailsOrdered.filter(email => email.IndividualEmailTypeId == HOME_EMAIL);
                 return emails.length>0 ? emails[0].Email : '';
             },
             getWorkEmails: function (individualEmailsOrdered) {
-                const emails = individualEmailsOrdered.filter(email => email.IndividualEmailTypeId==2);
+                const emails = individualEmailsOrdered.filter(email => email.IndividualEmailTypeId == WORK_EMAIL);
                 return emails.length>0 ? emails[0].Email : '';
             },
             loadConfiguration(key) {
@@ -727,35 +699,6 @@
                     this.updateFilter();
                     this.getDataFromApi();
                 });
-            },
-            initialSetup() {
-                this.handleTableObserver();
-                this.bodyDynamicStyle();
-                this.headerDynamicStyle();
-                this.footerDynamicSyle();
-            },
-            bodyScroll() {
-                if (!this.loading && !this.collapsedFilter) {
-                    const leftPosition = this.$refs.tableContainer.getBoundingClientRect().left + 15;
-                    document.getElementsByClassName('v-data-table__thead')[0].style.left = leftPosition + 'px';
-                } else {
-                    document.getElementsByClassName('v-data-table__thead')[0].style.left = this.$refs.tableContainer.getBoundingClientRect().left + 'px';
-                }
-            },
-            onScroll(e) {
-                if (typeof window === 'undefined' || !this.headers) return;
-                const top = window.pageYOffset || e.target.scrollTop || 0;
-                if (top > 60 && !this.fixedHeaders && this.totalIndividuals !== 0) {
-                    this.fixedHeaders = true;
-                } else if(top < 60 && this.fixedHeaders) {
-                    this.fixedHeaders = false;
-                }
-                // if (this.collapsedFilter) {
-                //     document.getElementsByClassName('v-data-table-header')[0].style.left = this.$refs.tableContainer.getBoundingClientRect().left + 'px';
-                // } else {
-                //     var leftPosition = this.$refs.tableContainer.getBoundingClientRect().left + 15;
-                //     document.getElementsByClassName('v-data-table-header')[0].style.left = leftPosition + 'px';
-                // }
             },
             shouldShowResultsAndSortingTypeText() {
                 return !!(this.totalIndividuals && !this.hasSelectedItem && !this.shouldHideResults);
@@ -861,23 +804,24 @@
 
                 return urlParams;
             },
-            getDataFromApi() {
+            async getDataFromApi() {
                 if (this.loading) {
                     return;
                 }
                 this.loading = true;
-                let url = this.baseUrl + '?' + this.getOptionsUrlParams() + '&' + this.urlInclude;
+                const url = this.baseUrl + '?' + this.getOptionsUrlParams() + '&' + this.urlInclude;
 
                 this.updateQueryParams(this.options, this.filters, this.headers);
 
-                return axios.get(url)
-                    .then(response => {
-                        this.individuals = response.data.data;
-                        this.totalIndividuals = response.data.meta.total;
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                try {
+                    const response = await axios.get(url);
+                    this.individuals = response.data.data;
+                    this.totalIndividuals = response.data.meta.total;
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    this.loading = false;
+                }
             },
             updateTableOnSearch() {
                 this.options.page = 1;
@@ -886,10 +830,10 @@
                 this.fixedHeaders = false;
             },
             onDestroyComponent() {
-                window.removeEventListener('scroll', this.handleScroll);
-                document.getElementById('main-container').removeEventListener('scroll', this.bodyScroll);
-                this.destroyObserver();
-                this.destroyDynamicStyle();
+                const container = document.getElementById('main-container');
+                if (!container) {
+                    console.warn('main-container element not found during teardown');
+                }
             }
         },
         unmounted () {
@@ -898,127 +842,9 @@
     }
 </script>
 
-<style>
-    /* TODO: full width table hack */
-    html {
-        overflow: auto;
-        overflow-x: scroll !important;
-    }
-    body {
-        overflow-x: initial;
-    }
-    .v-application--wrap {
-        width: 100%;
-    }
-    .main-menu, .footer-block {
-        max-width: 100vw;
-    }
-    .row {
-        flex-wrap: nowrap;
-    }
-    .col-9 {
-        max-width: none;
-    }
-
-    @media only screen and (min-width: 960px) {
-        .table-content-row {
-            width: 100vw;
-            overflow: hidden;
-            margin-top: -50px;
-        }
-        .table-content-row__left {
-            min-width: 295px;
-        }
-        .table-content-row__right {
-            transition: all 0.4s ease-in-out;
-        }
-        .individual-results-table table tr th:first-child span,
-        .individual-results-table table tr td:first-child {
-            padding-left: 8px;
-        }
-        .individual-results-table .v-data-table__thead th,
-        .affiliate-results-table .v-data-table__thead th {
-            position: relative;
-        }
-        .individual-results-table .v-data-table__thead th i,
-        .affiliate-results-table .v-data-table__thead th i {
-            position: absolute;
-            top: 14px;
-            left: -2px;
-        }
-        .individual-results-table .v-data-table__thead th:first-child i {
-            left: 3px;
-        }
-
-        /* data table scroll bar */
-        .top-scroller {
-            width: calc(100vw - 320px);
-            height: 7px;
-            overflow: scroll;
-            scroll-behavior: smooth;
-            background-color: #fff;
-        }
-        .top-scroller .inner-scroll {
-            width: 6450px;
-            height: 7px;
-        }
-        .top-scroller .i-scroll {
-            width: 1800px;
-        }
-        .fixed-table-header .top-scroller {
-            position: fixed;
-            top: 64px;
-        }
-
-        .individual-results-table .v-data-table__wrapper,
-        .affiliate-results-table .v-data-table__wrapper {
-            height: calc(100vh - 237px);
-            width: calc(100vw - 320px);
-            overflow: scroll;
-            scroll-behavior: smooth;
-        }
-        .affiliate-results-table .v-data-table__wrapper {
-            height: calc(100vh - 437px);
-        }
-        .individual-results-table .v-data-table__wrapper::-webkit-scrollbar,
-        .affiliate-results-table .v-data-table__wrapper::-webkit-scrollbar,
-        .top-scroller::-webkit-scrollbar  {
-            height: 7px;
-            width: 7px;
-            border-top: 1px solid #092a5c;
-            border-bottom: 1px solid #092a5c;
-        }
-        .individual-results-table .v-data-table__wrapper::-webkit-scrollbar-track,
-        .affiliate-results-table .v-data-table__wrapper::-webkit-scrollbar-track,
-        .top-scroller::-webkit-scrollbar-track {
-            background-color: rgba(9, 42, 92, 0.1);
-        }
-        .individual-results-table .v-data-table__wrapper::-webkit-scrollbar-thumb,
-        .affiliate-results-table .v-data-table__wrapper::-webkit-scrollbar-thumb,
-        .top-scroller::-webkit-scrollbar-thumb {
-            background-color: #092a5c;
-        }
-        .theme--light.v-data-table.v-data-table--fixed-header thead th {
-            background: #092a5c;
-        }
-        .fixed-table-header .individual-results-table {
-            position: fixed;
-            top: 5px;
-        }
-        .fixed-table-header .affiliate-results-table {
-            position: fixed;
-            top: 11px;
-        }
-
-        .collapsed-table-col {
-            max-width: 100%;
-        }
-        .collapsed-table-col .top-scroller {
-            width: calc(100vw - 35px);
-        }
-        .collapsed-table-col .v-data-table__wrapper {
-            width: calc(100vw - 35px);
-            height: calc(100vh - 475px);
-        }
+<style scoped>
+    .fixed-table-header th {
+        position: sticky;
+        top: 0;
     }
 </style>

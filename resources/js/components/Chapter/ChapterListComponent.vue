@@ -128,29 +128,9 @@
     }
 </script>
 
-<style>
-    /* TODO: full width table hack */
-    html {
-        overflow: auto;
-    }
-
-    .v-application--wrap {
-        max-width: none;
-    }
-
-    .main-menu, .footer-block {
-        max-width: 100vw;
-    }
-
-    .row {
-        flex-wrap: nowrap;
-    }
-
-    .col-2 {
-        max-width: 320px;
-    }
-
-    .col-9 {
-        max-width: none;
+<style scoped>
+    .fixed-table-header th {
+        position: sticky;
+        top: 0;
     }
 </style>

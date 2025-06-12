@@ -143,26 +143,15 @@
                     items-per-page-text="Rows per page"
                 >
                 <template v-slot:item="{ item }">
-                <tr class="tr-mobile-affiliate">
-                    <td class="v-data-table__mobile-row mobile-row-header td-mobile-padding custom-mobile-row">{{ item.AffiliateName }}</td>
-                    <td class="v-data-table__mobile-row td-mobile-padding custom-mobile-row" v-if="item.AffiliateNumber">{{ item.AffiliateNumber }}</td>
-                    <td class="v-data-table__mobile-row custom-mobile-row td-mobile-padding" v-if="item.AffiliateAcronym">{{ item.AffiliateAcronym }}</td>
-                    <td class="v-data-table__mobile-row custom-mobile-row td-mobile-padding" v-if="item.AffiliateEIN">{{ item.AffiliateEIN }}</td>
-
-                    <td class="td-mobile-padding">
-                        <v-btn size="small" icon="mdi:mdi-menu-down" @click="displaySelectedRow(item)" />
-                    </td>
-                </tr>
+                    <affiliate-table-row :item="item" @select="displaySelectedRow" />
                 </template>
                 </v-data-table-server>
             </v-col>
             <div v-if="hasSelectedItem">
-            <div class="mobile-selected-item-container">
-                <affiliate-detail-component v-on:swipeToClose="hasSelectedItem = false" :affiliateId="selectedItem.AffiliateId" :shouldDisplayDataComponent="false"></affiliate-detail-component>
+                <affiliate-detail-drawer :affiliateId="selectedItem.AffiliateId" @close="hasSelectedItem = false" />
             </div>
         </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -171,21 +160,24 @@
     import headersMixin from "../../mixins/Grid/headersMixin";
     import configurationMixin from "../../mixins/UI/configurationMixin";
     import paginationUrlMixin from "../../mixins/Grid/paginationUrlMixin";
-    import dataTablesMixin from "../../mixins/UI/dataTablesMixin";
-    import AffiliateSwitchComponent from "./AffiliateSwitchComponent";
-    import mobileCheckMixin from "../../mixins/UI/mobileCheckMixin";
-    import AffiliateDetailComponent from "./Partial/AffiliateDetailComponent";
+import AffiliateSwitchComponent from "./AffiliateSwitchComponent";
+import mobileCheckMixin from "../../mixins/UI/mobileCheckMixin";
+import AffiliateDetailComponent from "./Partial/AffiliateDetailComponent";
+import AffiliateTableRow from "./Partial/AffiliateTableRow";
+import AffiliateDetailDrawer from "./Partial/AffiliateDetailDrawer";
     import { maskPhoneNumber } from "../../helpers/index.js";
 
     export default {
         name: "AffiliateListComponent",
 
-        mixins: [headersMixin, configurationMixin, paginationUrlMixin, dataTablesMixin, mobileCheckMixin],
+        mixins: [headersMixin, configurationMixin, paginationUrlMixin, mobileCheckMixin],
 
         components: {
             'filter-component': FilterComponent,
             'chooser-component': ColumnChooserComponent,AffiliateSwitchComponent,
             'affiliate-detail-component': AffiliateDetailComponent,
+            'affiliate-table-row': AffiliateTableRow,
+            'affiliate-detail-drawer': AffiliateDetailDrawer,
         },
 
         data: () => ({
@@ -229,8 +221,10 @@
         mounted() {
             this.initConfiguration();
             this.showLabel = false;
-            document.getElementById('main-container').addEventListener('scroll', this.bodyScroll);
-            this.initialSetup();
+            const container = document.getElementById('main-container');
+            if (!container) {
+                console.warn('main-container element not found during mounted');
+            }
 
             // const fullRow = document.querySelector('.v-data-table');
             // const dataTable = document.querySelector('.v-data-table__wrapper');
@@ -260,36 +254,6 @@
                 deep: true,
                 immediate: true,
             },
-            collapsedFilter: {
-                handler() {
-                    if (this.numberOfCells > 0) {
-                        this.setTableWidth(this.numberOfCells);
-                    }
-                    if (this) {
-                        document.getElementsByClassName('v-data-table__thead')[0].style.left = '0px';
-                    }
-
-                    const rowCollapse = document.querySelector('.table-content-row__right');
-                    const isCollapsed = rowCollapse.classList.contains("collapsed-table-col");
-                    const dataTableCollapsed = document.querySelector('.v-data-table');
-                    if (isCollapsed) {
-                        dataTableCollapsed.classList.remove("collapse-table");
-                    } else {
-                        dataTableCollapsed.classList.add("collapse-table");
-                    }
-                },
-                deep: true,
-            },
-            fixedHeaders: {
-                handler() {
-                    if (this) {
-                        const table = this.$refs.tableContainer.getElementsByTagName('table')[0];
-                        table.style.width = this.fixedWidth + "px";
-                        document.getElementsByClassName('v-data-table__thead')[0].style.width = this.fixedWidth + 'px';
-                    }
-                },
-                deep: true,
-            },
         },
         methods: {
             loadConfiguration(key) {
@@ -311,35 +275,6 @@
                     this.selectedPreset = response.data.selectedPreset;
                     this.getDataFromApi();
                 });
-            },
-            initialSetup() {
-                this.handleTableObserver();
-                this.bodyDynamicStyle();
-                this.headerDynamicStyle();
-                this.footerDynamicSyle();
-            },
-            bodyScroll() {
-                if (!this.loading && !this.collapsedFilter) {
-                    const leftPosition = this.$refs.tableContainer.getBoundingClientRect().left + 15;
-                    document.getElementsByClassName('v-data-table__thead')[0].style.left = leftPosition + 'px';
-                } else {
-                    document.getElementsByClassName('v-data-table__thead')[0].style.left = this.$refs.tableContainer.getBoundingClientRect().left + 'px';
-                }
-            },
-            onScroll(e) {
-                if (typeof window === 'undefined' || !this.headers) return;
-                const top = window.pageYOffset || e.target.scrollTop || 0;
-                if (top > 60 && !this.fixedHeaders && this.totalAffiliates !== 0) {
-                    this.fixedHeaders = true;
-                } else if(top < 60 && this.fixedHeaders) {
-                    this.fixedHeaders = false;
-                }
-                // if (this.collapsedFilter) {
-                //     document.getElementsByClassName('v-data-table__thead')[0].style.left = this.$refs.tableContainer.getBoundingClientRect().left + 'px';
-                // } else {
-                //     var leftPosition = this.$refs.tableContainer.getBoundingClientRect().left + 15;
-                //     document.getElementsByClassName('v-data-table__thead')[0].style.left = leftPosition + 'px';
-                // }
             },
             shouldCollapseFilter(val) {
                 this.collapsedFilter = val;
@@ -369,7 +304,7 @@
                 this.updateQueryParams(this.options, this.filters, this.headers);
                 this.getDataFromApi();
             },
-            getDataFromApi() {
+            async getDataFromApi() {
                 this.loading = true;
                 const { sortBy, page, itemsPerPage } = this.options;
                 const sortDefault = sortBy[0] ?? { key: '', order: 'asc' };
@@ -390,26 +325,25 @@
 
                 this.updateQueryParams(this.options, this.filters, this.headers);
 
-                return axios.get(url)
-                    .then(response => {
-                        this.affiliates = response.data.data;
-                        this.totalAffiliates = response.data.meta.total;
-                        if (this.affiliates.length === 0 && page > 0 && this.totalAffiliates > 0) {
-                            //nothing to show, not on first page, elements do exist => show first page
-                            this.options.page = 1;
-                            this.loading = false;
-                            this.getDataFromApi();
-                        }
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                try {
+                    const response = await axios.get(url);
+                    this.affiliates = response.data.data;
+                    this.totalAffiliates = response.data.meta.total;
+                    if (this.affiliates.length === 0 && page > 0 && this.totalAffiliates > 0) {
+                        this.options.page = 1;
+                        await this.getDataFromApi();
+                    }
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    this.loading = false;
+                }
             },
             onDestroyComponent() {
-                window.removeEventListener('scroll', this.handleScroll);
-                document.getElementById('main-container').removeEventListener('scroll', this.bodyScroll);
-                this.destroyObserver();
-                this.destroyDynamicStyle();
+                const container = document.getElementById('main-container');
+                if (!container) {
+                    console.warn('main-container element not found during teardown');
+                }
             },
             maskPhone(phone) {
                 return maskPhoneNumber(phone);
@@ -422,36 +356,8 @@
 </script>
 
 <style scoped>
-    /* TODO: full width table hack */
-    html {
-        overflow: auto;
-        overflow-x: scroll !important;
-    }
-    body {
-        overflow-x: initial;
-    }
-    .v-application--wrap {
-        width: 100%;
-    }
-    .main-menu, .footer-block {
-        max-width: 100vw;
-    }
-    .row {
-        flex-wrap: nowrap;
-    }
-    .col-2 {
-        max-width: 320px;
-    }
-    .col-9 {
-        max-width: none;
-    }
-    @media only screen and (min-width: 960px) {
-        .affiliate-results-table .v-data-table__thead th:first-child i {
-            left: -1px;
-        }
-        .fixed-table-header .top-scroller {
-            position: fixed;
-            top: 63px;
-        }
+    .fixed-table-header th {
+        position: sticky;
+        top: 0;
     }
 </style>

@@ -216,7 +216,7 @@
                 this.hasSelectedItem = true;
                 this.selectedItem = value;
             },
-            getDataFromApi() {
+            async getDataFromApi() {
                 this.loading = true;
                 const {sortBy, page, itemsPerPage} = this.options;
                 const sortDefault = sortBy[0] ?? { key: 'EmployerName', order: 'asc' };
@@ -231,30 +231,31 @@
                 }
                 this.updateQueryParams(this.options, this.filters, this.headers);
 
-                return axios.get(url)
-                    .then(response => {
-                        this.employers = response.data.data;
-                        this.totalEmployers = response.data.meta.total;
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                try {
+                    const response = await axios.get(url);
+                    this.employers = response.data.data;
+                    this.totalEmployers = response.data.meta.total;
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    this.loading = false;
+                }
             },
             getAffiliateId() {
                 return this.$store.getters['user/selectedAffiliate'].AffiliateId;
             },
-            getAffiliateDataFromApi() {
+            async getAffiliateDataFromApi() {
                 this.loading = true;
                 const id = this.id ?? this.getAffiliateId();
                 let url = '/api/v2/aggregate/affiliate/detail/' + id + '?scope=global';
-
-                return axios.get(url)
-                    .then(response => {
-                        this.employerAffiliate = response.data.data;
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                try {
+                    const response = await axios.get(url);
+                    this.employerAffiliate = response.data.data;
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    this.loading = false;
+                }
             },
         }
     }
