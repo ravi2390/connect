@@ -1,0 +1,123 @@
+.btn-tooltip[data-v-0b73deff] {
+  width: 24px;
+  height: 24px;
+}
+.btn-tooltip .v-icon[data-v-0b73deff] {
+  font-size: 20px !important;
+}
+.ck-editor__editable_inline {
+    min-height: 200px;
+}
+div:has(> .watermark) {
+  position: relative;
+}
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+  font-size: 32px;
+  opacity: 0.5;
+  z-index: 1;
+}
+.canvas-pad canvas {
+  border: 2px solid grey;
+}
+.mfp-signature-field.sig-err canvas,
+.signatureOther.sig-err canvas,
+.signature.sig-err canvas {
+  border-color: rgb(255, 82, 82);
+}
+.below-sig {
+  box-shadow: none;
+  border: none;
+}
+.mfp-signature-field.sig-err .below-sig .v-alert,
+.signatureOther.sig-err .below-sig .v-alert,
+.signature.sig-err .below-sig .v-alert {
+  border-color: rgb(255, 82, 82) !important;
+  color: rgb(255, 82, 82) !important;
+  caret-color: rgb(255, 82, 82) !important;
+}
+.custom-dues-signature > div[data-v-1bb41b2f] {
+    opacity: 0.2;
+    pointer-events: none;
+}
+.custom-dues-signature > div.canvasEnabled[data-v-1bb41b2f] {
+    opacity: 1;
+    pointer-events: auto;
+}
+#memberforms .v-card__text .v-input.custom-dues-textarea[data-v-1bb41b2f] {
+    pointer-events: auto;
+}
+.radio-btn-dues .v-input--selection-controls[data-v-1bb41b2f] {
+    margin-top: 8px;
+}
+@media only screen and (max-width: 960px) {
+.v-card__text div[label="Mobile Phone"] .row:nth-of-type(2) .col div[data-v-d0101fe8] {
+    font-size: 0.75rem !important;
+    line-height: 1.125rem !important;
+}
+.m-col[data-v-d0101fe8] {
+    flex: 0 0 100% !important;
+}
+}.closeIcon {
+  background-color: #e2e8f3;
+  border: 1px dotted #0A2A5C;
+  border-radius: 15px;
+  margin-left: -15px;
+  margin-top: -25px;
+}
+.closeIcon .v-icon {
+  color: rgba(31, 93, 189, 0.6784313725);
+}
+.mx-2 .v-input__slot {
+  top: 15px;
+}
+#memberforms .v-card__text .v-input,
+#memberforms .v-card__text .canvas-pad {
+  pointer-events: none;
+}
+#memberforms .v-card__text .v-input.dues-check,
+#memberforms .v-card__text .select-payment .v-input,
+#memberforms .v-card__text .editable-comp .v-input {
+  pointer-events: auto;
+}
+#memberforms .v-card__text label {
+  color: rgba(0, 0, 0, 0.38);
+}
+.text-error {
+  color: #F44336;
+}.bg-404[data-v-a3bdc682] {
+  display: flex;
+  padding: 1.25rem;
+  color: #000;
+  background-color: #FFF;
+}
+.form-card-header[data-v-a3bdc682] {
+  position: relative;
+}
+.form-card-header .first-logo[data-v-a3bdc682] {
+  float: left;
+}
+.form-card-header .second-logo[data-v-a3bdc682] {
+  display: flex;
+  margin: 0 auto;
+}
+.form-card-header .third-logo[data-v-a3bdc682] {
+  float: right;
+}
+.form-card-header h4[data-v-a3bdc682] {
+  display: inline-block;
+  width: 100%;
+  background-color: #E3F2FD;
+}
+.v-card__actions > .v-btn.v-btn[data-v-a3bdc682] {
+  background-color: #092a5c !important;
+  border-color: #092a5c !important;
+  color: #ffffff !important;
+}
+.v-theme--light.v-cardi > .v-card__text.form-header[data-v-a3bdc682] {
+  color: #000;
+}

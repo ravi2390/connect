@@ -1,0 +1,65 @@
+/** Tables **/
+.v-data-table table .v-data-table-header {
+  background: #092a5c;
+}
+.v-data-table table .v-data-table-header span {
+  color: #7bb8da;
+}
+.v-data-table table .v-data-table-header .v-data-table-header__icon {
+  color: rgba(255, 255, 255, 0.87) !important;
+}
+.v-data-table table tbody tr:hover {
+  background: #f0f5fe !important;
+}
+.v-data-table table tbody tr td {
+  font-size: 12px;
+}
+.v-data-table table tbody tr td .table-filter {
+  padding: 0;
+}
+.v-data-table table tbody tr:hover {
+  background: #f0f5fe !important;
+}
+.v-data-table table tbody tr:nth-child(even) {
+  background: #efefef;
+}
+
+.v-sheet.v-stepper:not(.v-sheet--outlined) {
+  box-shadow: none;
+}
+
+.v-outlined {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.form-title {
+  text-align: center;
+  display: block;
+}
+
+.form-header {
+  background: none;
+  width: 100%;
+  text-align: left;
+  border: 2px;
+}
+
+.ql-size-small {
+  font-size: 12px !important;
+}
+
+.ql-size-large {
+  font-size: 24px !important;
+}
+
+.ql-size-huge {
+  font-size: 32px !important;
+}
+
+.ql-align-center {
+  text-align: center !important;
+}
+
+.ql-align-right {
+  text-align: right !important;
+}

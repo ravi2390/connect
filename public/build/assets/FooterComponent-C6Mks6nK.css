@@ -1,0 +1,46 @@
+.footer-block[data-v-88202b1b] {
+  max-width: 100vw;
+  border-top: 4px solid #3f98c9;
+  background: #092a5c;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #ffffff;
+  letter-spacing: 0.01rem;
+  line-height: 1.125rem;
+  font-size: 0.875rem;
+}
+.footer-block img[data-v-88202b1b] {
+  margin-bottom: 35px;
+  padding-right: 15px;
+  float: left;
+}
+.copy-rights[data-v-88202b1b] {
+  margin-top: 30px;
+  padding-left: 42px;
+}
+.copy-rights span[data-v-88202b1b] {
+  padding-left: 0.875rem;
+}
+#memberforms .back-to-top-btn[data-v-88202b1b] {
+  display: none;
+}
+@media only screen and (min-width: 960px) {
+.footer-block[data-v-88202b1b] {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+.footer-block .v-container[data-v-88202b1b] {
+    display: flex;
+    justify-content: space-between;
+}
+.footer-left[data-v-88202b1b] {
+    display: flex;
+}
+.copy-rights[data-v-88202b1b] {
+    margin-top: 0;
+    padding-left: 0;
+}
+}

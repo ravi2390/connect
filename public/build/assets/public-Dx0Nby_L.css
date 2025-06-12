@@ -1,0 +1,14 @@
+.aftLogo[data-v-4dd2b91c] {
+  margin: 30px;
+  z-index: 1;
+}
+.aftLogo img[data-v-4dd2b91c] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}.form-header[data-v-25ea21d1] {
+  padding-top: 16px;
+}
+.v-theme--light.v-card > .v-card__text.form-header[data-v-25ea21d1] {
+  color: #000;
+}

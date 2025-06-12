@@ -1,0 +1,17 @@
+
+.text-white .card-text[data-v-35ff87b5] a {
+    color: white;
+    text-decoration: underline;
+}
+
+#logo-small[data-v-b2225079] {
+        height: 1.5rem;
+}
+.nav-hidden[data-v-b2225079] {
+        display: none;
+}
+
+body {
+    min-height: 75rem;
+    padding-top: 4.5rem;
+}
